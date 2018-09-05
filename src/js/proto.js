@@ -1,8 +1,8 @@
 import {hexMD5} from './MD5.js';
 export default function(Vue){
     //全局url
-    Vue.prototype.baseUrl1 = 'http://ceshi.marathonbm.com'
-    Vue.prototype.baseUrl = 'http://192.168.2.13:8082'
+    Vue.prototype.baseUrl = 'http://ceshi.marathonbm.com'
+    Vue.prototype.baseUrl1 = 'http://192.168.2.13:8082'
     // 跳转
     Vue.prototype.goUrl = function (url, data) {
         if(!url) location.reload()
@@ -13,11 +13,12 @@ export default function(Vue){
     }
 
     // ajax 相关
-    Vue.prototype.successCode = 0;
+    Vue.prototype.successCode = 1;
     Vue.prototype._ajax = function(url, data, type, npTip){
         var data = data || {};
         var type = type || 'post';
         var headers = {}
+        var request = this.getSign(data, "e1bdc0f0a45a4ce5aa16b90a02851e2a");
         return new Promise((rs, rj) => {
             $.ajax({
                 type,
@@ -25,14 +26,19 @@ export default function(Vue){
                 url,
                 headers,
                 dataType: 'json',
-                data: data,
+                data: request,
                 crossDomian: true,
                 // xhrFields: {
                 //     withCredentials: true
                 // }
             }).done( data => {
                 rs(data);
-                console.log(data);
+                // console.log(data);
+                if (data && data.code == this.successCode) {
+
+                } else {
+                    alert(data.msg)
+                }
             }).fail( e => {
                 console.log('请求出错：' + url)
                 console.log(e)

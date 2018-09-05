@@ -35,20 +35,30 @@
             async login(){
                 var checkNum=this.validatemobile(this.num);
                 console.log(checkNum);
-                if(!checkNum){
-                    alert('请输入正确的手机号码')
-                }else if(this.pass==''){
-                    alert('密码不可为空')
-                }else{
-                    var paramslogin;
-                    paramslogin={'mobile':this.num};   
-                    paramslogin.password=this.pass;    
-                    var request = this.getSign(paramslogin,"e1bdc0f0a45a4ce5aa16b90a02851e2a");
-                    let res = await this._ajax(this.baseUrl+'/basic/user/login', request);
-                    if(res && res.code == this.successCode){
-                        this.descdesc = res.data || ''
-                    }
+                if(!checkNum) return alert('请输入正确的手机号码')
+                if(this.pass=='') return alert('密码不可为空')
+                var paramslogin = {
+                    mobile: this.num,
+                    password: this.pass
+                };   
+                let res = await this._ajax(this.baseUrl+'/basic/user/login', paramslogin);
+                if(res && res.code == this.successCode){
+                    this.descdesc = res.data || ''
                 }
+                // if(!checkNum){
+                //     alert('请输入正确的手机号码')
+                // }else if(this.pass==''){
+                //     alert('密码不可为空')
+                // }else{
+                //     var paramslogin = {
+                //         mobile: this.num,
+                //         password: this.pass   
+                //     };   
+                //     let res = await this._ajax(this.baseUrl+'/basic/user/login', paramslogin);
+                //     if(res && res.code == this.successCode){
+                //         this.descdesc = res.data || ''
+                //     }
+                // }
             }
         }
     }
