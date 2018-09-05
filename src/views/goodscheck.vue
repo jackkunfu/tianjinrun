@@ -21,9 +21,6 @@
                         |验证码
                         input(style='margin-left:20px')
                     .check 查询
-                //- input()
-
-
 
 </template>
 
