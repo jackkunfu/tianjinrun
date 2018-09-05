@@ -10,19 +10,20 @@
         name: 'index',
         data(){
             return {
-                navs: [{
-                    name: '首页',
-                    url: '/'
-                }, {
-                    name: '新闻',
-                    url: '/news'
-                }, {
-                    name: '参赛指南',
-                    url: '/desc'
-                }, {
-                    name: '联系我们',
-                    url: '/about'
-                }]
+                list: []
+            }
+        },
+        mounted(){
+            this.getList()
+        },
+        methods: {
+            async getList(){
+                let res = await this.ajax('', {})
+                if(res && res.code == this.successCode){
+                    this.list = res.data || []
+                }else {
+
+                }
             }
         }
     }

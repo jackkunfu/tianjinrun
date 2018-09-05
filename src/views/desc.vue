@@ -1,7 +1,7 @@
 <template lang="pug">
     
     .w1200
-        | 参赛指南
+        div(v-html="desc")
         
 </template>
 
@@ -10,19 +10,18 @@
         name: 'index',
         data(){
             return {
-                navs: [{
-                    name: '首页',
-                    url: '/'
-                }, {
-                    name: '新闻',
-                    url: '/news'
-                }, {
-                    name: '参赛指南',
-                    url: '/desc'
-                }, {
-                    name: '联系我们',
-                    url: '/about'
-                }]
+                desc: ''
+            }
+        },
+        mounted(){
+            this.getDesc()
+        },
+        methods: {
+            async getDesc(){
+                let res = await this.ajax('', {})
+                if(res && res.code == this.successCode){
+                    this.descdesc = res.data || ''
+                }
             }
         }
     }
