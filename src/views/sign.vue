@@ -21,13 +21,14 @@
                         .el-icon-arrow-right(style='line-height:60px')
 
                 //- .event
-                .match(v-for="(item, i) in tabs" :key="i")
+                .match(v-for="(item, i) in list" :key="i")
                     .name {{item.name}}
                     .time 比赛时间：
-                        span {{item.time}}
+                        span {{item.matchStartDate}} ~~ {{item.matchEndDate}}
                     .time 比赛地点：
-                        span {{item.address}}
-                    el-button.fr(@click="goUrl('/enroll', item)") 点击报名
+                        //- span {{item.address}}
+                        span 天津
+                    el-button.fr(@click="goUrl('/enroll', item)" size="mini") 点击报名
 
                     .clear
                     
@@ -102,7 +103,7 @@
 .match
     width: 800px
     padding: 20px
-    margin: 20px auto
+    margin: 30px auto
     text-align: left
     border: 1px solid #eee
     border-radius: 5px
@@ -111,7 +112,9 @@
         transform: scale(1.2, 1.2)
 
     .name
+        margin-bottom: 10px
+        font-size: 18px
     
-    .time
-
+    .time, .address
+        font-size: 14px
 </style>
