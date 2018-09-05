@@ -12,16 +12,25 @@
                     .fl.tabList(v-for="(item, i) in navs" :key="i" @click="goUrl(item.url)") {{item.name}}
                     .fr.tabList 返回官网
                     .fr.tabList 个人中心
-                .clear
+                    .clear
+
                 .process
                     .fl.processList(v-for="(items, i) in tabs" :key="i" @click="goUrl(items.url)")
                         .processImg
                         .processtext {{items.name}}
                         .el-icon-arrow-right(style='line-height:60px')
-                .event
 
+                //- .event
+                .match(v-for="(item, i) in tabs" :key="i")
+                    .name {{item.name}}
+                    .time 比赛时间：
+                        span {{item.time}}
+                    .time 比赛地点：
+                        span {{item.address}}
+                    el-button.fr(@click="goUrl('/enroll', item)") 点击报名
 
-
+                    .clear
+                    
 </template>
 
 <script>
@@ -54,11 +63,24 @@
                 }, {
                     name: '支付',
                     url: '/pay'
-                }]                
+                }],
+                list: []             
             }
         },
+        mounted(){
+            this.getMatchs()
+        },
         methods: {
-
+            async getMatchs(){
+                let res = await this.ajax('/app/mls/getEventEntryList', {
+                    eventId: '018a8b8a29984196a9a33959c99f2bc1',
+                    pageNo: 1,
+                    pagesize: 100
+                })
+                if(res && res.code == this.successCode){
+                    this.list = res.eventList || []
+                }
+            }
         }
     }
 </script>
@@ -76,5 +98,20 @@
     font-size: 16px  
 .tab
     color: #000000
+
+.match
+    width: 800px
+    padding: 20px
+    margin: 20px auto
+    text-align: left
+    border: 1px solid #eee
+    border-radius: 5px
+    transition: all 0.8s
+    &:hover
+        transform: scale(1.2, 1.2)
+
+    .name
+    
+    .time
 
 </style>

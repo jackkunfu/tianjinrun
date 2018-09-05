@@ -1,8 +1,6 @@
 import {hexMD5} from './MD5.js';
+import config from './config.js';
 export default function(Vue){
-    //全局url
-    Vue.prototype.baseUrl1 = 'http://ceshi.marathonbm.com'
-    Vue.prototype.baseUrl = 'http://192.168.2.13:8082'
     // 跳转
     Vue.prototype.goUrl = function (url, data) {
         if(!url) location.reload()
@@ -22,7 +20,7 @@ export default function(Vue){
             $.ajax({
                 type,
                 timeout: 30000, //超时时间设置，单位毫秒
-                url,
+                url: config.baseUrl + url,
                 headers,
                 dataType: 'json',
                 data: data,
