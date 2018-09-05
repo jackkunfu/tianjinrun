@@ -60,6 +60,11 @@ export default new Router({
             path: '/enrollCheck',
             name: 'enrollCheck',
             component: r => require(['./views/enrollCheck'], r)
+        },
+        {
+            path: '/enroll',
+            name: 'enroll',
+            component: r => require(['./views/enroll'], r)
         }
     ]
 })
