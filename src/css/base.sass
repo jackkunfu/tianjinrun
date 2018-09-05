@@ -1,0 +1,26 @@
+// 重置设置
+@import './reset.sass'
+
+// mixin
+@mixin els
+    text-overflow: ellipsis
+    overflow: hidden
+    white-space: nowrap
+
+// 公用
+.w1200
+    width: 1200px
+    margin: 0 auto
+
+.fl
+    float: left
+
+.fr
+    float: right
+
+.els
+    @include els
+
+.clear
+    clear: both
+
