@@ -7,7 +7,7 @@
         .num 
 
             input(v-model='num' placeholder="请输入手机号码")
-            .fr.getcode
+            .fr.getcode(@click='getcode')
                 |获取验证码
             input(v-model='code' placeholder="请输入验证码")
             input(v-model='pass' placeholder="请输入6-26位密码")  

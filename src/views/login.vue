@@ -41,7 +41,7 @@
                     mobile: this.num,
                     password: this.pass
                 };   
-                let res = await this._ajax(this.baseUrl+'/basic/user/login', paramslogin);
+                let res = await this._ajax('/basic/user/login', paramslogin);
                 if(res && res.code == this.successCode){
                     this.descdesc = res.data || ''
                 }

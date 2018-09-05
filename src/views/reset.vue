@@ -40,7 +40,7 @@
                         identify_code: this.code,
                         password: this.pass
                 };
-                let res = await this.ajax(this.baseUrl, params)
+                let res = await this.ajax('/basic/user/forgetPassword', params)
                 if(res && res.code == this.successCode){
                     this.descdesc = res.data || ''
                 }
@@ -52,13 +52,10 @@
                 var params;
                 params={'mobile':num};    
                 var request = _this.getSign(params,"e1bdc0f0a45a4ce5aa16b90a02851e2a");   
-                console.log(request);
-                // if(!_this.validatemobile(num)) return alert('请输入正确的手机号码')
-                // if()
                 if(_this.validatemobile(num)){
                     if (!_this.timer) {
                         _this.count = time_count;
-                        let res = await _this.ajax(_this.baseUrl+'/basic/user/identify', request)
+                        let res = await _this.ajax('/basic/user/identify', request)
                             if(res && res.code == _this.successCode){
                                 _this.descdesc = res.data || ''
                             }
