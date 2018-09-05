@@ -5,22 +5,10 @@
 
 <script>
     export default {
-        name: 'index',
+        name: 'about',
         data(){
             return {
-                navs: [{
-                    name: '首页',
-                    url: '/'
-                }, {
-                    name: '新闻',
-                    url: '/news'
-                }, {
-                    name: '参赛指南',
-                    url: '/desc'
-                }, {
-                    name: '联系我们',
-                    url: '/about'
-                }]
+                
             }
         }
     }

@@ -2,8 +2,8 @@
     .index
         .w1200.sign
             .fr
-                span 注册
-                span 登陆
+                span(@click="goUrl('/register')") 注册
+                span(@click="goUrl('/login')") 登陆
             .clear
         
         .w1200
@@ -19,7 +19,7 @@
             .clear
             
         div
-            img.poster(src="../assets/logo.png")
+            img.poster(src="../assets/mainImg.jpeg")
 
         .w1200
             .fl
@@ -27,7 +27,7 @@
                 | 公告
 
             .fr 
-                .enroll 立即报名
+                .enroll(@click="goUrl('/sign')") 立即报名
                 .time 
 
 </template>
@@ -65,7 +65,7 @@
 
     .poster
         width: 100%
-        height: 300px
+        height: 490px
 
     .sign
         margin-bottom: 10px
