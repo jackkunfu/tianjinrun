@@ -11,11 +11,12 @@ export default function(Vue){
     }
 
     // ajax 相关
-    Vue.prototype.successCode = 0;
+    Vue.prototype.successCode = 1;
     Vue.prototype._ajax = function(url, data, type, npTip){
         var data = data || {};
         var type = type || 'post';
         var headers = {}
+        var request = this.getSign(data, "e1bdc0f0a45a4ce5aa16b90a02851e2a");
         return new Promise((rs, rj) => {
             $.ajax({
                 type,
@@ -23,14 +24,19 @@ export default function(Vue){
                 url: config.baseUrl + url,
                 headers,
                 dataType: 'json',
-                data: data,
+                data: request,
                 crossDomian: true,
                 // xhrFields: {
                 //     withCredentials: true
                 // }
             }).done( data => {
                 rs(data);
-                console.log(data);
+                // console.log(data);
+                if (data && data.code == this.successCode) {
+
+                } else {
+                    alert(data.msg)
+                }
             }).fail( e => {
                 console.log('请求出错：' + url)
                 console.log(e)

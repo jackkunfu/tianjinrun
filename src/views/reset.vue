@@ -33,11 +33,14 @@
         },
         methods: {
             async reset(){
-                var paramslogin;
-                paramslogin={'mobile':this.num};   
-                paramslogin.password=this.pass;    
-                var request = this.getSign(paramslogin,"e1bdc0f0a45a4ce5aa16b90a02851e2a");
-                let res = await this.ajax(this.baseUrl, request)
+                if(this.code=='') return alert('验证码不可为空')
+                if(this.pass=='') return alert('密码不可为空')               
+                var params = {
+                        mobile: this.num,
+                        identify_code: this.code,
+                        password: this.pass
+                };
+                let res = await this.ajax(this.baseUrl, params)
                 if(res && res.code == this.successCode){
                     this.descdesc = res.data || ''
                 }
@@ -50,6 +53,8 @@
                 params={'mobile':num};    
                 var request = _this.getSign(params,"e1bdc0f0a45a4ce5aa16b90a02851e2a");   
                 console.log(request);
+                // if(!_this.validatemobile(num)) return alert('请输入正确的手机号码')
+                // if()
                 if(_this.validatemobile(num)){
                     if (!_this.timer) {
                         _this.count = time_count;
