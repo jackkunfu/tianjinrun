@@ -1,6 +1,8 @@
 <template lang="pug">
     .signPage
-        publicTop
+
+        public-top
+
         .match(v-for="(item, i) in list" :key="i")
             .name {{item.name}}
             .time 比赛时间：
@@ -14,7 +16,7 @@
                     
 </template>
 <script>
- import publicTop from "./publicTop.vue";
+    import publicTop from "./publicTop.vue"
     export default {
         name: 'sign',
         data(){

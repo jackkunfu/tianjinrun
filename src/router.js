@@ -67,6 +67,11 @@ export default new Router({
             component: r => require(['./views/enroll'], r)
         },
         {
+            path: '/editInfo',
+            name: 'editInfo',
+            component: r => require(['./views/editInfo'], r)
+        },
+        {
             path: '/add',
             name: 'add',
             component: r => require(['./views/add'], r)

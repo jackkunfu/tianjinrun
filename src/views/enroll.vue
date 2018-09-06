@@ -1,68 +1,84 @@
 <template lang="pug">
-    .enrollPage
-        publicTop
+    .w1200.enrollPage
+
+        public-top
+
         .matchInfo
             .name {{item.name}}
             .time {{item.matchStartDate}}~~{{item.matchEndDate}}
             .fee ￥{{item.fee}}
-        .add(@click="goUrl('/add',{entryId:item.entryId})") 增加/修改报名人信息
-        .enroll(@click='') 立即报名
+
+        .add(@click="goUrl('/editInfo', addInfoQuery)") 增加报名人
+
+        .list
+            .each(v-for="(item, i) in list" @click="item.choose=true")
+                .fl
+                    img(v-if="item.choose" src="")
+                    img(v-else src="")
+                .fl
+                    div
+                        span.name {{item.name}}
+                        span {{item.sex}}
+                        span {{item.mobile}}
+                    div 
+                        span.name {{item.id}}
+                        span
+                            img(src="")
+                            | 个人信息不完整
+                .fr
+                    img(src="" @click.stop="edit(item)")
+                .clear
+
+        .enroll(@click='enroll') 立即报名
                     
 </template>
 <script>
  import publicTop from "./publicTop.vue";
     export default {
         name: 'sign',
-        data(){
-            return {
-                item: this.$route.query,
-                list: []             
-            }
-        },
         components: {
             publicTop            
         },
-        mounted(){
+        data(){
+            let query = this.$route.query
+            return {
+                item: query,
+                list: [],
+                addInfoQuery: {
+                    item: query,
+                    type: 'add'
+                }     
+            }
+        },
+        async mounted(){
+            
         },
         methods: {
+            enroll(){
+                if(this.list.map(el=>el.choose).length == 0) return alert('请勾选报名人')
+                
+            },
+            edit(item){
+                item.type = 'edit'
+                this.goUrl('/editInfo', item)
+            },
+            async getList(){
+                let users = await this.ajax('/app/user/enrollUserList', {
+                    mobile: '',
+                    entryId: ''
+                })
+                if(users && users.code == this.successCode){
+                    this.list = users.data
+
+                    this.list.forEach(el => {
+                        this.$set(el, 'choose', false)
+                    })
+                }
+            }
         }
     }
 </script>
 
 <style lang="sass" scoped>
-.matchInfo
-    width: 600px
-    height: 200px
-    padding: 20px
-    margin: 30px auto
-    text-align: left
-    border: 1px solid #eee
-    border-radius: 5px
-    background-image: url('../assets/choose_event_item.png')
-    background-repeat: no-repeat
-    background-size: 100% 100%
-    position: relative
-    .name
-        position: absolute
-        left: 100px
-    .time
-        position: absolute
-        left: 100px
-        top: 60px
-    .fee
-        position: absolute
-        left: 100px
-        top: 100px
-.add
-    width: 400px
-    margin: 0 auto
-    text-align: center
-.enroll
-    width: 400px
-    margin: 20px auto
-    text-align: center
-    height: 40px
-    line-height: 40px
-    border: 1px solid #999999
-    border-radius: 5px
+
 </style>
