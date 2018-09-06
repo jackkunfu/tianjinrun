@@ -39,7 +39,7 @@
                     .newsList(
                         v-for="(item, i) in report" :key="i"
                         v-if='control==1'
-                        @click="goUrl()"
+                       @click="goUrl('/newsDetail',{newsId:item.id})"
                     ) 
                         .matchClass 2018
                         .matchClass {{item.title}}
@@ -70,10 +70,10 @@
         data(){
             return {
                 navs: [{
-                    name: '首页',
+                    name: '赛事首页',
                     url: '/'
                 }, {
-                    name: '新闻',
+                    name: '赛事新闻',
                     url: '/news'
                 }, {
                     name: '赛事介绍',
@@ -174,18 +174,7 @@
             line-height: 45px
             background: #e5e7ef
         .control
-            background: #999999
-        .newsList
-            display: flex
-            width: 80%
-            margin: 0 auto
-            text-align: left
-            font-size: 20px
-            height: 50px
-            line-height: 50px
-            border-bottom: 1px dashed
-            .matchClass
-                margin: 0px 25px
+            background: #999999        
     .enrollEntry
         width: 35%
         min-height: 600px

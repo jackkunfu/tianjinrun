@@ -1,35 +1,54 @@
 <template lang="pug">
-    
-    .w1200
-        | 新闻
-
+    .enrollPage
+        publicTab
+        .newsInfo    
+            .newsList(
+                v-for="(item, i) in report" :key="i"
+                    @click="goUrl('/newsDetail',{newsId:item.id})"
+                )
+                .matchClass 2018
+                .matchClass {{item.title}}
+                .matchClass {{item.updateDate}}                
+                    
 </template>
 
-<script>
+<script> 
+import publicTab from "./publicTab.vue";
     export default {
         name: 'news',
         data(){
             return {
-                list: []
+                report:[],
             }
+        },
+        components: {
+            publicTab            
         },
         mounted(){
-            this.getList()
+            this.getReport()
         },
         methods: {
-            async getList(){
-                let res = await this.ajax('', {})
+            async getReport(){
+                let res = await this.ajax('/news/news_notice/list', {
+                    domain:'tjwq-marathon',
+                    module:'xwgg',
+                    eventId:'',
+                    pageNo: 1,
+                    pageSize: 10
+                })
                 if(res && res.code == this.successCode){
-                    this.list = res.data || []
-                }else {
-
+                    console.log(res);
+                    this.report = res.list || []
                 }
             }
+
         }
     }
 </script>
 
-<style lang="sass">
-    .logo
-        width: 30px
+<style lang="sass" scoped>
+.newsInfo
+    width: 70%
+    margin: 0 auto
+
 </style>
