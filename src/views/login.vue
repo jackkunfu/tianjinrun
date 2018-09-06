@@ -50,7 +50,6 @@
         methods: {
             async login(from){
                 var checkNum=this.validatemobile(this.num);
-                console.log(checkNum);
                 if(!checkNum) return alert('请输入正确的手机号码')
                 if(from=='pass'){
                     if(this.pass=='') return alert('密码不可为空')

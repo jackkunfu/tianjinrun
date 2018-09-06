@@ -101,7 +101,6 @@
                     pageSize: 10
                 })
                 if(res && res.code == this.successCode){
-                    console.log(res);
                     this.list = res.list || []
                 }
             },
@@ -114,7 +113,6 @@
                     pageSize: 10
                 })
                 if(res && res.code == this.successCode){
-                    console.log(res);
                     this.report = res.list || []
                 }
             }

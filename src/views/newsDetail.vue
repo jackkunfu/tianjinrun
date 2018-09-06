@@ -1,14 +1,7 @@
 <template lang="pug">
-    .enrollPage
-        publicTab
-        .newsInfo    
-            .newsList(
-                v-for="(item, i) in report" :key="i"
-                    @click="goUrl('/newsDetail',{newsId:item.id})"
-                )
-                .matchClass 2018
-                .matchClass {{item.title}}
-                .matchClass {{item.updateDate}}                
+     .enrollPage
+        publicTab    
+        .content(v-html="data.content")               
                     
 </template>
 
@@ -18,7 +11,7 @@ import publicTab from "./publicTab.vue";
         name: 'news',
         data(){
             return {
-                report:[],
+                data:{},
             }
         },
         components: {
@@ -29,15 +22,16 @@ import publicTab from "./publicTab.vue";
         },
         methods: {
             async getReport(){
-                let res = await this.ajax('/news/news_notice/list', {
-                    domain:'tjwq-marathon',
+                console.log('执行了');
+                let res = await this.ajax('/news/news_notice/getById', {
+                    newsId:this.$route.query.newsId,
                     module:'xwgg',
                     eventId:'',
-                    pageNo: 1,
-                    pageSize: 10
+                    total: 1,
+                    size: 0
                 })
                 if(res && res.code == this.successCode){
-                    this.report = res.list || []
+                    this.data = res.objectData.marathonArticle.marathonArticleData || []
                 }
             }
 
@@ -46,8 +40,8 @@ import publicTab from "./publicTab.vue";
 </script>
 
 <style lang="sass" scoped>
-.newsInfo
-    width: 70%
+.content
+    width: 800px
     margin: 0 auto
 
 </style>

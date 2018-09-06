@@ -1,8 +1,10 @@
 <template lang="pug">
     .addInfo
         publicTop
-        .add(@click="goUrl('/add')") 增加/修改报名人信息
-        .match(v-for="(item, i) in list" :key="i")
+        .add(@click="goUrl('/info')") 增加/修改报名人信息
+        .match(v-for="(item, i) in list" :key="i"
+            @click="goUrl('/info',item)"
+        )
 
             input(type='checkbox' v-model='checked')           
             .itemClass {{item.name}}
@@ -32,7 +34,6 @@
         },
         methods: {
             async getInfoList(){
-                console.log(this.$route.query.entryId);
                 let res = await this.ajax('/app/user/enrollUserList', {
                     entryId: this.$route.query.entryId,
                     mobile: '17647581576'

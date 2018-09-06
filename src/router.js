@@ -75,6 +75,11 @@ export default new Router({
             path: '/newsDetail',
             name: 'newsDetail',
             component: r => require(['./views/newsDetail'], r)
+        },
+        {
+           path: '/info',
+           name: 'info',
+           component: r => require(['./views/info'], r)
         }
     ] 
 })

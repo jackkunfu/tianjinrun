@@ -31,7 +31,6 @@ export default function(Vue){
                 // }
             }).done( data => {
                 rs(data);
-                // console.log(data);
                 if (data && data.code == this.successCode) {
 
                 } else {
@@ -98,7 +97,6 @@ export default function(Vue){
         var _this = this;
         //var num=_this.num;
         var time_count = 60;
-        console.log(num);
         if(_this.validatemobile(num)){
             if (!_this.timer) {
                 _this.count = time_count;
