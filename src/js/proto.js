@@ -94,4 +94,31 @@ export default function(Vue){
         }
         return true;
     }
+    Vue.prototype.getcode = async function (num) {
+        var _this = this;
+        //var num=_this.num;
+        var time_count = 60;
+        console.log(num);
+        if(_this.validatemobile(num)){
+            if (!_this.timer) {
+                _this.count = time_count;
+                let res = await _this.ajax('/basic/user/identify', {mobile:num})
+                    if(res && res.code == _this.successCode){
+                        //_this.descdesc = res.data || ''
+                    }
+                _this.timer = setInterval(() => {
+                if (_this.count > 0 && _this.count <= time_count) {                      
+                        _this.count--;
+                        _this.msg="重新发送"+_this.count;
+                    } else {
+                        clearInterval(_this.timer);
+                        _this.timer = null;
+                        _this.msg="获取验证码";
+                    }
+                }, 1000)
+            }
+        }else{
+            alert('请输入正确的手机号码')
+        }
+    }
 }

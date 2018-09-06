@@ -1,58 +1,68 @@
 <template lang="pug">
-    .w1200
-        .top
-            .name {{match.name}}
-
-
+    .enrollPage
+        publicTop
+        .matchInfo
+            .name {{item.name}}
+            .time {{item.matchStartDate}}~~{{item.matchEndDate}}
+            .fee ￥{{item.fee}}
+        .add(@click="goUrl('/add',{entryId:item.entryId})") 增加/修改报名人信息
+        .enroll(@click='') 立即报名
+                    
 </template>
-
 <script>
+ import publicTop from "./publicTop.vue";
     export default {
-        name: 'index',
+        name: 'sign',
         data(){
             return {
-                match: {}
+                item: this.$route.query,
+                list: []             
             }
         },
-        mounted() {
-            this.match = this.$route.query
-            this.getUserList()
+        components: {
+            publicTop            
+        },
+        mounted(){
         },
         methods: {
-            getUserList() {
-
-            }
         }
     }
 </script>
 
 <style lang="sass" scoped>
-
-    .logo
-        height: 100px
-
-    .poster
-        width: 100%
-        height: 490px
-
-    .sign
-        margin-bottom: 10px
-        span
-            height: 30px
-            line-height: 30px
-            display: inline-block
-            margin: 0 10px
-
-    .nav
-        margin-top: 60px
-        span
-            height: 40px
-            line-height: 40px
-            font-size: 20px
-            display: inline-block
-            margin: 0 10px
-            cursor: pointer
-            &:hover
-                color: red
-    
+.matchInfo
+    width: 600px
+    height: 200px
+    padding: 20px
+    margin: 30px auto
+    text-align: left
+    border: 1px solid #eee
+    border-radius: 5px
+    background-image: url('../assets/choose_event_item.png')
+    background-repeat: no-repeat
+    background-size: 100% 100%
+    position: relative
+    .name
+        position: absolute
+        left: 100px
+    .time
+        position: absolute
+        left: 100px
+        top: 60px
+    .fee
+        position: absolute
+        left: 100px
+        top: 100px
+.add
+    width: 400px
+    margin: 0 auto
+    text-align: center
+.enroll
+    width: 400px
+    margin: 20px auto
+    text-align: center
+    height: 40px
+    line-height: 40px
+    border: 1px solid #999999
+    border-radius: 5px
 </style>
