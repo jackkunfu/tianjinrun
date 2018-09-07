@@ -24,7 +24,7 @@ import publicTab from "./publicTab.vue";
             async getReport(){
                 let res = await this.ajax('/news/news_notice/getById', {
                     newsId:this.$route.query.newsId,
-                    module:'xwgg',
+                    module:'ssgg',
                     eventId:this.$route.query.eventId,
                     total: 1,
                     size: 0

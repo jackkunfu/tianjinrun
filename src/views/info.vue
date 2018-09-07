@@ -1,6 +1,6 @@
 <template lang="pug">
     .Info  
-        publicTop 
+        public-top 
         .match(v-for="(item, i) in list" :key="i"
             @click="goUrl('/info',item)"
         )           
@@ -61,15 +61,13 @@
         },
         methods: {
             async getInfoList(){
-                console.log(this.$route.query);
                 let res = await this.ajax('/app/mls/getEventDyncList', {
                     mobile: '17647581576',
                     sessionid: 'a46d4af91c874e1db516b6d2454833ce',
                     entryId:'6f73a48fd55e485e81488ae0c884fc6e',
                     pageNo:1
                 })
-                if(res && res.code == this.successCode){   
-                    console.log(res);                 
+                if(res && res.code == this.successCode){              
                     this.list = res.eventList || []
                 }
             }

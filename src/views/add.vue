@@ -1,6 +1,6 @@
 <template lang="pug">
     .addInfo
-        publicTop
+        public-top
         .add(@click="goUrl('/info')") 增加/修改报名人信息
         .match(v-for="(item, i) in list" :key="i"
             @click="goUrl('/info',item)"

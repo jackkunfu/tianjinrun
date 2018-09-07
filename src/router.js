@@ -85,6 +85,16 @@ export default new Router({
            path: '/info',
            name: 'info',
            component: r => require(['./views/info'], r)
+        },
+        {
+            path: '/descDetail',
+            name: 'descDetail',
+            component: r => require(['./views/descDetail'], r)
+        },
+        {
+           path: '/report',
+           name: 'report',
+           component: r => require(['./views/report'], r)
         }
     ] 
 })

@@ -11,22 +11,28 @@
         .add(@click="goUrl('/editInfo', addInfoQuery)") 增加报名人
 
         .list
-            .each(v-for="(item, i) in list" @click="item.choose=true")
+            .each(v-for="(item, i) in list" @click="choose(item,i)")
                 .fl
-                    img(v-if="item.choose" src="")
-                    img(v-else src="")
+                    img(v-if="item.choose" src="../assets/choose.png")
+                    img(v-else src="../assets/notchoose.png")
                 .fl
                     div
                         span.name {{item.name}}
                         span {{item.sex}}
-                        span {{item.mobile}}
-                    div 
+                        span {{item.mobileNum}}
+                        span {{item.cardId}}
+                    div(v-if='item.enoughcheck==false') 
                         span.name {{item.id}}
-                        span
-                            img(src="")
-                            | 个人信息不完整
+                        span(style='color:#ff0000')
+                            img(src="../assets/tishi.png")
+                            | 个人信息不完整,不可选
+                    div(v-if='item.agecheck==false') 
+                        span.name {{item.id}}
+                        span(style='color:#ff0000')
+                            img(src="../assets/tishi.png")
+                            | 年龄不在范围内,不可选
                 .fr
-                    img(src="" @click.stop="edit(item)")
+                    img(src="../assets/icon_enroll_modify_info.png" @click.stop="edit(item)")
                 .clear
 
         .enroll(@click='enroll') 立即报名
@@ -43,17 +49,46 @@
             let query = this.$route.query
             return {
                 item: query,
+                maxage:null,
+                minage:null,
+                formList:[],
                 list: [],
                 addInfoQuery: {
                     item: query,
                     type: 'add'
-                }     
+                },
+                checkflag:false,
+                isSelect:false,
+                selectList:[]    
             }
         },
         async mounted(){
-            
+            this.getList()          
         },
         methods: {
+            async choose(item,i){
+                console.log(i);
+                var selectList =this.selectList;
+                if(!item.enoughcheck) return alert('信息不完整，不可选')
+                if(!item.agecheck) return alert('年龄不在范围内，不可选')
+                if(this.isSelect){
+                    let check = await this.ajax('/app/mls/order/checkEnrollSelects', {
+                        cardId: item.cardId,
+                        entryId:this.$route.query.entryId,
+                    })
+                    if(check && check.code == this.successCode){ 
+                        console.log(check);
+                    }                                    
+                }
+                if(!item.choose){
+                    selectList.push(item)
+                }else{
+                    selectList.splice(i,1);
+                }
+                item.choose=!item.choose
+                this.selectList=selectList;
+                console.log(this.selectList);
+            },
             enroll(){
                 if(this.list.map(el=>el.choose).length == 0) return alert('请勾选报名人')
                 
@@ -63,18 +98,172 @@
                 this.goUrl('/editInfo', item)
             },
             async getList(){
+                var entryId=this.$route.query.entryId;
+                let res = await this.ajax('/app/mls/getEventDyncList', {
+                    mobile: '17647581576',
+                    sessionid: 'a46d4af91c874e1db516b6d2454833ce',
+                    entryId:entryId,
+                    pageNo:1
+                })
+                if(res && res.code == this.successCode){ 
+                    this.maxage = res.objectData.maxAge;
+                    this.minage = res.objectData.minAge; 
+                    this.isSelect = res.objectData.isSelect;               
+                    this.formList = res.eventList || []
+                    var formTemp = res.eventList;
+                    for(var ke in formTemp){
+                        if(formTemp[ke].key=='birstday'){
+                            this.checkflag=true
+                        }
+                    }
+                }
                 let users = await this.ajax('/app/user/enrollUserList', {
-                    mobile: '',
-                    entryId: ''
+                    mobile: '17647581576',
+                    entryId: entryId
                 })
                 if(users && users.code == this.successCode){
-                    this.list = users.data
-
+                    this.list = users.list;
+                    for (var i = 0; i < users.list.length; i++) {
+                        var user = users.list[i];
+                        var flag = this.checkUser(user);
+                        if (flag) {
+                            this.list[i].enoughcheck=true;
+                        } else {
+                            this.list[i].enoughcheck=false;
+                        }
+                        if(this.checkflag){
+                            var age = users.list[i].birthday;
+                            var ddate = new Date(age).getTime();        
+                            if (ddate > this.minage || ddate <this.maxage) {
+                                this.list[i].agecheck=false
+                            } else {
+                                this.list[i].agecheck=true
+                            }
+                        }else{
+                            this.list[i].agecheck=true                            
+                        }
+                        
+                    };
                     this.list.forEach(el => {
                         this.$set(el, 'choose', false)
                     })
                 }
-            }
+                
+            },
+            checkUser: function (user) {
+                var params=this.formList;
+                //校验性别
+                var sex = user.sex;
+                if (sex != "" && sex != undefined && sex != null) {
+                    var sexflag = false;
+                    var iscontain = false;
+                    for (var i = 0; i < params.length; i++) {
+                        if (params[i].key == "sex") {
+                            iscontain = true;
+                            var obj = params[i];
+                            var secondList = obj.secondList;
+                            for (var j = 0; j < secondList.length; j++) {
+                                if (sex == secondList[j].name) {
+                                    sexflag = true;
+                                }
+                            }
+                        }
+                    }
+                    if (!iscontain) {
+                        return true;
+                    }
+                    if (!sexflag) {
+                        return false;
+                    }
+                }
+                //证件类型
+                var cardType = user.cardType;
+                if (cardType != "" && cardType != undefined && cardType != null) {
+                    var cardTypeflag = false;
+                    var iscontain = false;
+                    for (var i = 0; i < params.length; i++) {
+                        if (params[i].key == "cardType") {
+                            iscontain = true;
+                            var obj = params[i];
+                            var secondList = obj.secondList;
+                            for (var j = 0; j < secondList.length; j++) {
+                                if (cardType == secondList[j].name) {
+                                cardTypeflag = true;
+                                }
+                            }
+                        }
+                    }
+                        if (!iscontain) {
+                            return true;
+                        }
+                        if (!cardTypeflag) {
+                            return false;
+                        }
+                }
+                //服装尺寸
+                var clothSize = user.clothSize;
+                if (clothSize != "" && clothSize != undefined && clothSize != null) {
+                    var clothSizeflag = false;
+                    var iscontain = false;
+                    for (var i = 0; i < params.length; i++) {
+                        if (params[i].key == "clothSize") {
+                            iscontain = true;
+                            var obj = params[i];
+                            var secondList = obj.secondList;
+                            for (var j = 0; j < secondList.length; j++) {
+                                if (clothSize == secondList[j].name) {
+                                    clothSizeflag = true;
+                                }
+                            }
+                        }
+                    }
+                        if (!iscontain) {
+                            return true;
+                        }
+                        if (!clothSizeflag) {
+                            return false;
+                        }
+                }
+                //血型校验
+                var blood = user.blood;
+                if (blood != "" && blood != undefined && blood != null) {
+                    var bloodflag = false;
+                    var iscontain = false;
+                    for (var i = 0; i < params.length; i++) {
+                        if (params[i].key == "blood") {
+                            iscontain = true;
+                            var obj = params[i];
+                            var secondList = obj.secondList;
+                            for (var j = 0; j < secondList.length; j++) {
+                                if (blood == secondList[j].name) {
+                                bloodflag = true;
+                                }
+                            }
+                        }
+                    }
+                        if (!iscontain) {
+                            return true;
+                        }
+                        if (!bloodflag) {
+                            return false;
+                        }
+                }
+                //空校验
+                var nullflag = true;
+                //各项不为空的校验
+                for (var i = 0; i < params.length; i++) {
+                    var key = params[i].key;
+                    var value = user[key];                
+                    if ((value == "" || value == undefined || value == null) && params[i].required) {
+                        nullflag = false;   
+                    }
+                }
+                if (!nullflag) {
+                    return false;
+                }
+                    return true;
+            }       
+        
         }
     }
 </script>

@@ -8,7 +8,7 @@
 <script> 
 import publicTab from "./publicTab.vue";
     export default {
-        name: 'news',
+        name: 'descDetail',
         data(){
             return {
                 data:{},
@@ -24,7 +24,7 @@ import publicTab from "./publicTab.vue";
             async getReport(){
                 let res = await this.ajax('/news/news_notice/getById', {
                     newsId:this.$route.query.newsId,
-                    module:'xwgg',
+                    module:'ssjs',
                     eventId:this.$route.query.eventId,
                     total: 1,
                     size: 0

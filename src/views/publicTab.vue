@@ -55,7 +55,9 @@
     top: 20px
     z-index: 9
     color: #fff
-    font-size: 16px  
+    font-size: 16px
+    span
+        cursor: pointer  
 .tab
     display: flex
 </style>

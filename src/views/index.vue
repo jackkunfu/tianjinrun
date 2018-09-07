@@ -31,24 +31,24 @@
                     .newsList(
                         v-for="(item, i) in list" :key="i"
                         v-if='control==0'
-                        @click="goUrl()"
+                        @click="goUrl('/report',{newsId:item.id,eventId:item.marathonEvent.id})"
                     ) 
-                        .matchClass 2018
-                        .matchClass {{item.title}}
-                        .matchClass {{item.updateDate}}
+                        .matchTime 2018
+                        .matchClass {{item.title|intercept}}
+                        .matchTime {{item.updateDate|intercept}}
                     .newsList(
                         v-for="(item, i) in report" :key="i"
                         v-if='control==1'
-                       @click="goUrl('/newsDetail',{newsId:item.id})"
+                       @click="goUrl('/newsDetail',{newsId:item.id,eventId:item.marathonEvent.id})"
                     ) 
-                        .matchClass 2018
-                        .matchClass {{item.title}}
-                        .matchClass {{item.updateDate}}
+                        .matchTime 2018
+                        .matchClass {{item.title|intercept}}
+                        .matchTime {{item.updateDate|intercept}}
 
                 //- .fr 
                 .enrollEntry
                     .enroll(@click="goUrl('/sign')") 立即报名
-                    .center.know 距离 中华人民共和国第十四届运动会马拉松赛暨2018天津（武清）国际马拉松赛 开赛剩余
+                    .center.know {{matchName}}
                     .time 
                         .clock
                             |00 00 00 00 
@@ -84,15 +84,21 @@
                 }],
                 list:[],
                 report:[],
-                control:0
+                control:0,
+                matchName:''
             }
         },
         mounted(){
             this.getNews()
-            this.getReport()
+            // this.getReport()
+            // this.getTime()
         },
         methods: {
             async getNews(){
+                //获取域名请求赛事公告
+                //var host = window.location.host;
+                var domain=document.domain;
+                console.log(document.domain);
                 let res = await this.ajax('/news/news_notice/list', {
                     domain:'tjwq-marathon',
                     module:'ssgg',
@@ -103,19 +109,30 @@
                 if(res && res.code == this.successCode){
                     this.list = res.list || []
                 }
-            },
-            async getReport(){
-                let res = await this.ajax('/news/news_notice/list', {
+                //获取域名请求赛事新闻
+                let re = await this.ajax('/news/news_notice/list', {
                     domain:'tjwq-marathon',
                     module:'xwgg',
                     eventId:'',
                     pageNo: 1,
                     pageSize: 10
                 })
-                if(res && res.code == this.successCode){
-                    this.report = res.list || []
+                if(re && re.code == this.successCode){
+                    console.log('re',re)
+                    this.report = re.list || []
                 }
-            }
+                //获取域名请求时间和状态
+                let time = await this.ajax('/app/mls/getEventsByDomain', {
+                    domain:'tjwq-marathon',
+                    total:0,
+                    pageNo: 1,
+                    pageSize: 10
+                })
+                if(time && time.code == this.successCode){
+                    console.log('time',time)
+                    this.matchName=time.list[0].name
+                }
+            },
         }
     }
 </script>

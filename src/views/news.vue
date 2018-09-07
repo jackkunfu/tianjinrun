@@ -1,14 +1,14 @@
 <template lang="pug">
     .enrollPage
-        publicTab
+        public-tab
         .newsInfo    
             .newsList(
                 v-for="(item, i) in report" :key="i"
-                    @click="goUrl('/newsDetail',{newsId:item.id})"
+                    @click="goUrl('/newsDetail',{newsId:item.id,eventId:item.marathonEvent.id})"
                 )
-                .matchClass 2018
+                .matchTime 2018
                 .matchClass {{item.title}}
-                .matchClass {{item.updateDate}}                
+                .matchClass {{item.updateDate|intercept}}                
                     
 </template>
 

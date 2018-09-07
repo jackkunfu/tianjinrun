@@ -16,6 +16,11 @@ Vue.use(proto)
 
 Vue.config.productionTip = false
 
+Vue.filter('intercept', function (value) {
+  if (!value) return ''
+  return value.length > 10 ? (value.substr(0, 10)) : value;
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -1,33 +1,53 @@
 <template lang="pug">
-    
-    .w1200 
-        |参赛指南      
-        
+    .enrollPage
+        public-tab
+        .newsInfo    
+            .newsList(
+                v-for="(item, i) in report" :key="i"
+                    @click="goUrl('/descDetail',{newsId:item.id,eventId:item.marathonEvent.id})"
+                )
+                .matchTime 2018
+                .matchClass {{item.title}}
+                .matchClass {{item.updateDate|intercept}}                
+                    
 </template>
 
-<script>
+<script> 
+import publicTab from "./publicTab.vue";
     export default {
         name: 'desc',
         data(){
             return {
-                desc: ''
+                report:[],
             }
+        },
+        components: {
+            publicTab            
         },
         mounted(){
-            this.getDesc()
+            this.getReport()
         },
         methods: {
-            async getDesc(){
-                let res = await this.ajax('', {})
+            async getReport(){
+                let res = await this.ajax('/news/news_notice/list', {
+                    domain:'tjwq-marathon',
+                    module:'ssjj',
+                    eventId:'',
+                    pageNo: 1,
+                    pageSize: 10
+                })
                 if(res && res.code == this.successCode){
-                    this.desc = res.data || ''
+                    this.report = res.list || []
                 }
             }
+
         }
     }
 </script>
 
-<style lang="sass">
-    .logo
-        width: 30px
+<style lang="sass" scoped>
+.newsInfo
+    width: 70%
+    margin: 0 auto
+
 </style>

@@ -1,14 +1,14 @@
 <template lang="pug">
 
     el-form(:model="obj")
-        el-form-item(label="姓名")
-            el-input(v-model="obj.name")
+        //- el-form-item(label="姓名")
+        //-     el-input(v-model="obj.name")
 
-        el-form-item(label="手机号")
-            el-input(v-model="obj.phone")
+        //- el-form-item(label="手机号")
+        //-     el-input(v-model="obj.phone")
 
-        el-form-item
-            el-button(@click="$emit('editOk', obj)")
+        //- el-form-item
+        //-     el-button(@click="$emit('editOk', obj)")
 
 </template>
 <script>
@@ -20,9 +20,9 @@
                 obj: this.objData   
             }
         },
-        components: {
-            cpPersonInfo            
-        },
+        // components: {
+        //     cpPersonInfo            
+        // },
         mounted(){
         },
         methods: {
