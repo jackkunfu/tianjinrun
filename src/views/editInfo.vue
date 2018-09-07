@@ -1,7 +1,7 @@
 <template lang="pug">
     .w1200
 
-        cp-person-info(:obj="personInfo" @editOk="editOk")
+        cp-person-info(:obj="personInfo" @editOk="editOk" :list="list")
                     
 </template>
 <script>
@@ -11,12 +11,19 @@
         components: { CpPersonInfo },
         data(){
             return {
-                personInfo: {}       
+                personInfo: {},
+                list: []
             }
         },
         mounted(){
         },
         methods: {
+            async getAsyncList(){
+                let res = await this.ajax('/app/mls/getEventDyncList', {
+                    entryId: this.entryId
+                }, 'post')
+                if(res && res.code == this.successCode) this.list = res.eventList || []
+            },
             editOk(obj){}
         }
     }
