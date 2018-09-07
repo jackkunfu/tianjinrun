@@ -8,34 +8,35 @@
             .time {{item.matchStartDate}}~~{{item.matchEndDate}}
             .fee ￥{{item.fee}}
 
-        .add(@click="goUrl('/editInfo', addInfoQuery)") 增加报名人
 
         .list
+        
+            .add(@click="goUrl('/editInfo', addInfoQuery)") 增加报名人
             .each(v-for="(item, i) in list" @click="choose(item,i)")
                 .fl
                     img(v-if="item.choose" src="../assets/choose.png")
                     img(v-else src="../assets/notchoose.png")
                 .fl
                     div
-                        span.name {{item.name}}
-                        span {{item.sex}}
-                        span {{item.mobileNum}}
-                        span {{item.cardId}}
+                        span.infoClass {{item.name}}
+                        span.infoClass {{item.sex}}
+                        span.infoClass {{item.mobileNum}}
+                        span.infoClass {{item.cardId}}
                     div(v-if='item.enoughcheck==false') 
-                        span.name {{item.id}}
+                        //- span.name {{item.id}}
                         span(style='color:#ff0000')
                             img(src="../assets/tishi.png")
-                            | 个人信息不完整,不可选
+                            |个人信息不完整,不可选
                     div(v-if='item.agecheck==false') 
-                        span.name {{item.id}}
+                        //- span.name {{item.id}}
                         span(style='color:#ff0000')
                             img(src="../assets/tishi.png")
-                            | 年龄不在范围内,不可选
+                            |年龄不在范围内,不可选
                 .fr
                     img(src="../assets/icon_enroll_modify_info.png" @click.stop="edit(item)")
                 .clear
 
-        .enroll(@click='enroll') 立即报名
+            .enroll(@click='enroll') 立即报名
                     
 </template>
 <script>
@@ -67,7 +68,6 @@
         },
         methods: {
             async choose(item,i){
-                console.log(i);
                 var selectList =this.selectList;
                 if(!item.enoughcheck) return alert('信息不完整，不可选')
                 if(!item.agecheck) return alert('年龄不在范围内，不可选')
@@ -78,7 +78,7 @@
                     })
                     if(check && check.code == this.successCode){ 
                         console.log(check);
-                    }                                    
+                    }                              
                 }
                 if(!item.choose){
                     selectList.push(item)
@@ -87,10 +87,29 @@
                 }
                 item.choose=!item.choose
                 this.selectList=selectList;
-                console.log(this.selectList);
             },
-            enroll(){
-                if(this.list.map(el=>el.choose).length == 0) return alert('请勾选报名人')
+            async enroll(){
+                if(this.selectList.length==0) return alert('请勾选报名人')
+                var checkedUserlist=this.selectList;
+                var map = {};
+                for (var i = 0; i < checkedUserlist.length; i++) {
+                    var obj = checkedUserlist[i];
+                    map[obj.cardId] = obj.id;
+                } 
+                console.log(map);
+                let goEnroll = await this.ajax('/app/mls/order/enrolls', {
+                    mobile: '17647581576',
+                    sessionid: '8e564466e8724ed093aed6d1748d4e7b',
+                    entryId: this.$route.query.entryId,
+                    additionals:[],
+                    from:'from_webs',
+                    params:map
+                })
+                if(goEnroll && goEnroll.code == 906){
+                    console.log(goEnroll);
+                }
+
+                //if(this.list.map(el=>el.choose).length == 0) return alert('请勾选报名人')
                 
             },
             edit(item){
@@ -102,7 +121,7 @@
                 let res = await this.ajax('/app/mls/getEventDyncList', {
                     mobile: '17647581576',
                     sessionid: 'a46d4af91c874e1db516b6d2454833ce',
-                    entryId:entryId,
+                    entryId:'5a503701ff0e4c74abcb05a15f4b9489',
                     pageNo:1
                 })
                 if(res && res.code == this.successCode){ 
@@ -269,5 +288,48 @@
 </script>
 
 <style lang="sass" scoped>
-
+.matchInfo
+    width: 600px
+    height: 200px
+    padding: 20px
+    margin: 30px auto
+    text-align: left
+    border: 1px solid #eee
+    border-radius: 5px
+    background-image: url('../assets/choose_event_item.png')
+    background-repeat: no-repeat
+    background-size: 100% 100%
+    position: relative
+    .name
+        position: absolute
+        left: 100px
+    .time
+        position: absolute
+        left: 100px
+        top: 60px
+    .fee
+        position: absolute
+        left: 100px
+        top: 100px
+.list
+    width: 600px
+    height: 200px
+    padding: 20px
+    margin: 30px auto
+    .add
+        width: 400px
+        margin: 20px auto
+        text-align: center
+        height: 40px
+        line-height: 40px
+    .enroll
+        width: 400px
+        margin: 20px auto
+        text-align: center
+        height: 40px
+        line-height: 40px
+        border: 1px solid #999999
+        border-radius: 5px
+.infoClass
+    margin: 0 20px
 </style>
