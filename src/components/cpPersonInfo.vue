@@ -18,7 +18,7 @@
                     @province="(data)=>{changeDist(data, 0)}" @city="(data)=>{changeDist(data, 1)}" @area="(data)=>{changeDist(data, 2)}"
                     class="form-control" autocomplete="off"
                 )
-                //- @city="changeCity" @area="changeArea" (data)=>{obj.location.city=data.value}
+                //- :province="selectProvince.province" :city="selectProvince.city" :area="selectProvince.area"
                 el-select(
                     v-else
                     v-model="obj[item.key]" :placeholder="'请选择'+item.name"
@@ -56,8 +56,10 @@
 
             //- 图片
             el-form-item(v-else-if="item.formType == 'image'" :label="item.name")
-                .img-ctn
-                    img(v-for="(it, i) in obj[item.key]" :src="it")
+                .img-ctn(v-for="(it, i) in obj[item.key+'Arr']")
+                    img(:src="it")
+                    i.el-icon-close(@click="obj[item.key+'Arr'].splice(i, 1)")
+                .clear
 
                 div
                     img(src="../assets/add-img.png" @click="upfile(item.key)")
@@ -98,8 +100,8 @@
         props: ['objData', 'list', 'isSelect', 'selects'],
         data(){
             return {
-                obj: this.objData || {},
-                selectProvince: {},
+                obj: this.objData,
+                selectProvince: { province: '', city: '', area: '' },
                 selectObj: [],
                 imageList1: [],
                 imageList2: []
@@ -117,8 +119,28 @@
                 }
             }
         },
-        mounted(){},
+        mounted(){
+            this.fillData()
+        },
         methods: {
+            fillData(){
+                // 图片数据处理
+                if(this.obj.runwayImage){
+                    // this.obj.runwayImageArr = this.obj.runwayImage.split(',')
+                    this.$set(this.obj, 'runwayImageArr', this.obj.runwayImage.split(','))
+                }
+                if(this.obj.completionCertificate) {
+                    // this.obj.completionCertificateArr = this.obj.completionCertificate.split(',')
+                    this.$set(this.obj, 'completionCertificateArr', this.obj.completionCertificate.split(','))
+                }
+
+                // 省市区数据处理
+                if(this.obj.location){
+                    this.selectProvince.province = this.obj.location.split(',')[0]
+                    this.selectProvince.city = this.obj.location.split(',')[1]
+                    this.selectProvince.area = this.obj.location.split(',')[2]
+                }
+            },
             changeDist(data, i){
                 if(!this.obj.location) this.$set(this.obj, 'location', [])
                 this.obj.location[i] = data.value
@@ -133,8 +155,8 @@
                     let res = await this.upfileProto(inputFile.files[0])
                     loading.close()
                     if(res && res.code == this.successCode){
-                        if(!this.obj[key]) this.$set(this.obj, key, [])
-                        this.obj[key].push(res.objectData)
+                        if(!this.obj[key+'Arr']) this.$set(this.obj, key+'Arr', [])
+                        this.obj[key+'Arr'].push(res.objectData)
                     }
                 }
             },
@@ -144,15 +166,13 @@
                 }
             },
             changeObj(data){
-                if(data.completionCertificate) data.completionCertificate = data.completionCertificate.map(el => el).join(',')
-                if(data.runwayImage) data.runwayImage = data.runwayImage.map(el => el).join(',')
+                if(data.completionCertificateArr) data.completionCertificate = data.completionCertificateArr.map(el => el).join(',')
+                if(data.runwayImageArr) data.runwayImage = data.runwayImageArr.map(el => el).join(',')
 
                 // dymaic
 
                 // 地区省市区处理
-                data.location = data.location.join(',')
-
-                //
+                data.location = typeof data.location == 'object' ? data.location.join(',') : data.location
 
                 return data
             },
@@ -205,7 +225,8 @@
                             }
                         }else if(el.formType == 'image'){   // 图片
                             if(el.required){
-                                if(!keyVal && keyVal.length == 0){
+                                // if(!keyVal && keyVal.length == 0){
+                                if(!this.Obj[key+'Arr'] || this.Obj[key+'Arr'].length == 0){
                                     alert('请上传'+name)
                                     return false
                                 }
@@ -228,9 +249,20 @@
 
 <style lang="sass" scoped>
 .img-ctn
+    border: 1px solid #eee
+    width: 100px
+    height: 100px
+    position: relative
+    margin: 0 10px 10px 0
+    display: inline-block
+    float: left
+    i
+        position: absolute
+        right: 5px
+        top: 5px
+        cursor: pointer
     img
         max-width: 100px
         max-height: 100px
-        margin: 0 10px 10px 0
         vertical-align: middle
 </style>

@@ -1,7 +1,7 @@
 <template lang="pug">
     .w1200(style="width:1000px;")
 
-        cp-person-info(:obj="personInfo" @submit="editOk" :list="list" :isSelect="isSelect" :selects="selects")
+        cp-person-info(:objData="propData" @submit="editOk" :list="list" :isSelect="isSelect" :selects="selects")
                     
 </template>
 <script>
