@@ -1,6 +1,34 @@
 <template lang="pug">
 
     el-form(:model="obj")
+
+        template(v-for="(item, i) in list")
+            el-form-item(v-if="item.formType == 'text'" :label="item.name")
+                el-input(v-model="obj[item.key]" type="text")
+
+            el-form-item(v-else-if="item.formType == 'select'" :label="item.name")
+                //- el-select(v-model="obj[item.key]")
+                    el-option(v-for="(item, i) in item.")
+                el-select(v-model="request[item.key]" @change="selectChange($event,item.key)" :placeholder="'请选择'+item.name")
+                    el-option(
+                        filterable = false
+                        v-for="(it, i) in item.secondList" :key="sl"
+                        :label="it.name"
+                        :value="it.formValue"
+                    )
+
+            el-form-item(v-else-if="item.formType == 'radio'" :label="item.name")
+                el-input(v-model="obj[item.key]" type="text")
+
+            el-form-item(v-else-if="item.formType == 'time'" :label="item.name")
+                el-date-picker(
+                    v-if="item.key=='birthday' || item.key=='location' || item.key=='finishTime' || item.key=='expectFinishTime'"
+                )
+                el-time-select(
+                    v-else
+                )
+
+            el-form-item(v--else-if="item.formType == 'image'" :label="item.name")
         //- el-form-item(label="姓名")
         //-     el-input(v-model="obj.name")
 
@@ -14,10 +42,10 @@
 <script>
     export default {
         name: 'CpPersonInfo',
-        props: ['objData'],
+        props: ['objData', 'list'],
         data(){
             return {
-                obj: this.objData   
+                obj: this.objData || {} 
             }
         },
         // components: {
