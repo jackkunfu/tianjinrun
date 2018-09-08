@@ -1,5 +1,5 @@
 <template lang="pug">
-    .w1200
+    .w1200(style="width:1000px;")
 
         cp-person-info(:obj="personInfo" @submit="editOk" :list="list" :isSelect="isSelect" :selects="selects")
                     
@@ -15,7 +15,8 @@
                 list: [],
                 propData: this.$route.query,
                 isSelect: false,
-                selects: []
+                selects: [],
+                id: this.$route.query.userId
             }
         },
         mounted(){
@@ -35,7 +36,13 @@
                 }
                 loading.close()
             },
-            editOk(obj){}
+            async editOk(obj){
+                if(this.isEdit){
+                    obj.id = this.id
+                }
+                let res = await this.ajax('', obj)
+                // if(e)
+            }
         }
     }
 </script>

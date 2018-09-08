@@ -1,7 +1,7 @@
 <template lang="pug">
 
     el-form(
-        :model="obj" label-width="180px" size="small"
+        :model="obj" label-width="100px" size="small"
         style="width:600px;margin: 0 auto;padding: 50px 0;"
     )
 
@@ -14,13 +14,14 @@
             el-form-item(v-else-if="item.formType == 'select'" :label="item.name")
                 v-distpicker(
                     v-if="item.key=='location'" v-model="obj[item.key]"
-                    :province="selectProvince.province" :city="selectProvince.city" :area="selectProvince.area" 
-                    class="form-control" autocomplete="off"  
+                    :province="selectProvince.province" :city="selectProvince.city" :area="selectProvince.area"
+                    @province="(data)=>{changeDist(data, 0)}" @city="(data)=>{changeDist(data, 1)}" @area="(data)=>{changeDist(data, 2)}"
+                    class="form-control" autocomplete="off"
                 )
-                //- @province="changeProvince" @city="changeCity" @area="changeArea"
+                //- @city="changeCity" @area="changeArea" (data)=>{obj.location.city=data.value}
                 el-select(
                     v-else
-                    v-model="obj[item.key]" @change="selectChange($event,item.key)" :placeholder="'请选择'+item.name"
+                    v-model="obj[item.key]" :placeholder="'请选择'+item.name"
                 )
                     el-option(
                         filterable = false
@@ -55,8 +56,8 @@
 
             //- 图片
             el-form-item(v-else-if="item.formType == 'image'" :label="item.name")
-                div(v-for="(it, i) in obj[item.key]")
-                    img(:src="it")
+                .img-ctn
+                    img(v-for="(it, i) in obj[item.key]" :src="it")
 
                 div
                     img(src="../assets/add-img.png" @click="upfile(item.key)")
@@ -87,7 +88,6 @@
                             :value="it"
                         )
 
-
         el-form-item
             el-button(@click="submit") 确定
 
@@ -98,7 +98,7 @@
         props: ['objData', 'list', 'isSelect', 'selects'],
         data(){
             return {
-                obj: this.objData || {} ,
+                obj: this.objData || {},
                 selectProvince: {},
                 selectObj: [],
                 imageList1: [],
@@ -119,15 +119,21 @@
         },
         mounted(){},
         methods: {
+            changeDist(data, i){
+                if(!this.obj.location) this.$set(this.obj, 'location', [])
+                this.obj.location[i] = data.value
+            },
             upfile(key){
                 let inputFile = document.createElement('input')
                 inputFile.type = 'file'
                 inputFile.click()
 
                 inputFile.onchange = async () => {
+                    let loading = this.$loading()
                     let res = await this.upfileProto(inputFile.files[0])
-
+                    loading.close()
                     if(res && res.code == this.successCode){
+                        if(!this.obj[key]) this.$set(this.obj, key, [])
                         this.obj[key].push(res.objectData)
                     }
                 }
@@ -138,6 +144,16 @@
                 }
             },
             changeObj(data){
+                if(data.completionCertificate) data.completionCertificate = data.completionCertificate.map(el => el).join(',')
+                if(data.runwayImage) data.runwayImage = data.runwayImage.map(el => el).join(',')
+
+                // dymaic
+
+                // 地区省市区处理
+                data.location = data.location.join(',')
+
+                //
+
                 return data
             },
             selectChange(data, i){
@@ -148,7 +164,7 @@
             },
             testInput(){
                 for(let i=0; i < this.list.length; i++){
-                    let el = this.lsit[i]
+                    let el = this.list[i]
                     let key = el.key, name = el.name
 
                     if(this.obj[key]){
@@ -158,13 +174,23 @@
                                 alert(name + '格式不正确')
                                 return false
                             }
-                        // }else if(key == 'cardType'){
                         }else if(key == 'cardId'){
                             if( this.obj.cardType == '身份证' && !(/^[1-9][0-9]{5}([1][9][0-9]{2}|[2][0][0|1][0-9])([0][1-9]|[1][0|1|2])([0][1-9]|[1|2][0-9]|[3][0|1])[0-9]{3}([0-9]|[X])$/.test(keyVal)) ){
                                 alert(name + '格式不正确')
                                 return false
                             }else if( this.obj.cardType == '护照' && !(/[\\u4E00-\\u9FFF]+/g.test(keyVal)) ){
                                 alert(name + '格式不正确')
+                                return false
+                            }
+                        }else if(key == 'location'){
+                            if(!this.obj.location[0] || this.obj.location[0] == '省'){
+                                alert('请选择省')
+                                return false
+                            }else if(!this.obj.location[1] || this.obj.location[1] == '市'){
+                                alert('请选择市')
+                                return false
+                            }else if(!this.obj.location[2] || this.obj.location[2] == '区'){
+                                alert('请选择区')
                                 return false
                             }
                         }else if(key == 'emergencyPhone'){
@@ -176,6 +202,13 @@
                             if( !(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(keyVal) ) ){
                                 alert(name + '格式不正确')
                                 return false
+                            }
+                        }else if(el.formType == 'image'){   // 图片
+                            if(el.required){
+                                if(!keyVal && keyVal.length == 0){
+                                    alert('请上传'+name)
+                                    return false
+                                }
                             }
                         }
                     }else {
@@ -194,5 +227,10 @@
 </script>
 
 <style lang="sass" scoped>
-
+.img-ctn
+    img
+        max-width: 100px
+        max-height: 100px
+        margin: 0 10px 10px 0
+        vertical-align: middle
 </style>
