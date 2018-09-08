@@ -4,9 +4,9 @@
         public-top
 
         .matchInfo
-            .name {{item.name}}
-            .time {{item.matchStartDate}}~~{{item.matchEndDate}}
-            .fee ￥{{item.fee}}
+            .name.matchPublic {{item.name}}
+            .time.matchPublic {{item.matchStartDate}}~~{{item.matchEndDate}}
+            .fee.matchPublic ￥{{item.fee}}
 
 
         .list
@@ -79,12 +79,19 @@
                     })
                     if(check && check.code == this.successCode){ 
                         console.log(check);
+                    }else{
+                        return
                     }                              
                 }
                 if(!item.choose){
                     selectList.push(item)
                 }else{
-                    selectList.splice(i,1);
+                    for(var ke in selectList){
+                        if(selectList[ke].cardId=item.cardId){
+                            selectList.splice(ke,1);
+                        }
+                    }
+                    
                 }
                 item.choose=!item.choose
                 this.selectList=selectList;
@@ -96,18 +103,21 @@
                 for (var i = 0; i < checkedUserlist.length; i++) {
                     var obj = checkedUserlist[i];
                     map[obj.cardId] = obj.id;
+                    var map2json=JSON.stringify(map);
                 } 
-                console.log(map);
+                console.log({params:map});
                 let goEnroll = await this.ajax('/app/mls/order/enrolls', {
                     mobile: '17647581576',
                     sessionid: '8e564466e8724ed093aed6d1748d4e7b',
                     entryId: this.$route.query.entryId,
                     additionals:[],
                     from:'from_webs',
-                    params:map
+                    param:map2json,
+                    payCode:'617T5R1NSc'
                 })
                 if(goEnroll && goEnroll.code == 906){
                     console.log(goEnroll);
+                    this.goUrl("/pay",{'outTradeNo':goEnroll.outTradeNo})
                 }
 
                 //if(this.list.map(el=>el.choose).length == 0) return alert('请勾选报名人')
@@ -122,7 +132,7 @@
                 let res = await this.ajax('/app/mls/getEventDyncList', {
                     mobile: '17647581576',
                     sessionid: 'a46d4af91c874e1db516b6d2454833ce',
-                    entryId:'5a503701ff0e4c74abcb05a15f4b9489',
+                    entryId:entryId,
                     pageNo:1
                 })
                 if(res && res.code == this.successCode){ 
@@ -315,8 +325,7 @@
 .list
     width: 600px
     height: 200px
-    padding: 20px
-    margin: 30px auto
+    margin: 0px auto
     .add
         width: 400px
         margin: 20px auto
@@ -333,4 +342,9 @@
         border-radius: 5px
 .infoClass
     margin: 0 20px
+.matchPublic
+    width: 70%
+    height: 40px
+    line-height: 40px
+    border-bottom: 1px dashed #eee
 </style>

@@ -95,6 +95,11 @@ export default new Router({
            path: '/report',
            name: 'report',
            component: r => require(['./views/report'], r)
+        },
+        {
+            path: '/pay',
+            name: 'pay',
+            component: r => require(['./views/pay'], r)
         }
     ] 
 })

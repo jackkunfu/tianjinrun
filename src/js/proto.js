@@ -17,6 +17,7 @@ export default function(Vue){
         var type = type || 'post';
         var headers = {}
         var request = this.getSign(data, "e1bdc0f0a45a4ce5aa16b90a02851e2a");
+        console.log(request);
         return new Promise((rs, rj) => {
             $.ajax({
                 type,

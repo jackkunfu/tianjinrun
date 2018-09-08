@@ -16,13 +16,38 @@
                 .event 报名查询
                     .num(style='font-size:20px') 
                         |证件号
-                        input(style='margin-left:20px')
+                        input(style='margin-left:20px' v-model='cardId')
                     .num(style='font-size:20px')
-                        |验证码
-                        input(style='margin-left:20px')
-                    .check 查询
-
-
+                        |姓名
+                        input(style='margin-left:20px' v-model='userName')
+                    .check(@click='checkInfo') 查询
+                .event(v-for="(item,i) in list" :key="i" @click='')
+                    .enrollTop 姓名:
+                        span.enrollName {{item.name}} 
+                    .enrollTop 证件号:
+                        span.enrollName {{item.cardId}}
+                    .enrollTop 性别:
+                        span.enrollName {{item.sex}}
+                    .enrollTop 手机号:
+                        span.enrollName {{item.mobile}}
+                    .enrollTop 赛事名称:
+                        span.enrollName {{item.entryName}}
+                    .enrollTop 参赛号码:
+                        span.enrollName {{item.matchNo}}
+                    .enrollTop 支付状态:
+                        span.enrollName(v-if="item.orderStatus==0") 未支付
+                        span.enrollName(v-else-if="item.orderStatus==2") 已支付
+                        span.enrollName(v-else-if="item.orderStatus==10") 已退款
+                        span.enrollName(v-else-if="item.orderStatus==1") 已失效
+                        span.enrollName(v-else) ---
+                    .enrollTop 审核状态:
+                        span.enrollName(v-if="item.check==1") 待审核
+                        span.enrollName(v-else-if="item.check==2") 审核通过
+                        span.enrollName(v-else-if="item.check==3") 审核失败
+                        span.enrollName(v-else-if="item.check==4")  待抽签 
+                        span.enrollName(v-else-if="item.check==5")  已中签
+                        span.enrollName(v-else-if="item.check==6") 未中签
+                        span.enrollName(v-else) 等待资料上传
 
 </template>
 
@@ -43,11 +68,30 @@
                 }, {
                     name: '领物单查询',
                     url: '/goodsCheck'
-                }]             
+                }],
+                list:[],
+                userName:'',
+                cardId:''            
             }
         },
+        mounted(){
+            // this.getList()
+        },
         methods: {
-
+            async checkInfo(){
+                if(this.name='') return alert('请输入姓名')
+                if(this.cardId='') return alert('请输入证件号')
+                console.log(this.userName);
+                console.log(this.cardId);
+                let get = await this.ajax('/search/enroll_status', {
+                    userName: 'ceshi',
+                    cardId: '68547'
+                })
+                if(get && get.code == this.successCode){
+                    this.list=get.list
+                    console.log(get);
+                }
+            },
         }
     }
 </script>

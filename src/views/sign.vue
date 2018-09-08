@@ -9,7 +9,7 @@
             .time 比赛地点：
                 //- span {{item.address}}
                 span 天津
-            el-button.fr(@click="showTc" size="mini") 点击获取邀请码
+            el-button.fr(@click="getInvitation=true" size="mini") 点击获取邀请码
 
             .clear        
 
@@ -28,7 +28,7 @@
                 .codeText(style='font-size:25px;margin-bottom:10px') 邀请码验证            
                 .codeText 请填写正确的邀请码
                 input(v-model="InvitationCode")
-                el-button.fl(@click="hideTc" style='margin-top:30px') 点击取消
+                el-button.fl(@click="getInvitation=false" style='margin-top:30px') 点击取消
                 el-button.fr(@click="getInviteCode" style='margin-top:30px') 点击验证
                 .clear           
 </template>
@@ -46,19 +46,11 @@
         },
         components: {
             publicTop            
-        },
+        },  
         mounted(){
             this.getMatchs()
         },
         methods: {
-            showTc(){
-                $('body').addClass("scrollAuto");
-                this.getInvitation=true
-            },
-            hideTc(){
-                $('body').removeClass("scrollAuto");
-                this.getInvitation=false
-            },
             async getInviteCode(){
                 if(this.InvitationCode=='') return alert('请输入邀请码')
                 let get = await this.ajax('/invite/code/verifyCode', {
