@@ -13,13 +13,12 @@ Vue.use(ElementUI)
 
 import proto from './js/proto'
 Vue.use(proto)
+import cp from './js/component'
+Vue.use(cp)
+import filter from './js/filter'
+Vue.use(filter)
 
 Vue.config.productionTip = false
-
-Vue.filter('intercept', function (value) {
-  if (!value) return ''
-  return value.length > 10 ? (value.substr(0, 10)) : value;
-})
 
 /* eslint-disable no-new */
 new Vue({

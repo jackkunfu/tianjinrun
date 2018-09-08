@@ -42,7 +42,7 @@
 <script>
  import publicTop from "./publicTop.vue";
     export default {
-        name: 'sign',
+        name: 'enroll',
         components: {
             publicTop            
         },
@@ -54,10 +54,11 @@
                 minage:null,
                 formList:[],
                 list: [],
-                addInfoQuery: {
-                    item: query,
-                    type: 'add'
-                },
+                // addInfoQuery: {
+                //     item: query,
+                //     type: 'add'
+                // },
+                addInfoQuery: Object.assign({type: 'add'}, query),
                 checkflag:false,
                 isSelect:false,
                 selectList:[]    
