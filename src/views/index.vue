@@ -98,7 +98,6 @@
                 //获取域名请求赛事公告
                 //var host = window.location.host;
                 var domain=document.domain;
-                console.log(document.domain);
                 let res = await this.ajax('/news/news_notice/list', {
                     domain:'tjwq-marathon',
                     module:'ssgg',
@@ -118,7 +117,6 @@
                     pageSize: 10
                 })
                 if(re && re.code == this.successCode){
-                    console.log('re',re)
                     this.report = re.list || []
                 }
                 //获取域名请求时间和状态
@@ -129,7 +127,6 @@
                     pageSize: 10
                 })
                 if(time && time.code == this.successCode){
-                    console.log('time',time)
                     this.matchName=time.list[0].name
                 }
             },
