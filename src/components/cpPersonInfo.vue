@@ -55,7 +55,11 @@
 
             //- 图片
             el-form-item(v-else-if="item.formType == 'image'" :label="item.name")
-                img(src="../assets/add-img.png")
+                div(v-for="(it, i) in obj[item.key]")
+                    img(:src="it")
+
+                div
+                    img(src="../assets/add-img.png" @click="upfile(item.key)")
 
         //- 级联
         template(v-if="isSelect")
@@ -85,7 +89,7 @@
 
 
         el-form-item
-            el-button(@click="$emit('submit', obj)") 确定
+            el-button(@click="submit") 确定
 
 </template>
 <script>
@@ -96,7 +100,9 @@
             return {
                 obj: this.objData || {} ,
                 selectProvince: {},
-                selectObj: []
+                selectObj: [],
+                imageList1: [],
+                imageList2: []
             }
         },
         watch: {
@@ -113,6 +119,27 @@
         },
         mounted(){},
         methods: {
+            upfile(key){
+                let inputFile = document.createElement('input')
+                inputFile.type = 'file'
+                inputFile.click()
+
+                inputFile.onchange = async () => {
+                    let res = await this.upfileProto(inputFile.files[0])
+
+                    if(res && res.code == this.successCode){
+                        this.obj[key].push(res.objectData)
+                    }
+                }
+            },
+            submit(){
+                if(this.testInput()){
+                    this.$emit('submit', this.changeObj(this.obj))
+                }
+            },
+            changeObj(data){
+                return data
+            },
             selectChange(data, i){
                 // console.log(data)
                 // console.log(this.selects[i])
@@ -167,39 +194,5 @@
 </script>
 
 <style lang="sass" scoped>
-.matchInfo
-    width: 600px
-    height: 200px
-    padding: 20px
-    margin: 30px auto
-    text-align: left
-    border: 1px solid #eee
-    border-radius: 5px
-    background-image: url('../assets/choose_event_item.png')
-    background-repeat: no-repeat
-    background-size: 100% 100%
-    position: relative
-    .name
-        position: absolute
-        left: 100px
-    .time
-        position: absolute
-        left: 100px
-        top: 60px
-    .fee
-        position: absolute
-        left: 100px
-        top: 100px
-.add
-    width: 400px
-    margin: 0 auto
-    text-align: center
-.enroll
-    width: 400px
-    margin: 20px auto
-    text-align: center
-    height: 40px
-    line-height: 40px
-    border: 1px solid #999999
-    border-radius: 5px
+
 </style>

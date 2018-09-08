@@ -120,4 +120,24 @@ export default function(Vue){
             alert('请输入正确的手机号码')
         }
     }
+
+    Vue.prototype.upfileProto = function (file) {
+        let formData = new FormData()
+        formData.append("file", file);
+        formData.append("bucketPath", "eventComent");
+        return new Promise((resolve, reject)=>{
+            $.ajax({
+                type: 'POST',
+                url: config.baseUrl + '/down/uploadImage',
+                data: formData,
+                contentType: false,
+                processData: false
+            }).done( data => {
+                resolve(data)
+            }).fail(e => {
+                alert('上传失败，请稍后重试')
+                reject(e)
+            })
+        })
+    }
 }
