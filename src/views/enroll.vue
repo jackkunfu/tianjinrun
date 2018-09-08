@@ -16,24 +16,24 @@
                 .fl
                     img(v-if="item.choose" src="../assets/choose.png")
                     img(v-else src="../assets/notchoose.png")
-                .fl
+                .fl(style="width:90%")
                     div
                         span.infoClass {{item.name}}
-                        span.infoClass {{item.sex}}
+                        span.infoClass(style="width:10%") {{item.sex}}
                         span.infoClass {{item.mobileNum}}
                         span.infoClass {{item.cardId}}
-                    div(v-if='item.enoughcheck==false') 
+                    div(v-if="item.enoughcheck==false")
                         //- span.name {{item.id}}
-                        span(style='color:#ff0000')
-                            img(src="../assets/tishi.png")
+                        span.fr(style='color:#ff0000;margin:10px')
+                            img.chooseIcon(src="../assets/tishi.png" style='width:14px')
                             |个人信息不完整,不可选
-                    div(v-if='item.agecheck==false') 
+                    div(v-if="item.agecheck==false")
                         //- span.name {{item.id}}
-                        span(style='color:#ff0000')
-                            img(src="../assets/tishi.png")
+                        span.fr(style='color:#ff0000;margin:10px')
+                            img.chooseIcon(src="../assets/tishi.png" style='width:14px')
                             |年龄不在范围内,不可选
                 .fr
-                    img(src="../assets/icon_enroll_modify_info.png" @click.stop="edit(item)")
+                    img.chooseIcon(src="../assets/icon_enroll_modify_info.png" @click.stop="edit(item)")
                 .clear
 
             .enroll(@click='enroll') 立即报名
@@ -113,9 +113,13 @@
                     additionals:[],
                     from:'from_webs',
                     param:map2json,
-                    payCode:'617T5R1NSc'
+                    payCode:''
                 })
                 if(goEnroll && goEnroll.code == 906){
+                    console.log(goEnroll);
+                    this.goUrl("/pay",{'outTradeNo':goEnroll.outTradeNo})
+                }
+                if(goEnroll && goEnroll.code == 900){
                     console.log(goEnroll);
                     this.goUrl("/pay",{'outTradeNo':goEnroll.outTradeNo})
                 }
@@ -178,6 +182,7 @@
                         this.$set(el, 'choose', false)
                     })
                 }
+                console.log(this.list);
                 
             },
             checkUser: function (user) {
@@ -326,6 +331,9 @@
     width: 600px
     height: 200px
     margin: 0px auto
+    .each
+        height: 70px
+        cursor: pointer        
     .add
         width: 400px
         margin: 20px auto
@@ -340,11 +348,17 @@
         line-height: 40px
         border: 1px solid #999999
         border-radius: 5px
-.infoClass
-    margin: 0 20px
-.matchPublic
-    width: 70%
-    height: 40px
-    line-height: 40px
-    border-bottom: 1px dashed #eee
+    .infoClass
+        margin: 0 10px
+        display: block
+        float: left
+        width: 25%
+        text-align: center
+    .matchPublic
+        width: 70%
+        height: 40px
+        line-height: 40px
+        border-bottom: 1px dashed #eee
+    .chooseIcon
+        width: 20px
 </style>
