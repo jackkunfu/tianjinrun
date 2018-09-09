@@ -10,8 +10,8 @@
             .signListMain
                 .tab
                     .fl.tabList(v-for="(item, i) in navs" :key="i" @click="goUrl(item.url)") {{item.name}}
-                    .fr.tabList 返回官网
-                    .fr.tabList 个人中心
+                    .fr.tabList 返回首页
+                    //- .fr.tabList 个人中心
                 .clear
                 .event 领物单查询
                     .num(style='font-size:20px') 

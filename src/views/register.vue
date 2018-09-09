@@ -2,7 +2,7 @@
     
     .login        
 
-        .center 注册
+        .center.fz22 注册
         
         .num 
             input(v-model='num' placeholder="请输入手机号码")
@@ -48,9 +48,11 @@
                     identify_code: this.code,
                     password: this.pass
                 };
-                let res = await this.ajax('/basic/user/reg', {params})
+                let res = await this.ajax('/basic/user/reg', params)
                 if(res && res.code == this.successCode){
-                     this.goUrl('/sign')
+                    alert("注册成功")
+                    //window.localStorage.RunUserInfo = JSON.stringify(objectData);
+                    this.goUrl('/login')
                 }else {
 
                 }

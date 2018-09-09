@@ -1,27 +1,34 @@
 <template lang="pug">
-    .w1200.enrollPage
+    .enrollPage
 
         public-top
 
         .matchInfo
-            .name.matchPublic {{item.name}}
-            .time.matchPublic {{item.matchStartDate}}~~{{item.matchEndDate}}
-            .fee.matchPublic ￥{{item.fee}}
+            .name.matchPublic 
+                img.fl(src="../assets/littleIcon.png") 
+                |报名场次:{{item.name}}
+            .time.matchPublic 
+                img.fl(src="../assets/littleIcon.png") 
+                |报名时间:{{item.matchStartDate}}~~{{item.matchEndDate}}
+            .fee.matchPublic 
+                img.fl(src="../assets/littleIcon.png") 
+                |报名费用￥{{item.fee}}
 
 
-        .list
-        
-            .add(@click="goUrl('/editInfo', addInfoQuery)") 增加报名人
-            .each(v-for="(item, i) in list" @click="choose(item,i)")
-                .fl
-                    img(v-if="item.choose" src="../assets/choose.png")
-                    img(v-else src="../assets/notchoose.png")
-                .fl(style="width:90%")
-                    div
-                        span.infoClass {{item.name}}
-                        span.infoClass(style="width:10%") {{item.sex}}
-                        span.infoClass {{item.mobileNum}}
-                        span.infoClass {{item.cardId}}
+            .list
+            
+                .add(@click="goUrl('/editInfo', addInfoQuery)") 增加报名人
+                .each(v-for="(item, i) in list" @click="choose(item,i)")
+                    //- .fl
+                    img.fl(v-if="item.choose" src="../assets/choose.png")
+                    img.fl(v-else src="../assets/notchoose.png")
+                    //- .fl
+                        //- div
+                    span.infoClass {{item.name}}
+                    span.infoClass {{item.sex}}
+                    span.infoClass {{item.mobileNum}}
+                    span.infoClass {{item.cardType}}
+                    span.infoClass {{item.cardId}}
                     div(v-if="item.enoughcheck==false")
                         //- span.name {{item.id}}
                         span.fr(style='color:#ff0000;margin:10px')
@@ -32,11 +39,20 @@
                         span.fr(style='color:#ff0000;margin:10px')
                             img.chooseIcon(src="../assets/tishi.png" style='width:14px')
                             |年龄不在范围内,不可选
-                .fr
-                    img.chooseIcon(src="../assets/icon_enroll_modify_info.png" @click.stop="edit(item)")
-                .clear
+                    .fr
+                        img.chooseIcon(src="../assets/icon_enroll_modify_info.png" @click.stop="edit(item)")
+                    .clear
 
-            .enroll(@click='enroll') 立即报名
+                .enroll(@click="clickEnroll('')") 立即报名
+
+        .bodyClass(v-if="Invitation==true")
+            .code
+                .codeText(style='font-size:25px;margin-bottom:10px') 邀请码验证            
+                .codeText 请填写正确的邀请码
+                input(v-model="InvitationCode")
+                el-button.fl(@click="Invitation=false" style='margin-top:30px') 点击取消
+                el-button.fr(@click="getInviteCode" style='margin-top:30px') 点击验证
+                .clear
                     
 </template>
 <script>
@@ -57,7 +73,9 @@
                 addInfoQuery: Object.assign({type: 'add'}, query, {name: ''}),
                 checkflag:false,
                 isSelect:false,
-                selectList:[]    
+                selectList:[],
+                Invitation:false,
+                InvitationCode:''  
             }
         },
         async mounted(){
@@ -74,8 +92,7 @@
                         entryId:this.$route.query.entryId,
                     })
                     if(check && check.code == this.successCode){ 
-                        console.log(check);
-                    }else{
+                    }else{                        
                         return
                     }                              
                 }
@@ -92,36 +109,43 @@
                 item.choose=!item.choose
                 this.selectList=selectList;
             },
-            async enroll(){
+            clickEnroll(){
+                if(this.$route.query.hasInvite == true||this.$route.query.hasInvite == 'true') return this.Invitation=true 
+                this.enroll('')
+            },
+            async enroll(payCode){    
                 if(this.selectList.length==0) return alert('请勾选报名人')
                 var checkedUserlist=this.selectList;
+                if(this.$route.query.hasInvite == true||this.$route.query.hasInvite == 'true'){
+                    if(checkedUserlist.length>1) return alert('邀请码只可选择一个人报名哦~')
+                }
                 var map = {};
                 for (var i = 0; i < checkedUserlist.length; i++) {
                     var obj = checkedUserlist[i];
                     map[obj.cardId] = obj.id;
                     var map2json=JSON.stringify(map);
                 } 
-                console.log({params:map});
                 let goEnroll = await this.ajax('/app/mls/order/enrolls', {
-                    mobile: '17647581576',
-                    sessionid: '8e564466e8724ed093aed6d1748d4e7b',
+                    mobile: JSON.parse(localStorage.RunUserInfo).mobile,
+                    sessionid: JSON.parse(localStorage.RunUserInfo).sessionId,
                     entryId: this.$route.query.entryId,
                     additionals:[],
                     from:'from_webs',
                     param:map2json,
-                    payCode:''
+                    payCode:payCode
                 })
                 if(goEnroll && goEnroll.code == 906){
-                    console.log(goEnroll);
                     this.goUrl("/pay",{'outTradeNo':goEnroll.outTradeNo})
                 }
                 if(goEnroll && goEnroll.code == 900){
-                    console.log(goEnroll);
-                    this.goUrl("/pay",{'outTradeNo':goEnroll.outTradeNo})
+                    this.goUrl("/enrollCheck")
                 }
-
                 //if(this.list.map(el=>el.choose).length == 0) return alert('请勾选报名人')
                 
+            },
+            getInviteCode(){
+                if(this.InvitationCode=='') return alert("请输入邀请码")
+                this.enroll(this.InvitationCode);
             },
             edit(item){
                 item.type = 'edit'
@@ -129,10 +153,11 @@
                 this.goUrl('/editInfo', item)
             },
             async getList(){
+                console.log(this.$route.query);
                 var entryId=this.$route.query.entryId;
                 let res = await this.ajax('/app/mls/getEventDyncList', {
-                    mobile: '17647581576',
-                    sessionid: 'a46d4af91c874e1db516b6d2454833ce',
+                    mobile: JSON.parse(localStorage.RunUserInfo).mobile,
+                    sessionid: JSON.parse(localStorage.RunUserInfo).sessionId,
                     entryId:entryId,
                     pageNo:1
                 })
@@ -149,7 +174,7 @@
                     }
                 }
                 let users = await this.ajax('/app/user/enrollUserList', {
-                    mobile: '17647581576',
+                    mobile: JSON.parse(localStorage.RunUserInfo).mobile,
                     entryId: entryId
                 })
                 if(users && users.code == this.successCode){
@@ -179,7 +204,6 @@
                         this.$set(el, 'choose', false)
                     })
                 }
-                console.log(this.list);
                 
             },
             checkUser: function (user) {
@@ -287,7 +311,7 @@
                     var key = params[i].key;
                     var value = user[key];                
                     if ((value == "" || value == undefined || value == null) && params[i].required) {
-                        nullflag = false;   
+                        nullflag = false; 
                     }
                 }
                 if (!nullflag) {
@@ -302,30 +326,37 @@
 
 <style lang="sass" scoped>
 .matchInfo
-    width: 600px
-    height: 200px
+    width: 1000px
     padding: 20px
     margin: 30px auto
     text-align: left
     border: 1px solid #eee
     border-radius: 5px
-    background-image: url('../assets/choose_event_item.png')
+    // background-image: url('../assets/choose_event_item.png')
     background-repeat: no-repeat
     background-size: 100% 100%
-    position: relative
-    .name
-        position: absolute
-        left: 100px
-    .time
-        position: absolute
-        left: 100px
-        top: 60px
-    .fee
-        position: absolute
-        left: 100px
-        top: 100px
+    .matchPublic
+        width: 70%
+        height: 40px
+        line-height: 40px
+        border-bottom: 1px dashed #eee
+        font-size: 18px
+        margin: 0 auto
+        padding-left: 40px
+    // position: relative
+    // .name
+    //     position: absolute
+    //     left: 100px
+    // .time
+    //     position: absolute
+    //     left: 100px
+    //     top: 60px
+    // .fee
+    //     position: absolute
+    //     left: 100px
+    //     top: 100px
 .list
-    width: 600px
+    width: 70%
     height: 200px
     margin: 0px auto
     .each
@@ -349,13 +380,9 @@
         margin: 0 10px
         display: block
         float: left
-        width: 25%
-        text-align: center
-    .matchPublic
-        width: 70%
-        height: 40px
-        line-height: 40px
-        border-bottom: 1px dashed #eee
+        width: 14%
+        text-align: center 
+        overflow: hidden   
     .chooseIcon
         width: 20px
 </style>

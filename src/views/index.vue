@@ -1,9 +1,13 @@
 <template lang="pug">
     .index
         .w1200.sign
-            .fr
+            .fr(v-if="ifLogin == false")
                 span(@click="goUrl('/register')") 注册
                 span(@click="goUrl('/login')") 登陆
+            .clear
+            .fr(v-if="ifLogin == true")
+                span() {{hasNum}}
+                span() 已登陆
             .clear
         
         .w1200

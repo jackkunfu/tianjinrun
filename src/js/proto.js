@@ -1,6 +1,18 @@
 import {hexMD5} from './MD5.js';
 import config from './config.js';
 export default function(Vue){
+    if (localStorage.RunUserInfo!=undefined){
+        var num = JSON.parse(localStorage.RunUserInfo).mobile;
+        if (num != '' && num != undefined) {
+          Vue.prototype.ifLogin = true
+          Vue.prototype.hasNum = num
+        } else {
+          this.ifLogin = false
+        }
+    }else{
+       Vue.prototype.ifLogin = false
+       Vue.prototype.hasNum = ''
+    }
     // 跳转
     Vue.prototype.goUrl = function (url, data) {
         if(!url) location.reload()
@@ -17,7 +29,6 @@ export default function(Vue){
         var type = type || 'post';
         var headers = {}
         var request = this.getSign(data, "e1bdc0f0a45a4ce5aa16b90a02851e2a");
-        console.log(request);
         return new Promise((rs, rj) => {
             $.ajax({
                 type,

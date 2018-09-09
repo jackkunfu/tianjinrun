@@ -26,7 +26,7 @@
             input(type='checkbox' v-model='checked')
             |阅读并接受《马拉松用户协议》    
             
-            .pass(@click="goUrl('/register')") 立即注册
+            .reg(@click="goUrl('/register')") 立即注册
 
             .loginButton(@click="login('code')") 登录    
             
@@ -42,32 +42,37 @@
                 code: '',
                 msg: '获取验证码',
                 control: 0,
-                checked: true
+                checked: true,
+                timer:null
             }
         },
         mounted(){
         },
         methods: {
             async login(from){
-                var checkNum=this.validatemobile(this.num);
+                var checkNum = this.validatemobile(this.num);
                 if(!checkNum) return alert('请输入正确的手机号码')
-                if(from=='pass'){
-                    if(this.pass=='') return alert('密码不可为空')
+                if(from == 'pass'){
+                    if(this.pass == '') return alert('密码不可为空')
                     let res = await this._ajax('/basic/user/login', 
                         {mobile: this.num,password: this.pass}
                     );
                     if(res && res.code == this.successCode){
+                        window.localStorage.RunUserInfo = JSON.stringify(res.objectData);
                         this.goUrl('/sign')
-                        //this.descdesc = res.data || ''
                     }
                 }
-                if(from=='code'){
-                    if(this.code=='') return alert('验证码不可为空')
+                if(from == 'code'){
+                    
+                    if(this.code == '') return alert('验证码不可为空')
                     if(!this.checked) return alert('请先同意马拉松报名用户协议')
                     let res = await this._ajax('/basic/user/loginByIdentify', 
                         {mobile: this.num,identifyCode: this.code}
                     );
                     if(res && res.code == this.successCode){
+                        var objectData=res.objectData;
+                        objectData.mobile=this.num;
+                        window.localStorage.RunUserInfo = JSON.stringify(objectData);
                         this.goUrl('/sign')
                     }
                 }
@@ -79,4 +84,12 @@
 <style lang="sass" scoped>
 .control
     color:#ff0000 
+.reg
+    height: 58px
+    line-height: 58px
+    text-align: left
+    font-size: 18px
+    color: #000
+    cursor: pointer
+    width: 50%
 </style>

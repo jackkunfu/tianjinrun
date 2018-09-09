@@ -1,16 +1,24 @@
 <template lang="pug">
     .sign
-        .fr.sign_
+        //- .fr.sign_
+        //-     span(@click="goUrl('/register')" style='margin-right:30px') 注册
+        //-     span(@click="goUrl('/login')") 登陆
+        //- .clear
+        .fr.sign_(v-if="ifLogin == false")
             span(@click="goUrl('/register')" style='margin-right:30px') 注册
             span(@click="goUrl('/login')") 登陆
+        .clear
+        .fr.sign_(v-if="ifLogin == true")
+            span(style='margin-right:30px') {{hasNum}}
+            span() 已登陆
         .clear
         .top
             img.banner(src="../assets/mainImg.jpeg")
             .signListMain
                 .tab
                     .fl.tabList(v-for="(item, i) in navs" :key="i" @click="goUrl(item.url)") {{item.name}}
-                    .fr.tabList 返回官网
-                    .fr.tabList 个人中心
+                    .fr.tabList 返回首页
+                    //- .fr.tabList 个人中心
                     .clear
 
                 .process

@@ -20,7 +20,7 @@
             .time 比赛地点：
                 //- span {{item.address}}
                 span 天津
-            el-button.fr(@click="goUrl('/enroll', item)" size="mini") 点击报名
+            el-button.fr(@click="goEnroll(item)" size="mini") 点击报名
 
             .clear
         .bodyClass(v-if="getInvitation==true")
@@ -51,15 +51,26 @@
             this.getMatchs()
         },
         methods: {
-            async getInviteCode(){
+            async getInviteCode(){                
                 if(this.InvitationCode=='') return alert('请输入邀请码')
                 let get = await this.ajax('/invite/code/verifyCode', {
                     code: this.InvitationCode,
-                    sessionId: 'c68f3d12bad14a9eb12c286fe696fadd',
+                    sessionId: JSON.parse(localStorage.RunUserInfo).sessionId || "",
                 })
                 if(get && get.code == this.successCode){
-                    this.goUrl('/enroll', get.objectData.info)
-                    console.log(get);
+                    var InvitationInfo=get.objectData.info;
+                    InvitationInfo.hasInvite=true;
+                    this.goUrl('/enroll', InvitationInfo)
+                }
+                if(get && get.code == 412){
+                    this.goUrl('/login')
+                }
+            },
+            goEnroll(item){
+                if(!this.ifLogin){
+                    this.goUrl("/login")
+                }else{
+                    this.goUrl("/enroll",item)
                 }
             },
             async getMatchs(){
@@ -94,36 +105,6 @@
         font-size: 18px
     
     .time, .address
-        font-size: 14px
-.bodyClass
-    background: rgba(0, 0, 0, 0.3)
-    width: 100%
-    height: 100%
-    min-height: 100%
-    position: fixed
-    top: 0
-    .code
-        width: 380px
-        padding: 30px
-        position: absolute
-        top: 50%
-        left: 50%
-        -webkit-transform: translate(-50%,-50%)
-        -ms-transform: translate(-50%,-50%)
-        transform: translate(-50%,-50%)
-        background-color: #fff
-        opacity: 1
-        border-radius: 4px
-        .codeText
-            font-weight: 700
-            text-align: center
-            color: #5c5c5c
-        input
-            display: block
-            width: 100%
-            height: 40px
-            border: 1px solid #5c5c5c
-            margin-top: 20px
-        
+        font-size: 14px        
 
 </style>

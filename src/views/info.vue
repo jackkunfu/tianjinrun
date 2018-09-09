@@ -62,8 +62,8 @@
         methods: {
             async getInfoList(){
                 let res = await this.ajax('/app/mls/getEventDyncList', {
-                    mobile: '17647581576',
-                    sessionid: 'a46d4af91c874e1db516b6d2454833ce',
+                    mobile: JSON.parse(localStorage.RunUserInfo).mobile,
+                    sessionid: JSON.parse(localStorage.RunUserInfo).sessionId,
                     entryId:'6f73a48fd55e485e81488ae0c884fc6e',
                     pageNo:1
                 })
