@@ -140,21 +140,30 @@
                     
                     this.enrolls.forEach(el => {
                         let sysTime = time.systemCurrentTime
-                        setInterval(()=>{
-                            this.$set(el, 'clock', this.changeTime(el, sysTime))
-                            sysTime += 1000
+
+                        let inter = setInterval(()=>{
+                            let eT    // 结束时间
+                            if(el.status == 1){   //
+                                eT = el.startDate
+                            }else{
+                                eT = 0
+                            }
+
+                            let shijiancha = new Date(eT).getTime() - sysTime
+                            // console.log(shijiancha)
+
+                            if(shijiancha > 0){
+                                this.$set(el, 'clock', this.changeTime(shijiancha))
+                                sysTime += 1000
+                            }else {
+                                clearInterval(inter)
+                                this.$set(el, 'clock', '00 00 00 00')
+                            }
                         }, 1000)
                     })
                 }
             },
-            changeTime(el, curTime){
-                let eT    // 结束时间
-                if(el.status == 1){   //
-                    eT = el.startDate
-                }
-                let shijiancha = new Date(eT).getTime() - curTime
-                if(shijiancha <= 0) return '00 00 00 00'
-
+            changeTime(shijiancha){
                 var days = shijiancha / 1000 / 60 / 60 / 24;
                 var d = Math.floor(days);
                 var hours = shijiancha / 1000 / 60 / 60 - (24 * d);
