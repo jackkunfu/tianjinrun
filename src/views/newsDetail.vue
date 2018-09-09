@@ -22,13 +22,15 @@ import publicTab from "./publicTab.vue";
         },
         methods: {
             async getReport(){
+                let loading = this.$loading()
                 let res = await this.ajax('/news/news_notice/getById', {
-                    newsId:this.$route.query.newsId,
-                    module:'xwgg',
-                    eventId:this.$route.query.eventId,
+                    newsId: this.$route.query.newsId,
+                    module: 'xwgg',
+                    eventId: this.$route.query.eventId,
                     total: 1,
                     size: 0
                 })
+                loading.close()
                 if(res && res.code == this.successCode){
                     this.data = res.objectData.marathonArticle.marathonArticleData || []
                 }

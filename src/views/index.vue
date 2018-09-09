@@ -62,10 +62,10 @@
                                 | 天 时 分 秒
                         .enrollTime
                             img.icon(src='../assets/clock.png')
-                            .text 报名时间：{{item.startDate}} - {{item.endDate}}
+                            .text 报名时间：{{item.startDate.split(' ')[0]}} - {{item.endDate.split(' ')[0]}}
                         .enrollTime
                             img.icon(src='../assets/clock.png')
-                            .text 比赛时间：{{item.eventDate}}
+                            .text 比赛时间：{{item.eventDate | stampToStr}}
         div
             img.footer(src="../assets/footer.png")
 </template>
