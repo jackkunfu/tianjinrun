@@ -14,6 +14,7 @@
                 span(
                     v-for="(item, i) in navs" :key="i"
                     @click="goUrl(item.url)"
+                    :class="{'cur':curPage==i}"
                 ) {{item.name}}
 
             .clear
@@ -21,7 +22,7 @@
         div
             img.poster(src="../assets/mainImg.jpeg")
 
-        .w1200
+        .main
             .content
                 //- .fl
                 .report
@@ -47,19 +48,20 @@
 
                 //- .fr 
                 .enrollEntry
-                    .enroll(@click="goUrl('/sign')") 立即报名
-                    .center.know {{matchName}}
-                    .time 
-                        .clock
-                            |00 00 00 00 
-                        .clockText
-                            |天 时 分 秒
-                    .enrollTime
+                    .enroll-list(v-for="(item, i) in enrolls")
+                        .enroll(v-if="item.status==1" @click="goUrl('/sign')") 立即报名
+                        .enroll.grey(v-else) 报名已结束
+                        .center.know {{item.name}}
+                        .time 
+                            .clock {{item.clock}}
+                            .clockText
+                                | 天 时 分 秒
+                        .enrollTime
                             img.icon(src='../assets/clock.png')
-                            .text 报名时间：03月20日 - 03月31日
-                    .enrollTime
+                            .text 报名时间：{{item.startDate}} - {{item.endDate}}
+                        .enrollTime
                             img.icon(src='../assets/clock.png')
-                            .text 比赛时间：04月29日
+                            .text 比赛时间：{{item.eventDate}}
         div
             img.footer(src="../assets/footer.png")
 </template>
@@ -82,10 +84,12 @@
                     name: '联系我们',
                     url: '/about'
                 }],
-                list:[],
-                report:[],
-                control:0,
-                matchName:''
+                list: [],
+                report: [],
+                control: 0,
+                matchName: '',
+                curPage: 0,
+                enrolls: []
             }
         },
         mounted(){
@@ -99,9 +103,9 @@
                 //var host = window.location.host;
                 var domain=document.domain;
                 let res = await this.ajax('/news/news_notice/list', {
-                    domain:'tjwq-marathon',
-                    module:'ssgg',
-                    eventId:'',
+                    domain: 'tjwq-marathon',
+                    module: 'ssgg',
+                    eventId: '',
                     pageNo: 1,
                     pageSize: 10
                 })
@@ -110,9 +114,9 @@
                 }
                 //获取域名请求赛事新闻
                 let re = await this.ajax('/news/news_notice/list', {
-                    domain:'tjwq-marathon',
-                    module:'xwgg',
-                    eventId:'',
+                    domain: 'tjwq-marathon',
+                    module: 'xwgg',
+                    eventId: '',
                     pageNo: 1,
                     pageSize: 10
                 })
@@ -121,20 +125,56 @@
                 }
                 //获取域名请求时间和状态
                 let time = await this.ajax('/app/mls/getEventsByDomain', {
-                    domain:'tjwq-marathon',
-                    total:0,
+                    domain: 'tjwq-marathon',
+                    total: 0,
                     pageNo: 1,
                     pageSize: 10
                 })
                 if(time && time.code == this.successCode){
-                    this.matchName=time.list[0].name
+                    // this.matchName = time.list[0].name
+                    this.enrolls = time.list || []
+                    
+                    this.enrolls.forEach(el => {
+                        let sysTime = time.systemCurrentTime
+                        setInterval(()=>{
+                            this.$set(el, 'clock', this.changeTime(el, sysTime))
+                            sysTime += 1000
+                        }, 1000)
+                    })
                 }
+            },
+            changeTime(el, curTime){
+                let eT    // 结束时间
+                if(el.status == 1){   //
+                    eT = el.endDate
+                }
+                let timeStamp = new Date(eT).getTime() - curTime
+                let time = new Date( timeStamp )
+                // console.log('time.getHours()')
+                // console.log(eT)
+                // console.log(timeStamp)
+                // console.log(time)
+                // console.log(time.getDay())
+                // console.log(time.getHours())
+                // console.log(time.getMinutes())
+                // console.log(time.getSeconds())
+                let d = time.getDate() - 1,
+                    h = time.getHours(),
+                    m = time.getMinutes(),
+                    s = time.getSeconds()
+                return `${(d+'').length == 1 ? '0'+ d : d} 
+                        ${(h+'').length == 1 ? '0'+ h : h}
+                        ${(m+'').length == 1 ? '0'+ m : m}
+                        ${(s+'').length == 1 ? '0'+ s : s}`
             },
         }
     }
 </script>
 
 <style lang="sass" scoped>
+
+    .main
+        background: #e5e7ef
 
     .logo
         height: 100px
@@ -151,56 +191,85 @@
             display: inline-block
             margin: 0 10px
             cursor: pointer
+    .enroll-list
+        border: 1px solid #eee
     .enroll
         width: 120px
         margin: 20px auto
         text-align: center
         height: 40px
-        line-height: 40px
+        line-height: 38px
         border: 1px solid #000
         border-radius: 5px
         cursor: pointer
+        &:hover
+            background: #278bc5
+            border: 1px solid #278bc5
+            color: #fff
+        &.grey
+            border: 1px solid #eee
+            cursor: not-allowed
+            background: #eee
+            color: #fff
+            &:hover
+                background: #eee
+                border: 1px solid #eee
+                color: #fff
     .nav
-        margin-top: 60px
+        margin-top: 64px
         span
-            height: 40px
-            line-height: 40px
+            // height: 40px
+            // line-height: 40px
+            padding: 10px 20px
             font-size: 20px
             display: inline-block
             margin: 0 10px
             cursor: pointer
-            &:hover
-                color: red
+            &:hover, &.cur
+                color: #fff
+                background: #278bc5
+
     .content
         display: flex
     .report
         width: 65%
-        min-height: 600px
-        background: #e5e7ef
+        min-height: 500px
+        background: #fff
         border-radius: 10px
-        margin: 10px
+        margin: 20px
         .public
             width: 50%
             text-align: center
             height: 45px
             line-height: 45px
-            background: #e5e7ef
-        .control
-            background: #999999        
+            border-bottom: 2px solid #e5e7ef
+            font-size: 18px
+            color: #999
+            margin-top: 10px
+            cursor: pointer
+            // background: #e5e7ef
+            &.control
+                // background: #999999
+                color: #278bc5
+                border-bottom: 2px solid #278bc5
+
     .enrollEntry
         width: 35%
-        min-height: 600px
-        background: #e5e7ef
+        min-height: 500px
+        background: #fff
         border-radius: 10px
-        margin: 10px
+        margin: 20px
     .time
         text-align: center
-        height: 120px
+        // height: 120px
+        margin: 20px
         line-height: 60px
-        margin: 40px
         font-size: 36px
     .clockText
-        word-spacing: 7px
+        word-spacing: 27px
+        font-size: 18px
+        line-height: 30px
+        color: #666
     .know
         margin: 0 7px
     .enrollTime
@@ -216,7 +285,14 @@
     .text
         position: absolute
         left: 30px
+        color: #999
+        font-size: 16px
     .footer
         width: 100%
         height: 270px
+
+    .newsList
+        color: #666
+        font-size: 15px
+
 </style>
