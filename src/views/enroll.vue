@@ -50,15 +50,11 @@
             let query = this.$route.query
             return {
                 item: query,
-                maxage:null,
-                minage:null,
-                formList:[],
+                maxage: null,
+                minage: null,
+                formList: [],
                 list: [],
-                // addInfoQuery: {
-                //     item: query,
-                //     type: 'add'
-                // },
-                addInfoQuery: Object.assign({type: 'add'}, query),
+                addInfoQuery: Object.assign({type: 'add'}, query, {name: ''}),
                 checkflag:false,
                 isSelect:false,
                 selectList:[]    
@@ -129,6 +125,7 @@
             },
             edit(item){
                 item.type = 'edit'
+                item.entryId = this.item.entryId
                 this.goUrl('/editInfo', item)
             },
             async getList(){

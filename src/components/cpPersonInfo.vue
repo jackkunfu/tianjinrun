@@ -2,7 +2,7 @@
 
     el-form(
         :model="obj" label-width="100px" size="small"
-        style="width:600px;margin: 0 auto;padding: 50px 0;"
+        style="width:800px;margin: 0 auto;padding: 50px 0;"
     )
 
         template(v-for="(item, i) in list")
@@ -66,10 +66,11 @@
 
         //- 级联
         template(v-if="isSelect")
-            template(v-if="selects.length > 0" v-for="(item, i) in selects")
+            template(v-if="selectsArr.length > 0" v-for="(item, i) in selectsArr")
                 el-form-item(:label="item.name")
                     el-select(
-                        v-model="selectObj[i].firstValue" @change="(data)=>{selectChange(data, i)}" :placeholder="'请选择'+item.name"
+                        :placeholder="'请选择'+item.name"
+                        v-model="selectObj[i].firstValue" @change="(data)=>{selectChange(data, i)}"
                     )
                         el-option(
                             filterable = false
@@ -79,7 +80,7 @@
                             
                         )
 
-                el-form-item(v-if="selectObj[i]" :label="item.selectName")
+                el-form-item(:label="item.selectName")
                     el-select(
                         v-model="selectObj[i].secondValue" :placeholder="'请选择'+item.name"
                     )
@@ -103,27 +104,39 @@
                 obj: this.objData,
                 selectProvince: { province: '', city: '', area: '' },
                 selectObj: [],
-                imageList1: [],
-                imageList2: []
+                selectsArr: []
             }
         },
         watch: {
             selects(v){
-                if(v && v.length > 0) {
-                    v.forEach( (el, i) => {
-                        el.paramsArr = el.params ? JSON.parse(el.params) : []
-                        this.$set(this.selectObj, i, {})
-                        this.$set(this.selectObj[i], 'firstValue', '')
-                        this.$set(this.selectObj[i], 'secondValue', '')
-                    });
+                v.forEach( (el, i) => {
+                    this.$set(this.selectObj, i, {})
+                    this.$set(this.selectObj[i], 'firstValue', '')
+                    this.$set(this.selectObj[i], 'secondValue', '')
+                })
+                this.selectsArr = v.map(el => {
+                    el.paramsArr = el.params ? JSON.parse(el.params) : []
+                    return el
+                })
+                // 处理级联数据
+                if(this.isSelect){
+                    this.selectObj = this.objData.selectValus.map(el => {
+                        return {
+                            firstValue: el.firstGrade.split('_')[1],
+                            secondValue: el.secondGrade.split('_')[1]
+                        }
+                    })
                 }
             }
         },
         mounted(){
-            this.fillData()
+            this.$nextTick(() => {
+                this.fillData()
+            })
         },
         methods: {
             fillData(){
+                // Object.keys(this.obj)
                 // 图片数据处理
                 if(this.obj.runwayImage){
                     // this.obj.runwayImageArr = this.obj.runwayImage.split(',')
@@ -140,6 +153,7 @@
                     this.selectProvince.city = this.obj.location.split(',')[1]
                     this.selectProvince.area = this.obj.location.split(',')[2]
                 }
+
             },
             changeDist(data, i){
                 if(!this.obj.location) this.$set(this.obj, 'location', [])
@@ -166,21 +180,32 @@
                 }
             },
             changeObj(data){
-                if(data.completionCertificateArr) data.completionCertificate = data.completionCertificateArr.map(el => el).join(',')
-                if(data.runwayImageArr) data.runwayImage = data.runwayImageArr.map(el => el).join(',')
+                let copyData = JSON.parse( JSON.stringify(data) )
+                if(copyData.completionCertificateArr){
+                    copyData.completionCertificate = copyData.completionCertificateArr.join(',')
+                    delete copyData.completionCertificateArr
+                }
+                if(copyData.runwayImageArr){
+                    copyData.runwayImage = copyData.runwayImageArr.join(',')
+                    delete copyData.runwayImageArr
+                }
 
                 // dymaic
 
                 // 地区省市区处理
-                data.location = typeof data.location == 'object' ? data.location.join(',') : data.location
+                copyData.location = typeof copyData.location == 'object' ? copyData.location.join(',') : copyData.location
 
-                return data
+                // 时间转换成秒
+                copyData.finishTime = ( new Date(copyData.finishTime).getTime() - new Date().setHours(0,0,0,0) )/1000
+                copyData.expectFinishTime = ( new Date(copyData.expectFinishTime).getTime() - new Date().setHours(0,0,0,0) )/1000
+
+                return copyData
             },
             selectChange(data, i){
                 // console.log(data)
-                // console.log(this.selects[i])
+                // console.log(this.selectsArr[i])
                 this.$set(this.selectObj[i], 'secondValue', '')
-                this.$set(this.selectObj[i], 'list', this.selects[i].paramsArr.filter(el => el.p == data)[0].c)
+                this.$set(this.selectObj[i], 'list', this.selectsArr[i].paramsArr.filter(el => el.p == data)[0].c)
             },
             testInput(){
                 for(let i=0; i < this.list.length; i++){
@@ -225,8 +250,9 @@
                             }
                         }else if(el.formType == 'image'){   // 图片
                             if(el.required){
+                                console.log(this.obj)
                                 // if(!keyVal && keyVal.length == 0){
-                                if(!this.Obj[key+'Arr'] || this.Obj[key+'Arr'].length == 0){
+                                if(!this.obj[key+'Arr'] || this.obj[key+'Arr'].length == 0){
                                     alert('请上传'+name)
                                     return false
                                 }
@@ -235,8 +261,20 @@
                     }else {
                         if(this.obj[key] === null || this.obj[key] === undefined || this.obj[key] === '' || this.obj[key].trim() == ''){
                             if(el.required){
-                                alert(name + '不能为空')
-                                return false
+                                if(el.formType == 'image'){   // 图片
+                                    if(el.required){
+                                        console.log(this.obj)
+                                        // if(!keyVal && keyVal.length == 0){
+                                        if(!this.obj[key+'Arr'] || this.obj[key+'Arr'].length == 0){
+                                            alert('请上传'+name)
+                                            return false
+                                        }
+                                    }
+                                }else {
+                                    alert(name + '不能为空')
+                                    return false
+                                }
+                                
                             }
                         }
                     }
