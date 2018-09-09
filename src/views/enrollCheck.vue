@@ -10,8 +10,8 @@
             .signListMain
                 .tab
                     .fl.tabList(v-for="(item, i) in navs" :key="i" @click="goUrl(item.url)") {{item.name}}
-                    .fr.tabList 返回官网
-                    .fr.tabList 个人中心
+                    .fr.tabList 返回首页
+                    //- .fr.tabList 个人中心
                 .clear
                 .event 报名查询
                     .num(style='font-size:20px') 
@@ -21,7 +21,7 @@
                         |姓名
                         input(style='margin-left:20px' v-model='userName')
                     .check(@click='checkInfo') 查询
-                .event(v-for="(item,i) in list" :key="i" @click='')
+                .event(v-for="(item,i) in list" :key="i" @click='pay(item)')
                     .enrollTop 姓名:
                         span.enrollName {{item.name}} 
                     .enrollTop 证件号:
@@ -79,19 +79,21 @@
         },
         methods: {
             async checkInfo(){
-                if(this.name='') return alert('请输入姓名')
-                if(this.cardId='') return alert('请输入证件号')
-                console.log(this.userName);
-                console.log(this.cardId);
+                if(this.userName == '') return alert('请输入姓名')
+                if(this.cardId == '') return alert('请输入证件号')
                 let get = await this.ajax('/search/enroll_status', {
-                    userName: 'ceshi',
-                    cardId: '68547'
+                    userName: this.userName,
+                    cardId: this.cardId
                 })
                 if(get && get.code == this.successCode){
                     this.list=get.list
-                    console.log(get);
                 }
             },
+            pay(item){
+                if(item.orderStatus == 0){
+                    this.goUrl('pay',{'outTradeNo':item.tradeNo})
+                }
+            }
         }
     }
 </script>

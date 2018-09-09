@@ -47,12 +47,10 @@ import publicTop from "./publicTop.vue";
                     sessionid: JSON.parse(localStorage.RunUserInfo).sessionId,
                     outTradeNo:this.$route.query.outTradeNo
                 })
-                if(get && get.code == 911){                 
-                    console.log(get);
+                if(get && get.code == 911){   
                 }
             },
             async gopay(){
-                console.log('执行了');
                 var req={mobile:'17647581576',
                     sessionid:JSON.parse(localStorage.RunUserInfo).sessionId,
                     outTradeNo:this.$route.query.outTradeNo,
@@ -61,12 +59,10 @@ import publicTop from "./publicTop.vue";
                     payFrom:1,
                     total_fee:this.totalData.totalFee
                 }
-                console.log(req);
                 let get = await this.ajax('/app/mls/order/unifiedPay', req)
                 if(get && get.code == this.successCode){
                     var payUrl=get.data.payUrl;
-                    $(payUrl).appendTo("#alipay");                  
-                    console.log(get);
+                    $(payUrl).appendTo("#alipay");   
                 }
             },
             async getpay(){
@@ -76,8 +72,7 @@ import publicTop from "./publicTop.vue";
                     outTradeNo:this.$route.query.outTradeNo
                 })
                 if(get && get.code == this.successCode){
-                    this.totalData=get.objectData                    
-                    console.log(get);
+                    this.totalData=get.objectData   
                 }
             },
         }

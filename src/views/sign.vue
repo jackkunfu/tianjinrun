@@ -61,7 +61,9 @@
                     var InvitationInfo=get.objectData.info;
                     InvitationInfo.hasInvite=true;
                     this.goUrl('/enroll', InvitationInfo)
-                    console.log(get);
+                }
+                if(get && get.code == 412){
+                    this.goUrl('/login')
                 }
             },
             goEnroll(item){
