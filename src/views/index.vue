@@ -1,9 +1,13 @@
 <template lang="pug">
     .index
         .w1200.sign
-            .fr
+            .fr(v-if="ifLogin == false")
                 span(@click="goUrl('/register')") 注册
                 span(@click="goUrl('/login')") 登陆
+            .clear
+            .fr(v-if="ifLogin == true")
+                span() {{hasNum}}
+                span() 已登陆
             .clear
         
         .w1200
@@ -85,7 +89,7 @@
                 list:[],
                 report:[],
                 control:0,
-                matchName:''
+                matchName:'',
             }
         },
         mounted(){
@@ -185,6 +189,7 @@
             height: 45px
             line-height: 45px
             background: #e5e7ef
+            font-size: 21px
         .control
             background: #999999        
     .enrollEntry

@@ -1,8 +1,16 @@
 <template lang="pug">
     .sign
-        .fr.sign_
+        //- .fr.sign_
+        //-     span(@click="goUrl('/register')" style='margin-right:30px') 注册
+        //-     span(@click="goUrl('/login')") 登陆
+        //- .clear
+        .fr.sign_(v-if="ifLogin == false")
             span(@click="goUrl('/register')" style='margin-right:30px') 注册
             span(@click="goUrl('/login')") 登陆
+        .clear
+        .fr.sign_(v-if="ifLogin == true")
+            span( style='margin-right:30px') {{hasNum}}
+            span() 已登陆
         .clear
         .top
             img.banner(src="../assets/mainImg.jpeg")

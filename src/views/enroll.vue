@@ -1,5 +1,5 @@
 <template lang="pug">
-    .w1200.enrollPage
+    .enrollPage
 
         public-top
 
@@ -36,7 +36,16 @@
                     img.chooseIcon(src="../assets/icon_enroll_modify_info.png" @click.stop="edit(item)")
                 .clear
 
-            .enroll(@click='enroll') 立即报名
+            .enroll(@click="clickEnroll('')") 立即报名
+
+        .bodyClass(v-if="Invitation==true")
+            .code
+                .codeText(style='font-size:25px;margin-bottom:10px') 邀请码验证            
+                .codeText 请填写正确的邀请码
+                input(v-model="InvitationCode")
+                el-button.fl(@click="Invitation=false" style='margin-top:30px') 点击取消
+                el-button.fr(@click="getInviteCode" style='margin-top:30px') 点击验证
+                .clear
                     
 </template>
 <script>
@@ -61,7 +70,9 @@
                 addInfoQuery: Object.assign({type: 'add'}, query),
                 checkflag:false,
                 isSelect:false,
-                selectList:[]    
+                selectList:[],
+                Invitation:false,
+                InvitationCode:''  
             }
         },
         async mounted(){
@@ -79,7 +90,7 @@
                     })
                     if(check && check.code == this.successCode){ 
                         console.log(check);
-                    }else{
+                    }else{                        
                         return
                     }                              
                 }
@@ -96,9 +107,16 @@
                 item.choose=!item.choose
                 this.selectList=selectList;
             },
-            async enroll(){
+            clickEnroll(){
+                if(this.$route.query.hasInvite == true||this.$route.query.hasInvite == 'true') return this.Invitation=true 
+                this.enroll('')
+            },
+            async enroll(payCode){    
                 if(this.selectList.length==0) return alert('请勾选报名人')
                 var checkedUserlist=this.selectList;
+                if(this.$route.query.hasInvite == true||this.$route.query.hasInvite == 'true'){
+                    if(checkedUserlist.length>1) return alert('邀请码只可选择一个人报名哦~')
+                }
                 var map = {};
                 for (var i = 0; i < checkedUserlist.length; i++) {
                     var obj = checkedUserlist[i];
@@ -107,13 +125,13 @@
                 } 
                 console.log({params:map});
                 let goEnroll = await this.ajax('/app/mls/order/enrolls', {
-                    mobile: '17647581576',
-                    sessionid: '8e564466e8724ed093aed6d1748d4e7b',
+                    mobile: JSON.parse(localStorage.RunUserInfo).mobile,
+                    sessionid: JSON.parse(localStorage.RunUserInfo).sessionId,
                     entryId: this.$route.query.entryId,
                     additionals:[],
                     from:'from_webs',
                     param:map2json,
-                    payCode:''
+                    payCode:payCode
                 })
                 if(goEnroll && goEnroll.code == 906){
                     console.log(goEnroll);
@@ -123,19 +141,23 @@
                     console.log(goEnroll);
                     this.goUrl("/pay",{'outTradeNo':goEnroll.outTradeNo})
                 }
-
                 //if(this.list.map(el=>el.choose).length == 0) return alert('请勾选报名人')
                 
+            },
+            getInviteCode(){
+                if(this.InvitationCode=='') return alert("请输入邀请码")
+                this.enroll(this.InvitationCode);
             },
             edit(item){
                 item.type = 'edit'
                 this.goUrl('/editInfo', item)
             },
             async getList(){
+                console.log(this.$route.query);
                 var entryId=this.$route.query.entryId;
                 let res = await this.ajax('/app/mls/getEventDyncList', {
-                    mobile: '17647581576',
-                    sessionid: 'a46d4af91c874e1db516b6d2454833ce',
+                    mobile: JSON.parse(localStorage.RunUserInfo).mobile,
+                    sessionid: JSON.parse(localStorage.RunUserInfo).sessionId,
                     entryId:entryId,
                     pageNo:1
                 })
@@ -152,7 +174,7 @@
                     }
                 }
                 let users = await this.ajax('/app/user/enrollUserList', {
-                    mobile: '17647581576',
+                    mobile: JSON.parse(localStorage.RunUserInfo).mobile,
                     entryId: entryId
                 })
                 if(users && users.code == this.successCode){
@@ -160,6 +182,7 @@
                     for (var i = 0; i < users.list.length; i++) {
                         var user = users.list[i];
                         var flag = this.checkUser(user);
+                        console.log(flag);
                         if (flag) {
                             this.list[i].enoughcheck=true;
                         } else {
@@ -290,7 +313,8 @@
                     var key = params[i].key;
                     var value = user[key];                
                     if ((value == "" || value == undefined || value == null) && params[i].required) {
-                        nullflag = false;   
+                        nullflag = false; 
+                        console.log(key);  
                     }
                 }
                 if (!nullflag) {

@@ -1,6 +1,19 @@
 import {hexMD5} from './MD5.js';
 import config from './config.js';
 export default function(Vue){
+    if (localStorage.RunUserInfo!=undefined){
+        console.log('local', localStorage.RunUserInfo);
+        var num = JSON.parse(localStorage.RunUserInfo).mobile;
+        if (num != '' && num != undefined) {
+          Vue.prototype.ifLogin = true
+          Vue.prototype.hasNum = num
+        } else {
+          this.ifLogin = false
+        }
+    }else{
+       Vue.prototype.ifLogin = false
+       Vue.prototype.hasNum = ''
+    }
     // 跳转
     Vue.prototype.goUrl = function (url, data) {
         if(!url) location.reload()

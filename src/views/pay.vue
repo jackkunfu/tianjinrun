@@ -4,8 +4,9 @@
         .matchInfo
             .payList
                 .eventName {{totalData.eventName}}
-                .eventName {{totalData.entry.name}}
-                .eventName 报名费 ￥{{totalData.entry.fee}}
+                template(v-if="totalData.entry")
+                    .eventName {{totalData.entry.name}}
+                    .eventName 报名费 ￥{{totalData.entry.fee}}
             .payList(v-for="(item,ke) in totalData.list" :key="ke")
                 .eventName.fl {{item.name}}
                 .eventName.fr {{item.cardId}}
@@ -16,10 +17,8 @@
             .payInfo
                 .eventName 合计 {{totalData.totalFee}}
             #alipay 选择支付方式
-                el-radio(v-model="obj['alipay']") 微信支付
-                el-radio(v-model="obj['weixin']") 支付宝支付
-                    //- .eventName 微信支付
-                    //- .eventName 支付宝支付
+                .eventName 微信支付
+                .eventName 支付宝支付
                 el-button(@click="gopay" style='margin-top:30px') 确认支付
         
         
@@ -32,8 +31,7 @@ import publicTop from "./publicTop.vue";
         name: 'pay',
         data(){
             return {
-                totalData:{},
-                obj:{alipay:'',weixin:''}                         
+                totalData:{}                      
             }
         },
         components: {
@@ -45,30 +43,27 @@ import publicTop from "./publicTop.vue";
         methods: {
             async ensure(){
                 let get = await this.ajax('/app/mls/order/checkOrderNew', {
-                    mobile: '17647581576',
-                    sessionid: '8e564466e8724ed093aed6d1748d4e7b',
+                    mobile: JSON.parse(localStorage.RunUserInfo).mobile,
+                    sessionid: JSON.parse(localStorage.RunUserInfo).sessionId,
                     outTradeNo:this.$route.query.outTradeNo
                 })
-                if(get && get.code == 911){
-                    //this.gopay()
-                    //this.totalData=get.objectData                    
+                if(get && get.code == 911){                 
                     console.log(get);
                 }
             },
             async gopay(){
                 console.log('执行了');
                 var req={mobile:'17647581576',
-                    sessionid:'8e564466e8724ed093aed6d1748d4e7b',
+                    sessionid:JSON.parse(localStorage.RunUserInfo).sessionId,
                     outTradeNo:this.$route.query.outTradeNo,
                     body:this.totalData.eventName,
-                    payType:2,
+                    payType:6,//支付宝：7，微信：6
                     payFrom:1,
                     total_fee:this.totalData.totalFee
                 }
                 console.log(req);
                 let get = await this.ajax('/app/mls/order/unifiedPay', req)
                 if(get && get.code == this.successCode){
-                    //this.totalData=get.objectData  
                     var payUrl=get.data.payUrl;
                     $(payUrl).appendTo("#alipay");                  
                     console.log(get);
@@ -76,8 +71,8 @@ import publicTop from "./publicTop.vue";
             },
             async getpay(){
                 let get = await this.ajax('/app/mls/order/getEnroll', {
-                    mobile: '17647581576',
-                    sessionid: '8e564466e8724ed093aed6d1748d4e7b',
+                    mobile: JSON.parse(localStorage.RunUserInfo).mobile,
+                    sessionid: JSON.parse(localStorage.RunUserInfo).sessionId,
                     outTradeNo:this.$route.query.outTradeNo
                 })
                 if(get && get.code == this.successCode){

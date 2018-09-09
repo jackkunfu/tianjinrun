@@ -23,6 +23,8 @@
 
 .clear
     clear: both
+.fz22
+    font-size: 22px
 .login
     width: 300px
     margin: 0 auto
@@ -58,6 +60,7 @@
     border: 1px solid
     border-radius: 5px
     margin-top: 20px
+    font-size: 18px
 .getcode
     height: 30px
     line-height: 30px
@@ -138,7 +141,7 @@
     width: 80%
     margin: 0 auto
     text-align: left
-    font-size: 20px
+    font-size: 16px
     height: 50px
     line-height: 50px
     border-bottom: 1px dashed
@@ -152,3 +155,30 @@
 .scrollAuto
     overflow: hidden
     height: 100%
+.bodyClass
+    background: rgba(0, 0, 0, 0.3)
+    width: 100%
+    height: 100%
+    min-height: 100%
+    position: fixed
+    top: 0
+    .code
+        width: 380px
+        padding: 30px
+        position: absolute
+        top: 50%
+        left: 50%
+        transform: translate(-50%,-50%)
+        background-color: #fff
+        opacity: 1
+        border-radius: 4px
+        .codeText
+            font-weight: 700
+            text-align: center
+            color: #5c5c5c
+        input
+            display: block
+            width: 100%
+            height: 40px
+            border: 1px solid #5c5c5c
+            margin-top: 20px
