@@ -7,18 +7,18 @@
         .top
             img.banner(src="../assets/mainImg.jpeg")
         .signList
-            .signListMain
+            .signListMain(style="min-height:800px")
                 .tab
                     .fl.tabList(v-for="(item, i) in navs" :key="i" @click="goUrl(item.url)") {{item.name}}
                     .fr.tabList 返回首页
                     //- .fr.tabList 个人中心
                 .clear
                 .event 报名查询
-                    .num(style='font-size:20px') 
-                        |证件号
+                    .num
+                        .fl 证件号
                         input(style='margin-left:20px' v-model='cardId')
-                    .num(style='font-size:20px')
-                        |姓名
+                    .num
+                        .fl 姓名
                         input(style='margin-left:20px' v-model='userName')
                     .check(@click='checkInfo') 查询
                 .event(v-for="(item,i) in list" :key="i" @click='pay(item)')
@@ -87,6 +87,7 @@
                 })
                 if(get && get.code == this.successCode){
                     this.list=get.list
+                    if(this.list == 0) return alert("未查询到报名记录")
                 }
             },
             pay(item){

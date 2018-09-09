@@ -7,17 +7,17 @@
         .top
             img.banner(src="../assets/mainImg.jpeg")
         .signList
-            .signListMain
+            .signListMain(style="min-height:800px")
                 .tab
                     .fl.tabList(v-for="(item, i) in navs" :key="i" @click="goUrl(item.url)") {{item.name}}
                     .fr.tabList 返回首页
                     //- .fr.tabList 个人中心
                 .clear
                 .event 成绩查询
-                    .num(style='font-size:20px') 
+                    .num
                         |证件号
                         input(style='margin-left:20px')
-                    .num(style='font-size:20px')
+                    .num
                         |验证码
                         input(style='margin-left:20px')
                     .check 查询
