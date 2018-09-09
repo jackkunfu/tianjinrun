@@ -61,8 +61,8 @@ import publicTop from "./publicTop.vue";
                     sessionid:'8e564466e8724ed093aed6d1748d4e7b',
                     outTradeNo:this.$route.query.outTradeNo,
                     body:this.totalData.eventName,
-                    payType:"4",
-                    payFrom:"1",
+                    payType:2,
+                    payFrom:1,
                     total_fee:this.totalData.totalFee
                 }
                 console.log(req);
