@@ -150,22 +150,19 @@
             changeTime(el, curTime){
                 let eT    // 结束时间
                 if(el.status == 1){   //
-                    eT = el.endDate
+                    eT = el.startDate
                 }
-                let timeStamp = new Date(eT).getTime() - curTime
-                let time = new Date( timeStamp )
-                // console.log('time.getHours()')
-                // console.log(eT)
-                // console.log(timeStamp)
-                // console.log(time)
-                // console.log(time.getDay())
-                // console.log(time.getHours())
-                // console.log(time.getMinutes())
-                // console.log(time.getSeconds())
-                let d = time.getDate() - 1,
-                    h = time.getHours(),
-                    m = time.getMinutes(),
-                    s = time.getSeconds()
+                let shijiancha = new Date(eT).getTime() - curTime
+                if(shijiancha <= 0) return '00 00 00 00'
+
+                var days = shijiancha / 1000 / 60 / 60 / 24;
+                var d = Math.floor(days);
+                var hours = shijiancha / 1000 / 60 / 60 - (24 * d);
+                var h = Math.floor(hours);
+                var minutes = shijiancha / 1000 / 60 - (24 * 60 * d) - (60 * h);
+                var m = Math.floor(minutes);
+                var second = shijiancha / 1000 - (24 * 60 * 60 * d) - (60 * 60 * h) - (60 * m);
+                var s = Math.floor(second);
                 return `${(d+'').length == 1 ? '0'+ d : d} 
                         ${(h+'').length == 1 ? '0'+ h : h}
                         ${(m+'').length == 1 ? '0'+ m : m}

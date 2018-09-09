@@ -5,13 +5,13 @@
 
         .matchInfo
             .name.matchPublic 
-                img.fl(src="../assets/littleIcon.png") 
+                img.littleIcon(src="../assets/littleIcon.png") 
                 |报名场次:{{item.name}}
             .time.matchPublic 
-                img.fl(src="../assets/littleIcon.png") 
+                img.littleIcon(src="../assets/littleIcon.png") 
                 |报名时间:{{item.matchStartDate}}~~{{item.matchEndDate}}
             .fee.matchPublic 
-                img.fl(src="../assets/littleIcon.png") 
+                img.littleIcon(src="../assets/littleIcon.png") 
                 |报名费用￥{{item.fee}}
 
 
@@ -335,6 +335,11 @@
     // background-image: url('../assets/choose_event_item.png')
     background-repeat: no-repeat
     background-size: 100% 100%
+    .littleIcon
+        width: 20px
+        padding-top: 10px
+        margin-right: 10px
+        float: left
     .matchPublic
         width: 70%
         height: 40px
