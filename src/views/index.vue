@@ -24,7 +24,10 @@
             .clear
             
         div
-            img.poster(src="../assets/mainImg.jpeg")
+            //- img.poster(src="../assets/mainImg.jpeg")
+            .el-carousel.poster
+                .el-carousel-item(v-for="(item,ke) in banner" :key="ke")
+                    img.poster(:src="item.image")    
 
         .main
             .content
@@ -93,7 +96,8 @@
                 control: 0,
                 matchName: '',
                 curPage: 0,
-                enrolls: []
+                enrolls: [],
+                banner: []
             }
         },
         mounted(){
@@ -136,8 +140,9 @@
                 })
                 if(time && time.code == this.successCode){
                     // this.matchName = time.list[0].name
+                    console.log(time);
                     this.enrolls = time.list || []
-                    
+                    this.banner = time.banners || []
                     this.enrolls.forEach(el => {
                         let sysTime = time.systemCurrentTime
 
