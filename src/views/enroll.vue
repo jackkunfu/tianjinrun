@@ -1,9 +1,8 @@
 <template lang="pug">
     .enrollPage
-
         public-top
-
         .matchInfo
+            process-tab
             .name.matchPublic 
                 img.littleIcon(src="../assets/littleIcon.png") 
                 |报名场次:{{item.name}}
@@ -53,14 +52,16 @@
                 el-button.fl(@click="Invitation=false" style='margin-top:30px') 点击取消
                 el-button.fr(@click="getInviteCode" style='margin-top:30px') 点击验证
                 .clear
-                    
+                
 </template>
 <script>
  import publicTop from "./publicTop.vue";
+ import processTab from "./processTab.vue";
     export default {
         name: 'enroll',
         components: {
-            publicTop            
+            publicTop,
+            processTab           
         },
         data(){
             let query = this.$route.query
@@ -325,41 +326,19 @@
 </script>
 
 <style lang="sass" scoped>
-.matchInfo
-    width: 1000px
-    padding: 20px
-    margin: 30px auto
-    text-align: left
-    border: 1px solid #eee
-    border-radius: 5px
-    // background-image: url('../assets/choose_event_item.png')
-    background-repeat: no-repeat
-    background-size: 100% 100%
-    .littleIcon
-        width: 20px
-        padding-top: 10px
-        margin-right: 10px
-        float: left
-    .matchPublic
-        width: 70%
-        height: 40px
-        line-height: 40px
-        border-bottom: 1px dashed #eee
-        font-size: 18px
-        margin: 0 auto
-        padding-left: 40px
-    // position: relative
-    // .name
-    //     position: absolute
-    //     left: 100px
-    // .time
-    //     position: absolute
-    //     left: 100px
-    //     top: 60px
-    // .fee
-    //     position: absolute
-    //     left: 100px
-    //     top: 100px
+.littleIcon
+    width: 20px
+    padding-top: 10px
+    margin-right: 10px
+    float: left
+.matchPublic
+    width: 70%
+    height: 40px
+    line-height: 40px
+    border-bottom: 1px dashed #eee
+    font-size: 18px
+    margin: 0 auto
+    padding-left: 40px
 .list
     width: 70%
     height: 200px

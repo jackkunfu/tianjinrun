@@ -119,7 +119,7 @@
                     return el
                 })
                 // 处理级联数据
-                if(this.isSelect){
+                if(this.isSelect && this.objData.selectValus != undefined){
                     this.selectObj = this.objData.selectValus.map(el => {
                         return {
                             firstValue: el.firstGrade.split('_')[1],
@@ -198,12 +198,10 @@
                 // 时间转换成秒
                 copyData.finishTime = ( new Date(copyData.finishTime).getTime() - new Date().setHours(0,0,0,0) )/1000
                 copyData.expectFinishTime = ( new Date(copyData.expectFinishTime).getTime() - new Date().setHours(0,0,0,0) )/1000
-
+                console.log("copyData",copyData);
                 return copyData
             },
             selectChange(data, i){
-                // console.log(data)
-                // console.log(this.selectsArr[i])
                 this.$set(this.selectObj[i], 'secondValue', '')
                 this.$set(this.selectObj[i], 'list', this.selectsArr[i].paramsArr.filter(el => el.p == data)[0].c)
             },
@@ -250,7 +248,6 @@
                             }
                         }else if(el.formType == 'image'){   // 图片
                             if(el.required){
-                                console.log(this.obj)
                                 // if(!keyVal && keyVal.length == 0){
                                 if(!this.obj[key+'Arr'] || this.obj[key+'Arr'].length == 0){
                                     alert('请上传'+name)
@@ -263,7 +260,6 @@
                             if(el.required){
                                 if(el.formType == 'image'){   // 图片
                                     if(el.required){
-                                        console.log(this.obj)
                                         // if(!keyVal && keyVal.length == 0){
                                         if(!this.obj[key+'Arr'] || this.obj[key+'Arr'].length == 0){
                                             alert('请上传'+name)

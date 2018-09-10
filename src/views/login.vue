@@ -1,34 +1,35 @@
 <template lang="pug">   
-    .login        
+    .publicBack
+        .login        
 
-        .pass(@click="control = 0" :class="control == 0 ? 'control':''")  密码登录
-        .dynamic(@click="control = 1" :class="control == 1 ? 'control':''") 动态登录
-        .password(v-if="control== 0")
-            .num 
+            .pass(@click="control = 0" :class="control == 0 ? 'control':''")  密码登录
+            .dynamic(@click="control = 1" :class="control == 1 ? 'control':''") 动态登录
+            .password(v-if="control== 0")
+                .num 
 
-                input(v-model='num' placeholder="请输入手机号码")
-                input(v-model='pass' placeholder="请输入密码")  
+                    input(v-model='num' placeholder="请输入手机号码")
+                    input(v-model='pass' placeholder="请输入密码")  
 
-            .pass(@click="goUrl('/register')") 立即注册
-            .dynamic(@click="goUrl('/reset')") 忘记密码
-            .clear
+                .pass(@click="goUrl('/register')") 立即注册
+                .dynamic(@click="goUrl('/reset')") 忘记密码
+                .clear
 
-            .loginButton(@click="login('pass')") 登录
-        .codeLogin(v-if="control== 1")
-            .num 
+                .loginButton(@click="login('pass')") 登录
+            .codeLogin(v-if="control== 1")
+                .num 
 
-                input(v-model='num' placeholder="请输入手机号码")
-                input(v-model='code' placeholder="请输入验证码")  
-                el-button.fr(@click="getcode(num)" size="mini" style='margin-top:20px') {{msg}}
+                    input(v-model='num' placeholder="请输入手机号码")
+                    input(v-model='code' placeholder="请输入验证码") 
+                    el-button.fr(@click="getcode(num)" size="mini" style='margin-top:20px') {{msg}}
 
                 .clear
 
-            input(type='checkbox' v-model='checked')
-            |阅读并接受《马拉松用户协议》    
-            
-            .reg(@click="goUrl('/register')") 立即注册
+                input.marginPublic(type='checkbox' v-model='checked')
+                |阅读并接受《马拉松用户协议》    
+                
+                .reg(@click="goUrl('/register')") 立即注册
 
-            .loginButton(@click="login('code')") 登录    
+                .loginButton(@click="login('code')") 登录    
             
 </template>
 
@@ -83,13 +84,13 @@
 
 <style lang="sass" scoped>
 .control
-    color:#ff0000 
+    border-bottom: 2px solid #fff
+    width: 25%
 .reg
     height: 58px
     line-height: 58px
     text-align: left
     font-size: 18px
-    color: #000
     cursor: pointer
     width: 50%
 </style>

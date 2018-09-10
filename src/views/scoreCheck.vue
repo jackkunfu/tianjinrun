@@ -1,19 +1,10 @@
 <template lang="pug">
     .sign
-        .fr.sign_
-            span(@click="goUrl('/register')" style='margin-right:30px') 注册
-            span(@click="goUrl('/login')") 登陆
-        .clear
-        .top
-            img.banner(src="../assets/mainImg.jpeg")
+        public-top
         .signList
-            .signListMain(style="min-height:800px")
-                .tab
-                    .fl.tabList(v-for="(item, i) in navs" :key="i" @click="goUrl(item.url)") {{item.name}}
-                    .fr.tabList 返回首页
-                    //- .fr.tabList 个人中心
-                .clear
-                .event 成绩查询
+            .matchInfo(style="min-height:800px")
+                .enrollCheck 成绩查询
+                .event
                     .num
                         |证件号
                         input(style='margin-left:20px')
@@ -21,32 +12,21 @@
                         |验证码
                         input(style='margin-left:20px')
                     .check 查询
-                //- input()
 
 
 
 </template>
 
 <script>
+    import publicTop from "./publicTop.vue"
     export default {
         name: 'enrollCheck',
         data(){
             return {
-                  navs: [{
-                    name: '赛事报名',
-                    url: '/sign'
-                }, {
-                    name: '报名查询',
-                    url: '/enrollCheck'
-                }, {
-                    name: '成绩查询',
-                    url: '/scoreCheck'
-                }, {
-                    name: '领物单查询',
-                    url: '/goodsCheck'
-                }]                
+                                
             }
         },
+        components:{publicTop},
         methods: {
 
         }

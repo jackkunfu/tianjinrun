@@ -1,14 +1,15 @@
 <template lang="pug">
     .enrollPage
         public-tab
-        .newsInfo    
-            .newsList(
-                v-for="(item, i) in report" :key="i"
-                    @click="goUrl('/newsDetail',{newsId:item.id,eventId:item.marathonEvent.id})"
-                )
-                .matchTime 2018
-                .matchClass {{item.title}}
-                .matchClass {{item.updateDate|intercept}}                
+        .matchInfo 
+            .newsInfo    
+                .newsList(
+                    v-for="(item, i) in report" :key="i"
+                        @click="goUrl('/newsDetail',{newsId:item.id,eventId:item.marathonEvent.id})"
+                    )
+                    .matchTime 2018
+                    .matchClass {{item.title}}
+                    .matchClass {{item.updateDate|intercept}}                
                     
 </template>
 
@@ -47,7 +48,7 @@ import publicTab from "./publicTab.vue";
 
 <style lang="sass" scoped>
 .newsInfo
-    width: 70%
-    margin: 0 auto
+    margin: 0px auto
+    padding-top: 60px
 
 </style>

@@ -150,7 +150,6 @@
                             }
 
                             let shijiancha = new Date(eT).getTime() - sysTime
-                            // console.log(shijiancha)
 
                             if(shijiancha > 0){
                                 this.$set(el, 'clock', this.changeTime(shijiancha))

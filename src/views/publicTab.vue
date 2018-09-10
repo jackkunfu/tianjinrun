@@ -13,13 +13,15 @@
             span() 已登陆
         .clear
         .top
-            img.banner(src="../assets/mainImg.jpeg")
+            img.banner(src="../assets/banner.png")
             .signListMain
-                .tab
-                    .tabList(
-                        v-for="(item, i) in navs" :key="i"
-                        @click="goUrl(item.url)"
-                    ) {{item.name}}               
+                .tab 
+                    .fl.tabList(v-for="(item, i) in navs" :key="i" @click="goUrl(item.url)")
+                        .tabName {{item.name}}
+                    .fr.tp(@click="goUrl('/')") 
+                        span.back(src="../assets/tab-back.png")
+                        span.toFirst 返回首页
+                .clear             
                 
                     
 </template>
@@ -68,4 +70,20 @@
         cursor: pointer  
 .tab
     display: flex
+.tp
+    position: absolute
+    right: 0
+.back
+    display: inline-block
+    vertical-align: middle
+    width: 18px
+    height: 15px
+    background-image: url(../assets/tab-back.png)
+    background-size: 100% 100%
+    background-repeat: no-repeat
+    margin-right: 10px
+.toFirst
+    color: #fff
+    font-size: 14px
+    cursor: pointer
 </style>

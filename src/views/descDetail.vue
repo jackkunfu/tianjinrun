@@ -1,7 +1,8 @@
 <template lang="pug">
      .enrollPage
-        public-tab    
-        .content(v-html="data.content")               
+        public-tab
+        .matchInfo    
+            .content(v-html="data.content")               
                     
 </template>
 
@@ -42,5 +43,6 @@ import publicTab from "./publicTab.vue";
 .content
     width: 800px
     margin: 0 auto
+    padding-top: 60px
 
 </style>

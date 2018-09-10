@@ -1,19 +1,10 @@
 <template lang="pug">
-    .sign
-        .fr.sign_
-            span(@click="goUrl('/register')" style='margin-right:30px') 注册
-            span(@click="goUrl('/login')") 登陆
-        .clear
-        .top
-            img.banner(src="../assets/mainImg.jpeg")
+ .sign
+        public-top
         .signList
-            .signListMain(style="min-height:800px")
-                .tab
-                    .fl.tabList(v-for="(item, i) in navs" :key="i" @click="goUrl(item.url)") {{item.name}}
-                    .fr.tabList 返回首页
-                    //- .fr.tabList 个人中心
-                .clear
-                .event 报名查询
+            .matchInfo(style="min-height:800px")
+                .enrollCheck 报名查询
+                .event 
                     .num
                         .fl 证件号
                         input(style='margin-left:20px' v-model='cardId')
@@ -21,6 +12,7 @@
                         .fl 姓名
                         input(style='margin-left:20px' v-model='userName')
                     .check(@click='checkInfo') 查询
+
                 .event(v-for="(item,i) in list" :key="i" @click='pay(item)')
                     .enrollTop 姓名:
                         span.enrollName {{item.name}} 
@@ -52,28 +44,17 @@
 </template>
 
 <script>
+    import publicTop from "./publicTop.vue"
     export default {
         name: 'enrollCheck',
         data(){
             return {
-                  navs: [{
-                    name: '赛事报名',
-                    url: '/sign'
-                }, {
-                    name: '报名查询',
-                    url: '/enrollCheck'
-                }, {
-                    name: '成绩查询',
-                    url: '/scoreCheck'
-                }, {
-                    name: '领物单查询',
-                    url: '/goodsCheck'
-                }],
                 list:[],
                 userName:'',
                 cardId:''            
             }
         },
+        components:{publicTop},
         mounted(){
             // this.getList()
         },

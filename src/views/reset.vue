@@ -1,19 +1,20 @@
-<template lang="pug">   
-    .login        
+<template lang="pug"> 
+    .publicBack  
+        .login        
 
-       .center 重置密码
+            .center 重置密码
+                
+                .num 
+
+                    input(v-model='num' placeholder="请输入手机号码")
+                    el-button.fr(@click="getcode(num)" size="mini" style='margin-top:20px') {{msg}}
+                    //- .fr.getcode(@click="getcode(num)")
+                    //-     |{{msg}}
+                    input(v-model='code' placeholder="请输入验证码")
+                    input(v-model='pass' placeholder="请输入6-26位密码") 
+                .clear
+                .loginButton(@click="reset") 确认重置
         
-        .num 
-
-            input(v-model='num' placeholder="请输入手机号码")
-            el-button.fr(@click="getcode(num)" size="mini" style='margin-top:20px') {{msg}}
-            //- .fr.getcode(@click="getcode(num)")
-            //-     |{{msg}}
-            input(v-model='code' placeholder="请输入验证码")
-            input(v-model='pass' placeholder="请输入6-26位密码") 
-
-        .loginButton(@click="reset") 确认重置
-            
             
 </template>
 

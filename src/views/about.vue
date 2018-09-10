@@ -1,18 +1,19 @@
 <template lang="pug">
 div
     public-top
+    .matchInfo
 
-    .w1200.about
-        .title 联系我们
+        .w1200.about
+            .title 联系我们
 
-        .each 邮箱：
-            span {{item.email}}
+            .each 邮箱：
+                span {{item.email}}
 
-        .each 电话：
-            span {{item.phone}}
+            .each 电话：
+                span {{item.phone}}
 
-        .each 地址：
-            span {{item.address}}
+            .each 地址：
+                span {{item.address}}
 </template>
 
 <script>
@@ -35,7 +36,6 @@ div
 <style lang="sass">
 .about
     width: 600px
-    background: #eee
     color: #333
     padding: 50px
     border-radius: 10px

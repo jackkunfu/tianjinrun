@@ -1,14 +1,19 @@
 <template lang="pug">
-
-    .w1200(style="width:1000px;")
-        cp-person-info(:objData="propData" @submit="editOk" :list="list" :isSelect="isSelect" :selects="selects")
+    .edit
+        public-top
+        .matchInfo
+            process-tab
+            .w1200(style="width:1000px;")
+            cp-person-info(:objData="propData" @submit="editOk" :list="list" :isSelect="isSelect" :selects="selects")
                     
 </template>
 <script>
     import CpPersonInfo from "../components/cpPersonInfo.vue";
+    import publicTop from "./publicTop.vue"
+    import processTab from "./processTab.vue";
     export default {
         name: 'editInfo',
-        components: { CpPersonInfo },
+        components: { CpPersonInfo,publicTop,processTab},
         data(){
             let query = this.$route.query;
             let isEdit = query.type == 'edit'
@@ -46,10 +51,10 @@
             async getUserDetail(){
                 let loading = this.$loading()
                 let res = await this.ajax('/app/user/getEnrollUserById', {
-                    // personId: this.propData.id,
-                    // entryId: this.propData.entryId,
-                    personId: '241238967867932672',
-                    entryId: '5a503701ff0e4c74abcb05a15f4b9489'
+                    personId: this.propData.id,
+                    entryId: this.propData.entryId,
+                    // personId: '241238967867932672',
+                    // entryId: '5a503701ff0e4c74abcb05a15f4b9489'
                 }, 'post')
                 if(res && res.code == this.successCode){
                     this.propData = res.objectData || {}
@@ -57,7 +62,6 @@
                 loading.close()
             },
             async editOk(obj){
-                // console.log(obj)
                 if(this.isEdit){
                     obj.id = this.id
                 }
@@ -66,10 +70,10 @@
                 opt.entryId = this.propData.entryId
 
                 delete opt.type
-
+                
                 let res = await this.ajax('/app/user/saveEnrollUser', opt)
                 if(res && res.code == this.successCode){
-                    window.history.go(-1)
+                    //window.history.go(-1)
                 }
             }
         }
