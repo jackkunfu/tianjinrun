@@ -31,7 +31,7 @@
                         .payType 支付宝支付                        
                         img.changePay(src="../assets/choose.png" v-if="payWay==7")
                         img.changePay(src="../assets/notChoose.png" v-else)
-                    el-button(@click="gopay" style='margin-top:30px') 确认支付
+                    el-button(@click="ensure" style='margin-top:30px') 确认支付
         
         
 
@@ -62,19 +62,22 @@
                     sessionid: JSON.parse(localStorage.RunUserInfo).sessionId,
                     outTradeNo:this.$route.query.outTradeNo
                 })
-                if(get && get.code == 911){   
+                if(get && get.code == 911){
+                    this.gopay()
+                }else{
+                    
                 }
             },
             async gopay(){
                 if(this.payWay == 0) return alert("请先选择付款方式")
                 var payType=0;
-                if(this.payWay == 6) payType=6
-                if(this.payWay == 7) payType=7
+                if(this.payWay == 6) payType = 6
+                if(this.payWay == 7) payType = 7
                 var req={mobile : JSON.parse(localStorage.RunUserInfo).mobile || "",
                     sessionid : JSON.parse(localStorage.RunUserInfo).sessionId || "",
                     outTradeNo : this.$route.query.outTradeNo,
                     body : this.totalData.eventName,
-                    payType : 6,//支付宝：7，微信：6
+                    payType : payType,//支付宝：7，微信：6
                     payFrom : 1,
                     total_fee : this.totalData.totalFee
                 }

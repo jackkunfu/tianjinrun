@@ -18,6 +18,10 @@
                     @province="(data)=>{changeDist(data, 0)}" @city="(data)=>{changeDist(data, 1)}" @area="(data)=>{changeDist(data, 2)}"
                     class="form-control" autocomplete="off"
                 )
+                el-date-picker(
+                    v-else-if="item.key == 'birthday'"
+                    v-model="obj[item.key]"
+                )
                 //- :province="selectProvince.province" :city="selectProvince.city" :area="selectProvince.area"
                 el-select(
                     v-else
@@ -40,12 +44,9 @@
             //- 时间 地区
             el-form-item(v-else-if="item.formType == 'time'" :label="item.name")
                 
-                el-date-picker(
-                    v-if="item.key=='birthday'"
-                    v-model="obj[item.key]"
-                )
+               
                 el-time-picker(
-                    v-else-if="item.key=='finishTime' || item.key=='expectFinishTime'"
+                    v-if="item.key=='finishTime' || item.key=='expectFinishTime'"
                     :picker-options="{selectableRange: '00:00:00-12:59:59'}"
                     v-model="obj[item.key]"
                 )
@@ -65,31 +66,31 @@
                     img(src="../assets/add-img.png" @click="upfile(item.key)")
 
         //- 级联
-        //- template(v-if="isSelect")
-        //-     template(v-if="selectsArr.length > 0" v-for="(item, i) in selectsArr")
-        //-         el-form-item(:label="item.name")
-        //-             el-select(
-        //-                 :placeholder="'请选择'+item.name"
-        //-                 v-model="selectObj[i].firstValue" @change="(data)=>{selectChange(data, i)}"
-        //-             )
-        //-                 el-option(
-        //-                     filterable = false
-        //-                     v-for="(it, j) in item.paramsArr" :key="j"
-        //-                     :label="it.p"
-        //-                     :value="it.p"
+        template(v-if="isSelect")
+            template(v-if="selectsArr.length > 0" v-for="(item, i) in selectsArr")
+                el-form-item(:label="item.name")
+                    el-select(
+                        :placeholder="'请选择'+item.name"
+                        v-model="selectObj[i].firstValue" @change="(data)=>{selectChange(data, i)}"
+                    )
+                        el-option(
+                            filterable = false
+                            v-for="(it, j) in item.paramsArr" :key="j"
+                            :label="it.p"
+                            :value="it.p"
                             
-        //-                 )
+                        )
 
-        //-         el-form-item(:label="item.selectName")
-        //-             el-select(
-        //-                 v-model="selectObj[i].secondValue" :placeholder="'请选择'+item.name"
-        //-             )
-        //-                 el-option(
-        //-                     filterable = false
-        //-                     v-for="(it, k) in selectObj[i].list" :key="k"
-        //-                     :label="it"
-        //-                     :value="it"
-        //-                 )
+                el-form-item(:label="item.selectName")
+                    el-select(
+                        v-model="selectObj[i].secondValue" :placeholder="'请选择'+item.name"
+                    )
+                        el-option(
+                            filterable = false
+                            v-for="(it, k) in selectObj[i].list" :key="k"
+                            :label="it"
+                            :value="it"
+                        )
 
         el-form-item
             el-button(@click="submit") 确定
@@ -110,6 +111,7 @@
         watch: {
             selects(v){
                 v.forEach( (el, i) => {
+
                     this.$set(this.selectObj, i, {})
                     this.$set(this.selectObj[i], 'firstValue', '')
                     this.$set(this.selectObj[i], 'secondValue', '')
@@ -119,33 +121,30 @@
                     return el
                 })
                 // 处理级联数据
-                if(this.isSelect && this.objData.selectValus != undefined){
+                if(this.isSelect && this.objData.selectValus.length != 0){
                     this.selectObj = this.objData.selectValus.map(el => {
                         return {
-                            firstValue: el.firstGrade.split('_')[1],
-                            secondValue: el.secondGrade.split('_')[1]
+                            firstValue: el.firstGrade.split('_')[1] || "",
+                            secondValue: el.secondGrade.split('_')[1] || ""
                         }
                     })
                 }
-            }
-        },
-        mounted(){
-            this.$nextTick(() => {
-                this.fillData()
-            })
-        },
-        methods: {
-            fillData(){
-                console.log(this.obj);
-                // Object.keys(this.obj)
-                // 图片数据处理
+            },
+            objData(v){
+                this.obj = v
+                 // 图片数据处理
                 if(this.obj.runwayImage){
                     // this.obj.runwayImageArr = this.obj.runwayImage.split(',')
                     this.$set(this.obj, 'runwayImageArr', this.obj.runwayImage.split(','))
+                    
                 }
                 if(this.obj.completionCertificate) {
                     // this.obj.completionCertificateArr = this.obj.completionCertificate.split(',')
                     this.$set(this.obj, 'completionCertificateArr', this.obj.completionCertificate.split(','))
+                }
+                if(this.obj.healthCertificate) {
+                    // this.obj.healthCertificateArr = this.obj.healthCertificate.split(',')
+                    this.$set(this.obj, 'healthCertificateArr', this.obj.healthCertificate.split(','))
                 }
 
                 // 省市区数据处理
@@ -154,10 +153,27 @@
                     this.selectProvince.city = this.obj.location.split(',')[1]
                     this.selectProvince.area = this.obj.location.split(',')[2]
                 }
-
+                //时间处理
+                if(this.obj.expectFinishTime){
+                }
+            }
+        },
+        mounted(){
+            // this.$nextTick(() => {                  
+                //this.fillData() 
+            // })
+        },
+        methods: {
+            fillData(){
+                // Object.keys(this.obj)               
             },
             changeDist(data, i){
-                if(!this.obj.location) this.$set(this.obj, 'location', [])
+                console.log("data",data)
+                console.log("zf",this.obj.location)  
+                // this.selectProvince.province = data.value
+                // this.selectProvince.city = data.value
+                // this.selectProvince.area = data.value              
+                if(!this.obj.location) this.$set(this.obj, 'location', []) 
                 this.obj.location[i] = data.value
             },
             upfile(key){
@@ -173,6 +189,7 @@
                         if(!this.obj[key+'Arr']) this.$set(this.obj, key+'Arr', [])
                         this.obj[key+'Arr'].push(res.objectData)
                     }
+                    console.log(this.obj);
                 }
             },
             submit(){
@@ -191,15 +208,20 @@
                     delete copyData.runwayImageArr
                 }
 
+                 if(copyData.healthCertificateArr){
+                    copyData.healthCertificate = copyData.healthCertificateArr.join(',')
+                    delete copyData.healthCertificateArr
+                }
+
                 // dymaic
 
                 // 地区省市区处理
                 copyData.location = typeof copyData.location == 'object' ? copyData.location.join(',') : copyData.location
 
                 // 时间转换成秒
+          
                 copyData.finishTime = ( new Date(copyData.finishTime).getTime() - new Date().setHours(0,0,0,0) )/1000
                 copyData.expectFinishTime = ( new Date(copyData.expectFinishTime).getTime() - new Date().setHours(0,0,0,0) )/1000
-                console.log("copyData",copyData);
                 return copyData
             },
             selectChange(data, i){
@@ -207,75 +229,120 @@
                 this.$set(this.selectObj[i], 'list', this.selectsArr[i].paramsArr.filter(el => el.p == data)[0].c)
             },
             testInput(){
+                var dynamicForm = []
                 for(let i=0; i < this.list.length; i++){
                     let el = this.list[i]
                     let key = el.key, name = el.name
-
-                    if(this.obj[key]){
-                        let keyVal = typeof this.obj[key] == 'string' ? this.obj[key].trim() : this.obj[key]
-                        if(key == 'phone'){
-                            if( !this.validatemobile(keyVal) ){
-                                alert(name + '格式不正确')
+                    console.log("检测",el.dynamic)
+                    if(el.dynamic){
+                        var dynamicTemp = {};                     
+                        dynamicTemp.id = el.id;
+                        dynamicTemp.column = key;
+                        dynamicTemp.value = this.obj[key];
+                        dynamicForm.push(dynamicTemp);
+                        console.log("动态表单",dynamicTemp)
+                        if(el.required == true){
+                            if(this.obj[key] === null || this.obj[key] === undefined || this.obj[key] === '' || this.obj[key].trim() == ''){
+                                alert(name+"不可为空")
                                 return false
-                            }
-                        }else if(key == 'cardId'){
-                            if( this.obj.cardType == '身份证' && !(/^[1-9][0-9]{5}([1][9][0-9]{2}|[2][0][0|1][0-9])([0][1-9]|[1][0|1|2])([0][1-9]|[1|2][0-9]|[3][0|1])[0-9]{3}([0-9]|[X])$/.test(keyVal)) ){
-                                alert(name + '格式不正确')
-                                return false
-                            }else if( this.obj.cardType == '护照' && !(/[\\u4E00-\\u9FFF]+/g.test(keyVal)) ){
-                                alert(name + '格式不正确')
-                                return false
-                            }
-                        }else if(key == 'location'){
-                            if(!this.obj.location[0] || this.obj.location[0] == '省'){
-                                alert('请选择省')
-                                return false
-                            }else if(!this.obj.location[1] || this.obj.location[1] == '市'){
-                                alert('请选择市')
-                                return false
-                            }else if(!this.obj.location[2] || this.obj.location[2] == '区'){
-                                alert('请选择区')
-                                return false
-                            }
-                        }else if(key == 'emergencyPhone'){
-                            if( !this.validatemobile(keyVal) ){
-                                alert(name + '格式不正确')
-                                return false
-                            }
-                        }else if(key == 'email'){
-                            if( !(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(keyVal) ) ){
-                                alert(name + '格式不正确')
-                                return false
-                            }
-                        }else if(el.formType == 'image'){   // 图片
-                            if(el.required){
-                                // if(!keyVal && keyVal.length == 0){
-                                if(!this.obj[key+'Arr'] || this.obj[key+'Arr'].length == 0){
-                                    alert('请上传'+name)
+                            }                           
+                        }else{
+                            if(dynamicTemp.value == "" || dynamicTemp.value==undefined){
+                                dynamicTemp.value = ""
+                            }  
+                        }
+                        delete this.obj[key]                        
+                    }else{
+                        if(this.obj[key]){
+                            let keyVal = typeof this.obj[key] == 'string' ? this.obj[key].trim() : this.obj[key]
+                            if(key == 'phone'){
+                                if( !this.validatemobile(keyVal) ){
+                                    alert(name + '格式不正确')
                                     return false
                                 }
-                            }
-                        }
-                    }else {
-                        if(this.obj[key] === null || this.obj[key] === undefined || this.obj[key] === '' || this.obj[key].trim() == ''){
-                            if(el.required){
-                                if(el.formType == 'image'){   // 图片
-                                    if(el.required){
-                                        // if(!keyVal && keyVal.length == 0){
-                                        if(!this.obj[key+'Arr'] || this.obj[key+'Arr'].length == 0){
-                                            alert('请上传'+name)
-                                            return false
-                                        }
+                            }else if(key == 'cardId'){
+                                if( this.obj.cardType == '身份证' && !(/^[1-9][0-9]{5}([1][9][0-9]{2}|[2][0][0|1][0-9])([0][1-9]|[1][0|1|2])([0][1-9]|[1|2][0-9]|[3][0|1])[0-9]{3}([0-9]|[X])$/.test(keyVal)) ){
+                                    alert(name + '格式不正确')
+                                    return false
+                                }else if( this.obj.cardType == '护照' && !(/[\\u4E00-\\u9FFF]+/g.test(keyVal)) ){
+                                    alert(name + '格式不正确')
+                                    return false
+                                }
+                            }else if(key == 'location'){
+                                if(!this.obj.location[0] || this.obj.location[0] == '省'){
+                                    alert('请选择省')
+                                    return false
+                                }else if(!this.obj.location[1] || this.obj.location[1] == '市'){
+                                    alert('请选择市')
+                                    return false
+                                }else if(!this.obj.location[2] || this.obj.location[2] == '区'){
+                                    alert('请选择区')
+                                    return false
+                                }
+                            }else if(key == 'emergencyPhone'){
+                                if( !this.validatemobile(keyVal) ){
+                                    alert(name + '格式不正确')
+                                    return false
+                                }
+                            }else if(key == 'email'){
+                                if( !(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(keyVal) ) ){
+                                    alert(name + '格式不正确')
+                                    return false
+                                }
+                            }else if(el.formType == 'image'){   // 图片
+                                if(el.required){
+                                    // if(!keyVal && keyVal.length == 0){
+                                    if(!this.obj[key+'Arr'] || this.obj[key+'Arr'].length == 0){
+                                        alert('请上传'+name)
+                                        return false
                                     }
-                                }else {
-                                    alert(name + '不能为空')
-                                    return false
                                 }
-                                
+                            }
+                        }else {
+                            if(this.obj[key] === null || this.obj[key] === undefined || this.obj[key] === '' || this.obj[key].trim() == ''){
+                                if(el.required){
+                                    if(el.formType == 'image'){   // 图片
+                                        if(el.required){
+                                            // if(!keyVal && keyVal.length == 0){
+                                            if(!this.obj[key+'Arr'] || this.obj[key+'Arr'].length == 0){
+                                                alert('请上传'+name)
+                                                return false
+                                            }
+                                        }
+                                    }else {
+                                        alert(name + '不能为空')
+                                        return false
+                                    }
+                                    
+                                }
                             }
                         }
-                    }
+                    }                    
+                   
                 }
+                if(this.isSelect){
+                    var para = []
+                    var selectArr = this.selects
+                    for(var ke in selectArr){
+                        if(this.selectObj[ke].firstValue == '' || this.selectObj[ke].firstValue == undefined){
+                            alert(selectArr[ke].name + "不能为空")
+                            return false
+                        }
+                        if(this.selectObj[ke].secondValue == '' || this.selectObj[ke].secondValue == undefined){
+                            alert(selectArr[ke].selectName + "不能为空")
+                            return false
+                        }
+                        var example = {};
+                        example.firstValue = this.selectObj[ke].firstValue;
+                        example.secondValue = this.selectObj[ke].secondValue;
+                        example.firstLabel = selectArr[ke].name;
+                        example.secondLabel = selectArr[ke].selectName;
+                        example.id = selectArr[ke].id;
+                        para.push(example);
+                    }
+                    this.obj.params = JSON.stringify(para)                   
+                }                
+                this.obj.dynamicForm = JSON.stringify(dynamicForm) 
                 return true
             }
         }

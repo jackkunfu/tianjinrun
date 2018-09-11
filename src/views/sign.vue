@@ -62,7 +62,7 @@
                 })
                 if(get && get.code == this.successCode){
                     var InvitationInfo=get.objectData.info;
-                    InvitationInfo.hasInvite=true;
+                    InvitationInfo.hasInvite = true;
                     this.goUrl('/editInfo', InvitationInfo)
                 }
                 if(get && get.code == 412){
@@ -76,13 +76,14 @@
                     var addInfo = {}
                     addInfo.type = "add"
                     addInfo.entryId = item.entryId
+                    addInfo.hasInvite = false;
                     // addInfo.selectValus = []
                     this.goUrl("/editInfo",addInfo)
                 }
             },
             async getMatchs(){
                 let res = await this.ajax('/app/mls/getEventEntryList', {
-                    eventId: '080b9235021a435883c30559342b748a',
+                    eventId: '4663bafefb4143f588923ca288d51d45',
                     pageNo: 1,
                     pagesize: 100
                 })
