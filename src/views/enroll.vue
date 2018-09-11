@@ -154,7 +154,6 @@
                 this.goUrl('/editInfo', item)
             },
             async getList(){
-                console.log(this.$route.query);
                 var entryId=this.$route.query.entryId;
                 let res = await this.ajax('/app/mls/getEventDyncList', {
                     mobile: JSON.parse(localStorage.RunUserInfo).mobile,

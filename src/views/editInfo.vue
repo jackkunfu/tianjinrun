@@ -20,7 +20,7 @@
             return {
                 personInfo: {},
                 list: [],
-                propData: query,
+                propData: {},
                 // propData: isEdit ? { entryId: query.entryId } : {},
                 isSelect: false,
                 selects: [],
@@ -30,15 +30,18 @@
         },
         mounted(){
             this.getAsyncList()
-            if(this.isEdit){
-                this.getUserDetail()
-            }
+            this.$nextTick(() => {
+               this.getUserDetail()
+            })
+            // if(this.isEdit){
+            //this.getUserDetail()
+            // }
         },
         methods: {
             async getAsyncList(){
                 let loading = this.$loading()
                 let res = await this.ajax('/app/mls/getEventDyncList', {
-                    entryId: this.propData.entryId
+                    entryId: this.$route.query.entryId
                     // entryId: '5a503701ff0e4c74abcb05a15f4b9489'
                 }, 'post')
                 if(res && res.code == this.successCode){
@@ -50,13 +53,14 @@
             },
             async getUserDetail(){
                 let loading = this.$loading()
-                let res = await this.ajax('/app/user/getEnrollUserById', {
-                    personId: this.propData.id,
-                    entryId: this.propData.entryId,
+                let res = await this.ajax('/app/user/getEnrollUser', {
+                    mobile: JSON.parse(localStorage.RunUserInfo).mobile,
+                    entryId: this.$route.query.entryId,
                     // personId: '241238967867932672',
                     // entryId: '5a503701ff0e4c74abcb05a15f4b9489'
                 }, 'post')
                 if(res && res.code == this.successCode){
+                    console.log(res)
                     this.propData = res.objectData || {}
                 }
                 loading.close()

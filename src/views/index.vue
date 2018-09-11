@@ -25,9 +25,9 @@
             
         div
             //- img.poster(src="../assets/mainImg.jpeg")
-            .el-carousel.poster
-                .el-carousel-item(v-for="(item,ke) in banner" :key="ke")
-                    img.poster(:src="item.image")    
+            el-carousel.poster
+                el-carousel-item(v-for="(item,ke) in banner" :key="ke")
+                    img.poster(:src="item.image") 
 
         .main
             .content
@@ -140,7 +140,6 @@
                 })
                 if(time && time.code == this.successCode){
                     // this.matchName = time.list[0].name
-                    console.log(time);
                     this.enrolls = time.list || []
                     this.banner = time.banners || []
                     this.enrolls.forEach(el => {

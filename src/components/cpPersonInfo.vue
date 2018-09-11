@@ -2,7 +2,7 @@
 
     el-form(
         :model="obj" label-width="100px" size="small"
-        style="width:800px;margin: 0 auto;padding: 50px 0;"
+        style="width:600px;margin: 0 auto;padding: 50px 0;"
     )
 
         template(v-for="(item, i) in list")
@@ -65,31 +65,31 @@
                     img(src="../assets/add-img.png" @click="upfile(item.key)")
 
         //- 级联
-        template(v-if="isSelect")
-            template(v-if="selectsArr.length > 0" v-for="(item, i) in selectsArr")
-                el-form-item(:label="item.name")
-                    el-select(
-                        :placeholder="'请选择'+item.name"
-                        v-model="selectObj[i].firstValue" @change="(data)=>{selectChange(data, i)}"
-                    )
-                        el-option(
-                            filterable = false
-                            v-for="(it, j) in item.paramsArr" :key="j"
-                            :label="it.p"
-                            :value="it.p"
+        //- template(v-if="isSelect")
+        //-     template(v-if="selectsArr.length > 0" v-for="(item, i) in selectsArr")
+        //-         el-form-item(:label="item.name")
+        //-             el-select(
+        //-                 :placeholder="'请选择'+item.name"
+        //-                 v-model="selectObj[i].firstValue" @change="(data)=>{selectChange(data, i)}"
+        //-             )
+        //-                 el-option(
+        //-                     filterable = false
+        //-                     v-for="(it, j) in item.paramsArr" :key="j"
+        //-                     :label="it.p"
+        //-                     :value="it.p"
                             
-                        )
+        //-                 )
 
-                el-form-item(:label="item.selectName")
-                    el-select(
-                        v-model="selectObj[i].secondValue" :placeholder="'请选择'+item.name"
-                    )
-                        el-option(
-                            filterable = false
-                            v-for="(it, k) in selectObj[i].list" :key="k"
-                            :label="it"
-                            :value="it"
-                        )
+        //-         el-form-item(:label="item.selectName")
+        //-             el-select(
+        //-                 v-model="selectObj[i].secondValue" :placeholder="'请选择'+item.name"
+        //-             )
+        //-                 el-option(
+        //-                     filterable = false
+        //-                     v-for="(it, k) in selectObj[i].list" :key="k"
+        //-                     :label="it"
+        //-                     :value="it"
+        //-                 )
 
         el-form-item
             el-button(@click="submit") 确定
@@ -136,6 +136,7 @@
         },
         methods: {
             fillData(){
+                console.log(this.obj);
                 // Object.keys(this.obj)
                 // 图片数据处理
                 if(this.obj.runwayImage){
