@@ -57,7 +57,6 @@
             },
             async enroll(payCode){    
                 var map = {};
-                console.log(opt);
                 var opt = this.enrollInfo;
                 map[opt.cardId] = opt.id;
                 var map2json=JSON.stringify(map);
@@ -79,7 +78,6 @@
                 
             },
             async getAsyncList(){
-                console.log(this.$route.query)
                 let loading = this.$loading()
                 let res = await this.ajax('/app/mls/getEventDyncList', {
                     entryId: this.$route.query.entryId
@@ -101,7 +99,6 @@
                     // entryId: '5a503701ff0e4c74abcb05a15f4b9489'
                 }, 'post')
                 if(res && res.code == this.successCode){
-                    console.log(res)
                     this.propData = res.objectData || {}
                     if(res.objectData != undefined && res.objectData != "") this.isEdit = true
                 }
@@ -118,7 +115,6 @@
                 opt.entryId = this.$route.query.entryId
 
                 delete opt.type
-                console.log(opt);
                 let res = await this.ajax('/app/user/saveEnrollUser', opt)
                 if(res && res.code == this.successCode){
                     if(this.hasInvite) return this.Invitation = true;

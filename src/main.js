@@ -5,6 +5,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import $ from 'jquery'
+import QRCode from 'qrcode'
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'

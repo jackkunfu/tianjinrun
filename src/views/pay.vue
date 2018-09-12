@@ -32,7 +32,10 @@
                         img.changePay(src="../assets/choose.png" v-if="payWay==7")
                         img.changePay(src="../assets/notChoose.png" v-else)
                     el-button(@click="ensure" style='margin-top:30px') 确认支付
-        
+
+                    #qrcode
+                        
+       
         
 
 </template>
@@ -40,17 +43,21 @@
 <script>
     import publicTop from "./publicTop.vue";
     import processTab from "./processTab.vue";
+    import QRCode from 'qrcode'
     export default {
         name: 'pay',
         data(){
             return {
                 totalData:{},
-                payWay:0                      
+                payWay:0,
+                outTradeNo : this.$route.query.outTradeNo,
+                QueryDetail:''                     
             }
         },
         components: {
             publicTop,
-            processTab          
+            processTab,
+                     
         },
         mounted(){
             this.getpay()
@@ -70,21 +77,37 @@
             },
             async gopay(){
                 if(this.payWay == 0) return alert("请先选择付款方式")
-                var payType=0;
+                var payType = null;
                 if(this.payWay == 6) payType = 6
                 if(this.payWay == 7) payType = 7
-                var req={mobile : JSON.parse(localStorage.RunUserInfo).mobile || "",
+                var req={
+                    mobile : JSON.parse(localStorage.RunUserInfo).mobile || "",
                     sessionid : JSON.parse(localStorage.RunUserInfo).sessionId || "",
-                    outTradeNo : this.$route.query.outTradeNo,
+                    // sessionid:"df55e122ec6f4fa4a2bc4167f4dd9122",
+                    outTradeNo : this.outTradeNo,
                     body : this.totalData.eventName,
                     payType : payType,//支付宝：7，微信：6
                     payFrom : 1,
-                    total_fee : this.totalData.totalFee
+                    total_fee : this.totalData.totalFee*1000,
+                    password : ""
                 }
+                
                 let get = await this.ajax('/app/mls/order/unifiedPay', req)
                 if(get && get.code == this.successCode){
-                    var payUrl=get.data.payUrl;
-                    $(payUrl).appendTo("#alipay");   
+                    if(payType == 7){
+                        var payUrl = get.data.payUrl;
+                        $(payUrl).appendTo("#alipay");  
+                    }
+                    if(payType == 6){
+                        var qrcode = new QRCode(document.getElementById("qrcode"), {
+                            width : 200,
+                            height : 200
+                        });
+                        qrcode.makeCode(get.data.codeUrl);
+
+                    }
+                    this.outTradeNo = get.objectData;
+                     
                 }
             },
             async getpay(){
@@ -131,5 +154,9 @@
     position: relative
     height: 20px
     top: 10px
+#canvas
+    width: 80%!important
+    // height: auto!important
+  
 
 </style>

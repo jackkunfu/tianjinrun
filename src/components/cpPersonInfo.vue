@@ -12,15 +12,23 @@
 
             //- 下拉选择
             el-form-item(v-else-if="item.formType == 'select'" :label="item.name")
+                //- v-distpicker(
+                //-     v-if="item.key=='location'" v-model="obj[item.key]"
+                //-     :province="selectProvince.province" :city="selectProvince.city" :area="selectProvince.area"
+                //-     @province="(data)=>{changeDist(data, 0)}" @city="(data)=>{changeDist(data, 1)}" @area="(data)=>{changeDist(data, 2)}"
+                //-     class="form-control" autocomplete="off"
+                //- )
                 v-distpicker(
-                    v-if="item.key=='location'" v-model="obj[item.key]"
-                    :province="selectProvince.province" :city="selectProvince.city" :area="selectProvince.area"
-                    @province="(data)=>{changeDist(data, 0)}" @city="(data)=>{changeDist(data, 1)}" @area="(data)=>{changeDist(data, 2)}"
-                    class="form-control" autocomplete="off"
-                )
+                    v-if="item.key=='location'"
+                    :province="selectProvince.province" @province="changeProvince"
+                    :city="selectProvince.city" @city="changeCity"
+                    :area="selectProvince.area" @area="changeArea"
+                    class="form-control" autocomplete="off"  v-model="obj[item.key]")
+              
                 el-date-picker(
                     v-else-if="item.key == 'birthday'"
                     v-model="obj[item.key]"
+                    value-format="yyyy-MM-dd"
                 )
                 //- :province="selectProvince.province" :city="selectProvince.city" :area="selectProvince.area"
                 el-select(
@@ -103,7 +111,7 @@
         data(){
             return {
                 obj: this.objData,
-                selectProvince: { province: '', city: '', area: '' },
+                selectProvince: { province: '浙江省', city: '杭州市', area: '西湖区' },
                 selectObj: [],
                 selectsArr: []
             }
@@ -149,12 +157,24 @@
 
                 // 省市区数据处理
                 if(this.obj.location){
+
                     this.selectProvince.province = this.obj.location.split(',')[0]
                     this.selectProvince.city = this.obj.location.split(',')[1]
                     this.selectProvince.area = this.obj.location.split(',')[2]
+
                 }
                 //时间处理
                 if(this.obj.expectFinishTime){
+                    var expectFinishTime = this.obj.expectFinishTime;
+                    let h = Math.floor(expectFinishTime/3600), m = Math.floor(expectFinishTime%3600/60), s = expectFinishTime%3600%60
+                    var newTime = new Date().setHours(h,m,s,0)
+                    this.obj.expectFinishTime = newTime
+                }
+                if(this.obj.finishTime){
+                    var finishTime = this.obj.finishTime;
+                    let h = Math.floor(finishTime/3600), m = Math.floor(finishTime%3600/60), s = finishTime%3600%60
+                    var newTime = new Date().setHours(h,m,s,0)
+                    this.obj.expectFinishTime = newTime
                 }
             }
         },
@@ -167,14 +187,19 @@
             fillData(){
                 // Object.keys(this.obj)               
             },
-            changeDist(data, i){
-                console.log("data",data)
-                console.log("zf",this.obj.location)  
-                // this.selectProvince.province = data.value
-                // this.selectProvince.city = data.value
-                // this.selectProvince.area = data.value              
-                if(!this.obj.location) this.$set(this.obj, 'location', []) 
-                this.obj.location[i] = data.value
+            // changeDist(data, i){
+            //     if(!this.obj.location)  this.$set(this.obj, 'location', []) 
+            //     this.obj.location[i] = data.value
+            // }, 
+            changeProvince(a) {
+
+                this.selectProvince.province = a.value;
+            },
+            changeCity(b) {
+                this.selectProvince.city = b.value;
+            },
+            changeArea(c) {
+                this.selectProvince.area = c.value;
             },
             upfile(key){
                 let inputFile = document.createElement('input')
@@ -189,15 +214,14 @@
                         if(!this.obj[key+'Arr']) this.$set(this.obj, key+'Arr', [])
                         this.obj[key+'Arr'].push(res.objectData)
                     }
-                    console.log(this.obj);
                 }
             },
             submit(){
                 if(this.testInput()){
-                    this.$emit('submit', this.changeObj(this.obj))
+                   this.$emit('submit', this.changeObj(this.obj))
                 }
             },
-            changeObj(data){
+            changeObj(data){           
                 let copyData = JSON.parse( JSON.stringify(data) )
                 if(copyData.completionCertificateArr){
                     copyData.completionCertificate = copyData.completionCertificateArr.join(',')
@@ -213,16 +237,28 @@
                     delete copyData.healthCertificateArr
                 }
 
-                // dymaic
+                
 
                 // 地区省市区处理
-                copyData.location = typeof copyData.location == 'object' ? copyData.location.join(',') : copyData.location
+                copyData.location = this.selectProvince.province + "," + this.selectProvince.city+"," + this.selectProvince.area
+                // copyData.location = typeof copyData.location == 'object' ? copyData.location.join(',') : copyData.location
 
                 // 时间转换成秒
-          
+                
                 copyData.finishTime = ( new Date(copyData.finishTime).getTime() - new Date().setHours(0,0,0,0) )/1000
                 copyData.expectFinishTime = ( new Date(copyData.expectFinishTime).getTime() - new Date().setHours(0,0,0,0) )/1000
-                return copyData
+                var giveData = {}
+                giveData.isSelect = copyData.isSelect;
+                if(giveData.isSelect) giveData.params = copyData.params;                
+                giveData.dynamicForm = copyData.dynamicForm;
+                for(var ke in this.list){
+                    let el = this.list[ke]
+                    let key = el.key
+                    giveData[key] = value;
+                    var value=copyData[key];
+                    
+                }
+                //return copyData
             },
             selectChange(data, i){
                 this.$set(this.selectObj[i], 'secondValue', '')
@@ -233,14 +269,13 @@
                 for(let i=0; i < this.list.length; i++){
                     let el = this.list[i]
                     let key = el.key, name = el.name
-                    console.log("检测",el.dynamic)
+                    // dynamic
                     if(el.dynamic){
                         var dynamicTemp = {};                     
                         dynamicTemp.id = el.id;
                         dynamicTemp.column = key;
                         dynamicTemp.value = this.obj[key];
                         dynamicForm.push(dynamicTemp);
-                        console.log("动态表单",dynamicTemp)
                         if(el.required == true){
                             if(this.obj[key] === null || this.obj[key] === undefined || this.obj[key] === '' || this.obj[key].trim() == ''){
                                 alert(name+"不可为空")
@@ -269,13 +304,13 @@
                                     return false
                                 }
                             }else if(key == 'location'){
-                                if(!this.obj.location[0] || this.obj.location[0] == '省'){
+                                if(!this.selectProvince.province || this.selectProvince.province == '省'){
                                     alert('请选择省')
                                     return false
-                                }else if(!this.obj.location[1] || this.obj.location[1] == '市'){
+                                }else if(!this.selectProvince.city || this.selectProvince.city == '市'){
                                     alert('请选择市')
                                     return false
-                                }else if(!this.obj.location[2] || this.obj.location[2] == '区'){
+                                }else if(!this.selectProvince.area || this.selectProvince.area == '区'){
                                     alert('请选择区')
                                     return false
                                 }
@@ -321,6 +356,7 @@
                    
                 }
                 if(this.isSelect){
+                    this.obj.isSelect = true
                     var para = []
                     var selectArr = this.selects
                     for(var ke in selectArr){
@@ -339,6 +375,7 @@
                         example.secondLabel = selectArr[ke].selectName;
                         example.id = selectArr[ke].id;
                         para.push(example);
+                        delete this.obj.selectValus
                     }
                     this.obj.params = JSON.stringify(para)                   
                 }                

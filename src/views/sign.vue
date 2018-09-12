@@ -84,6 +84,7 @@
             async getMatchs(){
                 let res = await this.ajax('/app/mls/getEventEntryList', {
                     eventId: '4663bafefb4143f588923ca288d51d45',
+                    // eventId: "080b9235021a435883c30559342b748a",
                     pageNo: 1,
                     pagesize: 100
                 })

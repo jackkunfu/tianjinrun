@@ -26,39 +26,51 @@
                             .getSex.eventName 性别：{{item.sex}}
 
                     .clear
-                    el-button.fl(style="margin-top:20px") 点击预览
-                    el-button.fr(style="margin-top:20px") 点击下载
+                    el-button.fl(style="margin-top:20px" @click = "getGoodsShow = true") 点击预览
+                    el-button.fr(style="margin-top:20px" @click = "downLoad(item)") 点击下载
                     .clear
+                    .bodyClass(v-if = "getGoodsShow == true")
+                        .el-icon-close(@click="getGoodsShow = false")
+                        img(:src = "item.receiveUrl")
 </template>
 
 <script>
     import publicTop from "./publicTop.vue"
+    import config from '../js/config.js';
     export default {
         name: 'goodsCheck',
         data(){
             return {
+                baseUrl: config.baseUrl,
                 cardId: "",
                 name: "",
-                list: []                                
+                list: [],
+                getGoodsShow: false                                
             }
         },
         components:{publicTop},
         mounted(){
         },
         methods: {
+            downLoad(item){
+                location.href = item.receiveUrl
+            },
             async checkInfo(){
-                // if(this.cardId == '') return alert('请输入证件号')
-                // if(this.name == '') return alert('请输入姓名')
+                if(this.cardId == '') return alert('请输入证件号')
+                if(this.name == '') return alert('请输入姓名')
                 let get = await this.ajax('/search/receive', {
-                    userName: "sqg",
-                    cardId: "567890",
+                    userName: this.name,
+                    cardId: this.cardId,
                     domain: "tjwq-marathon",
-                    sessionId: "f0a737dd8ef84a5483394a4ea5a38a44",
+                    sessionId: JSON.parse(localStorage.RunUserInfo).sessionId,
                 })
-                if(get && get.code == this.successCode){
-                    console.log(get);
-                    this.list=get.list
-                    if(this.list.length == 0) return alert("未查询到领物信息")
+                if(get && get.code == this.successCode){                   
+                    var list = get.list; 
+                    if(list.length == 0) return alert("未查询到信息")
+                    for(var ke in list){
+                        list[ke].receiveUrl = config.baseUrl + list[ke].receiveUrl
+                    }
+                    this.list = list
                 }
             },
         }
