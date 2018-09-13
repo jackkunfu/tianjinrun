@@ -58,17 +58,20 @@
             async enroll(payCode){    
                 var map = {};
                 var opt = this.enrollInfo;
-                map[opt.cardId] = opt.id;
+                map[opt.cardId] = opt.personId;
                 var map2json=JSON.stringify(map);
+
+                console.log(map2json)
                 let goEnroll = await this.ajax('/app/mls/order/enrolls', {
                     mobile: JSON.parse(localStorage.RunUserInfo).mobile,
                     sessionid: JSON.parse(localStorage.RunUserInfo).sessionId,
                     entryId: this.$route.query.entryId,
                     additionals: [],
-                    from: 'from_webs',
                     param : map2json,
+                    from: 'from_webs',
                     payCode: payCode
                 })
+                console.log({  param : map2json,})
                 if(goEnroll && goEnroll.code == 906){
                     this.goUrl("/pay",{'outTradeNo':goEnroll.outTradeNo})
                 }

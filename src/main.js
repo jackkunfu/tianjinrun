@@ -7,9 +7,11 @@ import router from './router'
 import $ from 'jquery'
 import QRCode from 'qrcode'
 
+
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
+Vue.use(QRCode)
 Vue.use(ElementUI)
 
 import proto from './js/proto'
@@ -18,6 +20,7 @@ import cp from './js/component'
 Vue.use(cp)
 import filter from './js/filter'
 Vue.use(filter)
+
 
 Vue.config.productionTip = false
 

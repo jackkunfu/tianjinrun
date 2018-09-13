@@ -26,12 +26,13 @@
                             .getSex.eventName 性别：{{item.sex}}
 
                     .clear
-                    el-button.fl(style="margin-top:20px" @click = "getGoodsShow = true") 点击预览
+                    //- el-button.fl(style="margin-top:20px" @click = "getGoodsShow = true") 点击预览
                     el-button.fr(style="margin-top:20px" @click = "downLoad(item)") 点击下载
                     .clear
                     .bodyClass(v-if = "getGoodsShow == true")
                         .el-icon-close(@click="getGoodsShow = false")
-                        img(:src = "item.receiveUrl")
+                        //- img(:src = "item.receiveUrl")
+                        img(src="http://192.168.2.13:8082/template/receive/018a8b8a29984196a9a33959c99f2bc1/cbe36626895347629bd030e5304b490e/247017285171019776.pdf")
 </template>
 
 <script>

@@ -7,10 +7,10 @@
                 .event
                     .num
                         |证件号
-                        input(style='margin-left:20px')
+                        input(style='margin-left:20px' v-model="cardId")
                     .num
-                        |验证码
-                        input(style='margin-left:20px')
+                        |姓名
+                        input(style='margin-left:20px' v-model="name")
                     .check(@click="checkInfo") 查询
                 .goods(v-for="(item,ke) in list" :key="ke")
                     .eventName 
@@ -29,7 +29,7 @@
                     //- el-button.fl(style="margin-top:20px") 点击预览
                     //- el-button.fr(style="margin-top:20px") 点击下载
                     //- .clear
-                    el-button.fl(style="margin-top:20px" @click = "getGoodsShow = true") 点击预览
+                    //- el-button.fl(style="margin-top:20px" @click = "getGoodsShow = true") 点击预览
                     el-button.fr(style="margin-top:20px" @click = "downLoad(item)") 点击下载
                     .clear
                     .bodyClass(v-if = "getGoodsShow == true")
@@ -42,12 +42,16 @@
 
 <script>
     import publicTop from "./publicTop.vue"
+    import config from '../js/config.js';
     export default {
         name: 'scoreCheck',
         data(){
             return {
                 list: [],
-                getGoodsShow:false                              
+                baseUrl: config.baseUrl,
+                getGoodsShow:false,
+                name:"",
+                cardId:""                            
             }
         },
         components:{publicTop},
@@ -55,8 +59,16 @@
 
         },
         methods: {
-            downLoad(item){
-                location.href = item.receiveUrl
+            async downLoad(item){                
+                let get = await this.ajax('/search/matchScore', {
+                    eventPayId: item.eventPayId,
+                    domain: "tjwq-marathon"
+                })
+                if(get && get.code == this.successCode){
+                    console.log(this.baseUrl+get.objectData.receiveUrl);
+                   location.href = this.baseUrl+get.objectData.receiveUrl      
+                }
+                // location.href = item.receiveUrl
             },
              async checkInfo(){
                 if(this.cardId == '') return alert('请输入证件号')
@@ -70,7 +82,7 @@
                     var list = get.list;
                     if(list.length == 0) return alert("未查询到信息")   
                     for(var ke in list){
-                        list[ke].receiveUrl = config.baseUrl + list[ke].receiveUrl
+                        list[ke].receiveUrl = this.baseUrl + list[ke].receiveUrl
                     }
                     this.list = list              
                 }

@@ -51,7 +51,7 @@
                 let res = await this.ajax('/basic/user/reg', params)
                 if(res && res.code == this.successCode){
                     alert("注册成功")
-                    //window.localStorage.RunUserInfo = JSON.stringify(objectData);
+                    // window.localStorage.RunUserInfo = JSON.stringify(objectData);
                     this.goUrl('/login')
                 }else {
 

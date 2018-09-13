@@ -72,20 +72,10 @@ export default new Router({
             component: r => require(['./views/editInfo'], r)
         },
         {
-            path: '/add',
-            name: 'add',
-            component: r => require(['./views/add'], r)
-        },
-        {
             path: '/newsDetail',
             name: 'newsDetail',
             component: r => require(['./views/newsDetail'], r)
-        },
-        {
-           path: '/info',
-           name: 'info',
-           component: r => require(['./views/info'], r)
-        },
+        },        
         {
             path: '/descDetail',
             name: 'descDetail',

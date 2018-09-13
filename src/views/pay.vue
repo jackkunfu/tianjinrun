@@ -33,7 +33,14 @@
                         img.changePay(src="../assets/notChoose.png" v-else)
                     el-button(@click="ensure" style='margin-top:30px') 确认支付
 
-                    #qrcode
+        .bodyClass(v-if = "scan == true")
+            .qrcode
+                .scan 
+                    span 微信支付
+                    span.fr(@click="scan = false") 关闭页面
+                img(:src = "cancas") 
+                .weichat 请使用微信扫一扫上面的二维码完成支付
+
                         
        
         
@@ -51,7 +58,9 @@
                 totalData:{},
                 payWay:0,
                 outTradeNo : this.$route.query.outTradeNo,
-                QueryDetail:''                     
+                QueryDetail:'',
+                cancas:'',
+                scan: false                     
             }
         },
         components: {
@@ -67,7 +76,7 @@
                 let get = await this.ajax('/app/mls/order/checkOrderNew', {
                     mobile: JSON.parse(localStorage.RunUserInfo).mobile,
                     sessionid: JSON.parse(localStorage.RunUserInfo).sessionId,
-                    outTradeNo:this.$route.query.outTradeNo
+                    outTradeNo:this.outTradeNo
                 })
                 if(get && get.code == 911){
                     this.gopay()
@@ -88,25 +97,28 @@
                     body : this.totalData.eventName,
                     payType : payType,//支付宝：7，微信：6
                     payFrom : 1,
-                    total_fee : this.totalData.totalFee*1000,
+                    total_fee : this.totalData.totalFee*100,
                     password : ""
                 }
                 
                 let get = await this.ajax('/app/mls/order/unifiedPay', req)
-                if(get && get.code == this.successCode){
+                if(get && get.code == this.successCode){                    
+                    this.outTradeNo = get.objectData;
                     if(payType == 7){
                         var payUrl = get.data.payUrl;
                         $(payUrl).appendTo("#alipay");  
                     }
                     if(payType == 6){
-                        var qrcode = new QRCode(document.getElementById("qrcode"), {
-                            width : 200,
-                            height : 200
-                        });
-                        qrcode.makeCode(get.data.codeUrl);
-
+                        this.scan = true
+                        this.cancas="http://qr.liantu.com/api.php?bg=f3f3f3&fg=000000&gc=222222&el=l&w=200&m=10&text="+get.data.codeUrl
+                        // var qrcode = new QRCode("qrcode");
+                        // qrcode.makeCode(get.data.codeUrl);
+                        // var qrcode = new QRCode(document.getElementById("qrcode"), {
+                        //     width : 200,
+                        //     height : 200
+                        // });
+                        // qrcode.makeCode(get.data.codeUrl);
                     }
-                    this.outTradeNo = get.objectData;
                      
                 }
             },
@@ -154,9 +166,26 @@
     position: relative
     height: 20px
     top: 10px
-#canvas
-    width: 80%!important
-    // height: auto!important
+.qrcode
+    position: fixed
+    top: 20%
+    width: 600px
+    height: 500px
+    background: #ffffff
+    left: 50%
+    margin-left: -300px
+    span
+        cursor: pointer
+    .scan        
+        font-size: 20px
+        width: 200px
+        margin: 40px auto
+    img
+        margin-left: 200px
+    .weichat
+        text-align: center
+        font-size: 16px
+        margin-top: 20px
   
 
 </style>

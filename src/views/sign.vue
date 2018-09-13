@@ -6,11 +6,11 @@
             .match(v-if='hasInvite==true')
                 .name 邀请码报名
                 .time 比赛时间：
-                    span 
+                    span {{matchStartDate|stampToStr}} ~~ {{matchEndDate|stampToStr}}
                 .time 比赛地点：
                     //- span {{item.address}}
-                    span 天津
-                el-button.fr(@click="getInvitation=true" size="mini") 点击获取邀请码
+                    span {{address}}
+                el-button.fr.enrollButton(@click="getInvitation=true" size="mini") 点击获取邀请码
 
                 .clear        
 
@@ -43,7 +43,10 @@
                 list: [],
                 hasInvite:false,
                 getInvitation:false,
-                InvitationCode:''            
+                InvitationCode:'',
+                matchStartDate:'',
+                matchEndDate:'',
+                address:''            
             }
         },
         components: {
@@ -83,7 +86,8 @@
             },
             async getMatchs(){
                 let res = await this.ajax('/app/mls/getEventEntryList', {
-                    eventId: '4663bafefb4143f588923ca288d51d45',
+                    eventId: localStorage.eventId,
+                    // eventId: '4663bafefb4143f588923ca288d51d45',
                     // eventId: "080b9235021a435883c30559342b748a",
                     pageNo: 1,
                     pagesize: 100
@@ -91,6 +95,9 @@
                 if(res && res.code == this.successCode){
                     this.list = res.eventList || []
                     this.hasInvite=res.hasInvite
+                    this.matchStartDate = res.matchEndDate
+                    this.matchEndDate = res.matchEndDate
+                    this.address = res.address
                 }
             }
         }

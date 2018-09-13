@@ -101,7 +101,7 @@
                         )
 
         el-form-item
-            el-button(@click="submit") 确定
+            el-button(@click="submit") 立即报名
 
 </template>
 <script>
@@ -113,7 +113,8 @@
                 obj: this.objData,
                 selectProvince: { province: '浙江省', city: '杭州市', area: '西湖区' },
                 selectObj: [],
-                selectsArr: []
+                selectsArr: [],
+                count:0
             }
         },
         watch: {
@@ -139,7 +140,9 @@
                 }
             },
             objData(v){
+                this.count++;
                 this.obj = v
+                console.log(this.count)
                  // 图片数据处理
                 if(this.obj.runwayImage){
                     // this.obj.runwayImageArr = this.obj.runwayImage.split(',')
@@ -164,28 +167,34 @@
 
                 }
                 //时间处理
-                if(this.obj.expectFinishTime){
-                    var expectFinishTime = this.obj.expectFinishTime;
-                    let h = Math.floor(expectFinishTime/3600), m = Math.floor(expectFinishTime%3600/60), s = expectFinishTime%3600%60
-                    var newTime = new Date().setHours(h,m,s,0)
-                    this.obj.expectFinishTime = newTime
-                }
-                if(this.obj.finishTime){
-                    var finishTime = this.obj.finishTime;
-                    let h = Math.floor(finishTime/3600), m = Math.floor(finishTime%3600/60), s = finishTime%3600%60
-                    var newTime = new Date().setHours(h,m,s,0)
-                    this.obj.expectFinishTime = newTime
-                }
+                if(this.count<=1){
+                    if(this.obj.expectFinishTime){
+                        var expectFinishTime =parseInt(this.obj.expectFinishTime);
+                        let h = Math.floor(expectFinishTime/3600), m = Math.floor(expectFinishTime%3600/60), s = expectFinishTime%3600%60
+                        var newTime = new Date().setHours(h,m,s,0)
+                        //var newTime = new Date( new Date().setHours(0,0,0,0) + time*1000 ) 
+                        this.obj.expectFinishTime = newTime
+                    }
+                    if(this.obj.finishTime){
+                        var finishTime = parseInt(this.obj.finishTime);
+                        let h = Math.floor(finishTime/3600), m = Math.floor(finishTime%3600/60), s = finishTime%3600%60
+                        var newTime = new Date().setHours(h,m,s,0)
+                        // var newTime = new Date( new Date().setHours(0,0,0,0) + time*1000 ) 
+                        this.obj.finishTime = newTime
+                    } 
+                }               
+                
             }
         },
         mounted(){
             // this.$nextTick(() => {                  
-                //this.fillData() 
+                this.fillData() 
             // })
         },
         methods: {
             fillData(){
-                // Object.keys(this.obj)               
+                
+
             },
             // changeDist(data, i){
             //     if(!this.obj.location)  this.$set(this.obj, 'location', []) 
@@ -248,17 +257,20 @@
                 copyData.finishTime = ( new Date(copyData.finishTime).getTime() - new Date().setHours(0,0,0,0) )/1000
                 copyData.expectFinishTime = ( new Date(copyData.expectFinishTime).getTime() - new Date().setHours(0,0,0,0) )/1000
                 var giveData = {}
+                // giveData.isSelect = copyData.id;
                 giveData.isSelect = copyData.isSelect;
                 if(giveData.isSelect) giveData.params = copyData.params;                
                 giveData.dynamicForm = copyData.dynamicForm;
                 for(var ke in this.list){
                     let el = this.list[ke]
                     let key = el.key
-                    giveData[key] = value;
                     var value=copyData[key];
-                    
+                    if(value!="" &&value!=undefined){
+                        giveData[key] = value;
+                    }                  
                 }
-                //return copyData
+                console.log(giveData);
+                return giveData
             },
             selectChange(data, i){
                 this.$set(this.selectObj[i], 'secondValue', '')

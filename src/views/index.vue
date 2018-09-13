@@ -3,11 +3,12 @@
         .w1200.sign
             .fr(v-if="ifLogin == false")
                 span(@click="goUrl('/register')") 注册
-                span(@click="goUrl('/login')") 登陆
+                span(@click="goUrl('/sign')") 登陆
             .clear
             .fr(v-if="ifLogin == true")
-                span() {{hasNum}}
-                span() 已登陆
+                span {{hasNum}}
+                span 已登陆
+                span(@click="clearNum") 退出登录
             .clear
         
         .w1200
@@ -56,7 +57,7 @@
                 //- .fr 
                 .enrollEntry
                     .enroll-list(v-for="(item, i) in enrolls")
-                        .enroll(v-if="item.status==1" @click="goUrl('/sign')") 立即报名
+                        .enroll(v-if="item.status==1" @click="goEnroll(item)") 立即报名
                         .enroll.grey(v-else) 报名已结束
                         .center.know {{item.name}}
                         .time 
@@ -106,6 +107,18 @@
             // this.getTime()
         },
         methods: {
+            goEnroll(item){
+                window.localStorage.eventId=item.id;                
+                this.goUrl("/sign")
+            },
+            clearNum(){
+                this.ifLogin = false;
+                this.hasNum = '';
+                window.localStorage.clear();
+                console.log(this.ifLogin)
+                console.log(this.hasNum)
+                console.log(localStorage);
+            },
             async getNews(){
                 //获取域名请求赛事公告
                 //var host = window.location.host;
@@ -130,6 +143,7 @@
                 })
                 if(re && re.code == this.successCode){
                     this.report = re.list || []
+                    window.localStorage.eventId = re.list[0].marathonEvent.id 
                 }
                 //获取域名请求时间和状态
                 let time = await this.ajax('/app/mls/getEventsByDomain', {
