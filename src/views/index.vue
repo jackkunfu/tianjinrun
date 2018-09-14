@@ -115,6 +115,7 @@
                 this.ifLogin = false;
                 this.hasNum = '';
                 window.localStorage.clear();
+                window.location.reload()
                 console.log(this.ifLogin)
                 console.log(this.hasNum)
                 console.log(localStorage);
@@ -132,6 +133,8 @@
                 })
                 if(res && res.code == this.successCode){
                     this.list = res.list || []
+                }else{
+                    alert(res.msg)
                 }
                 //获取域名请求赛事新闻
                 let re = await this.ajax('/news/news_notice/list', {
@@ -144,6 +147,8 @@
                 if(re && re.code == this.successCode){
                     this.report = re.list || []
                     window.localStorage.eventId = re.list[0].marathonEvent.id 
+                }else{
+                    alert(re.msg)
                 }
                 //获取域名请求时间和状态
                 let time = await this.ajax('/app/mls/getEventsByDomain', {
@@ -178,6 +183,8 @@
                             }
                         }, 1000)
                     })
+                }else{
+                    alert(time.msg)
                 }
             },
             changeTime(shijiancha){
@@ -321,5 +328,8 @@
     .newsList
         color: #666
         font-size: 15px
+    // .el-carousel__container 
+    //     position: relative
+    //     height: 490px!important
 
 </style>

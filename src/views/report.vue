@@ -31,6 +31,8 @@ import publicTab from "./publicTab.vue";
                 })
                 if(res && res.code == this.successCode){
                     this.data = res.objectData.marathonArticle.marathonArticleData || []
+                }else{
+                    alert(res.msg)
                 }
             }
 

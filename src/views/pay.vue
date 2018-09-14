@@ -81,7 +81,7 @@
                 if(get && get.code == 911){
                     this.gopay()
                 }else{
-                    
+                    alert(get.msg)                    
                 }
             },
             async gopay(){
@@ -120,6 +120,8 @@
                         // qrcode.makeCode(get.data.codeUrl);
                     }
                      
+                }else{
+                    alert(get.msg)
                 }
             },
             async getpay(){
@@ -130,6 +132,8 @@
                 })
                 if(get && get.code == this.successCode){
                     this.totalData=get.objectData   
+                }else{
+                    alert(get.msg)
                 }
             },
         }

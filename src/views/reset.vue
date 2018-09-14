@@ -43,7 +43,10 @@
                 };
                 let res = await this.ajax('/basic/user/forgetPassword', params)
                 if(res && res.code == this.successCode){
-                     this.goUrl('/sign')
+                    window.location.reload()
+                    this.goUrl('/sign')
+                }else{
+                    alert(res.msg)
                 }
             },           
         }

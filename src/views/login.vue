@@ -8,7 +8,7 @@
                 .num 
 
                     input(v-model='num' placeholder="请输入手机号码")
-                    input(v-model='pass' placeholder="请输入密码")  
+                    input(v-model='pass' placeholder="请输入密码" type="password")  
 
                 .pass(@click="goUrl('/register')") 立即注册
                 .dynamic(@click="goUrl('/reset')") 忘记密码
@@ -60,7 +60,10 @@
                     );
                     if(res && res.code == this.successCode){
                         window.localStorage.RunUserInfo = JSON.stringify(res.objectData);
+                        window.location.reload()
                         this.goUrl('/sign')
+                    }else{
+                        alert(res.msg)
                     }
                 }
                 if(from == 'code'){
@@ -74,7 +77,10 @@
                         var objectData=res.objectData;
                         objectData.mobile=this.num;
                         window.localStorage.RunUserInfo = JSON.stringify(objectData);
+                        window.location.reload()
                         this.goUrl('/sign')
+                    }else{
+                        alert(res.msg)
                     }
                 }
             },

@@ -73,6 +73,8 @@
                 if(get && get.code == this.successCode){
                     this.list=get.list
                     if(this.list == 0) return alert("未查询到报名记录")
+                }else{
+                    alert(get.msg)
                 }
             },
             pay(item){

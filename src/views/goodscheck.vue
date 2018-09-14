@@ -72,6 +72,8 @@
                         list[ke].receiveUrl = config.baseUrl + list[ke].receiveUrl
                     }
                     this.list = list
+                }else{
+                    alert(get.msg)
                 }
             },
         }

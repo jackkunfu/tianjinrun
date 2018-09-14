@@ -39,6 +39,8 @@ import publicTab from "./publicTab.vue";
                 })
                 if(res && res.code == this.successCode){
                     this.report = res.list || []
+                }else{
+                    alert(res.msg)
                 }
             }
 

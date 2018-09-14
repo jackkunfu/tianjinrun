@@ -37,7 +37,9 @@
                 hasInvite: this.$route.query.hasInvite,
                 Invitation: false,
                 InvitationCode: "",
-                enrollInfo: {}
+                enrollInfo: {},
+                maxage:null,
+                minage:null
             }
         },
         created(){
@@ -58,9 +60,20 @@
             async enroll(payCode){    
                 var map = {};
                 var opt = this.enrollInfo;
+                console.log(this.enrollInfo);
                 map[opt.cardId] = opt.personId;
                 var map2json=JSON.stringify(map);
-
+                if(this.enrollInfo.birthday){
+                    var age = this.enrollInfo.birthday;
+                    var ddate = new Date(age).getTime();        
+                    if (ddate > this.minage || ddate < this.maxage) return alert("年龄不在范围内")
+                    // {
+                    //     agecheck.push(false);
+                    // } else {
+                    //     agecheck.push(true);
+                    // }
+                }
+                
                 console.log(map2json)
                 let goEnroll = await this.ajax('/app/mls/order/enrolls', {
                     mobile: JSON.parse(localStorage.RunUserInfo).mobile,
@@ -74,9 +87,10 @@
                 console.log({  param : map2json,})
                 if(goEnroll && goEnroll.code == 906){
                     this.goUrl("/pay",{'outTradeNo':goEnroll.outTradeNo})
-                }
-                if(goEnroll && goEnroll.code == 900){
+                }else if(goEnroll && goEnroll.code == 900){
                     this.goUrl("/enrollCheck")
+                }else{
+                    alert(goEnroll.msg)
                 }
                 
             },
@@ -90,6 +104,10 @@
                     this.list = res.eventList || []
                     this.isSelect = res.isSelect || false
                     this.selects = res.selects || []
+                    this.maxage = res.objectData.maxAge;
+                    this.minage = res.objectData.minAge; 
+                }else{
+                    alert(res.msg)
                 }
                 loading.close()
             },
@@ -104,6 +122,8 @@
                 if(res && res.code == this.successCode){
                     this.propData = res.objectData || {}
                     if(res.objectData != undefined && res.objectData != "") this.isEdit = true
+                }else{
+                    alert(res.msg)
                 }
                 loading.close()
             },
@@ -120,10 +140,12 @@
                 delete opt.type
                 let res = await this.ajax('/app/user/saveEnrollUser', opt)
                 if(res && res.code == this.successCode){
-                    if(this.hasInvite) return this.Invitation = true;
                     this.enrollInfo = opt;
+                    if(this.hasInvite) return this.Invitation = true;                    
                     this.enroll("")
                     //window.history.go(-1)
+                }else{
+                    alert(res.msg)
                 }
             }
         }

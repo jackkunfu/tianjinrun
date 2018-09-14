@@ -101,6 +101,12 @@
                         )
 
         el-form-item
+            el-checkbox(v-model="checked") 
+                span(@click="goUrl('/accountAbout')") 阅读并接受《马拉松用户协议》
+            //- el-button(@click="submit") 立即报名
+        
+
+        el-form-item
             el-button(@click="submit") 立即报名
 
 </template>
@@ -114,7 +120,8 @@
                 selectProvince: { province: '浙江省', city: '杭州市', area: '西湖区' },
                 selectObj: [],
                 selectsArr: [],
-                count:0
+                count:0,
+                checked:true
             }
         },
         watch: {
@@ -222,6 +229,8 @@
                     if(res && res.code == this.successCode){
                         if(!this.obj[key+'Arr']) this.$set(this.obj, key+'Arr', [])
                         this.obj[key+'Arr'].push(res.objectData)
+                    }else{
+                        alert(res.msg)
                     }
                 }
             },
@@ -277,6 +286,7 @@
                 this.$set(this.selectObj[i], 'list', this.selectsArr[i].paramsArr.filter(el => el.p == data)[0].c)
             },
             testInput(){
+                if(!this.checked) return  alert("请阅读并同意以上声明")
                 var dynamicForm = []
                 for(let i=0; i < this.list.length; i++){
                     let el = this.list[i]

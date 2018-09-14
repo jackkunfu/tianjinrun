@@ -67,6 +67,8 @@
                 if(get && get.code == this.successCode){
                     console.log(this.baseUrl+get.objectData.receiveUrl);
                    location.href = this.baseUrl+get.objectData.receiveUrl      
+                }else{
+                    alert(get.msg)
                 }
                 // location.href = item.receiveUrl
             },
@@ -85,6 +87,8 @@
                         list[ke].receiveUrl = this.baseUrl + list[ke].receiveUrl
                     }
                     this.list = list              
+                }else{
+                    alert(get.msg)
                 }
             },
         }

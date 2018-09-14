@@ -10,7 +10,7 @@
                 //-     |{{msg}}
                 input(v-model='code' placeholder="请输入验证码")               
                 el-button.fr(@click="getcode(num)" size="mini" style='margin-top:20px') {{msg}}
-                input(v-model='pass' placeholder="请输入6-26位密码")  
+                input(v-model='pass' placeholder="请输入6-26位密码" type="password")  
 
             .clear
             
@@ -51,10 +51,11 @@
                 let res = await this.ajax('/basic/user/reg', params)
                 if(res && res.code == this.successCode){
                     alert("注册成功")
+                    window.location.reload()
                     // window.localStorage.RunUserInfo = JSON.stringify(objectData);
                     this.goUrl('/login')
                 }else {
-
+                    alert(res.msg)
                 }
             }
         }
