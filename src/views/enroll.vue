@@ -20,7 +20,7 @@
                 .each(v-for="(item, i) in list" @click="choose(item,i)")
                     //- .fl
                     img.fl(v-if="item.choose" src="../assets/choose.png")
-                    img.fl(v-else src="../assets/notchoose.png")
+                    img.fl(v-else src="../assets/nochoose.png")
                     //- .fl
                         //- div
                     span.infoClass {{item.name}}

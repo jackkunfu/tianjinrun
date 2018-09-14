@@ -15,7 +15,7 @@
             .clear
             
                 input.marginPublic(type='checkbox' v-model='checked')
-                |阅读并接受《马拉松用户协议》          
+                span(style="cursor:pointer")(@click="goUrl('/accountAbout')") 阅读并接受《马拉松用户协议》          
                 .loginButton(@click="register") 注册
 
 </template>
@@ -50,10 +50,10 @@
                 };
                 let res = await this.ajax('/basic/user/reg', params)
                 if(res && res.code == this.successCode){
-                    alert("注册成功")
+                    alert("注册成功,去登陆~")
                     window.location.reload()
                     // window.localStorage.RunUserInfo = JSON.stringify(objectData);
-                    this.goUrl('/login')
+                    this.goUrl("goUrl('/login',{from:'index'})")
                 }else {
                     alert(res.msg)
                 }

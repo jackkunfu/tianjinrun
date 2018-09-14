@@ -25,12 +25,14 @@
                         img.payimg(src="../assets/weixin.png")
                         .payType 微信支付
                         img.changePay(src="../assets/choose.png" v-if="payWay==6")
-                        img.changePay(src="../assets/notChoose.png" v-else)
+                        img.changePay(src="../assets/nochoose.png" v-else)
                     .eventName(@click="payWay=7")
                         img.payimg(src="../assets/alipay.jpg")
                         .payType 支付宝支付                        
+                        //- i 
                         img.changePay(src="../assets/choose.png" v-if="payWay==7")
-                        img.changePay(src="../assets/notChoose.png" v-else)
+                        //- i
+                        img.changePay(src="../assets/nochoose.png" v-else)
                     el-button(@click="ensure" style='margin-top:30px') 确认支付
 
         .bodyClass(v-if = "scan == true")

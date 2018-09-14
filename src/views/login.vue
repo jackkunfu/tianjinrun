@@ -44,7 +44,8 @@
                 msg: '获取验证码',
                 control: 0,
                 checked: true,
-                timer:null
+                timer:null,
+                from: this.$route.query.from
             }
         },
         mounted(){
@@ -61,7 +62,12 @@
                     if(res && res.code == this.successCode){
                         window.localStorage.RunUserInfo = JSON.stringify(res.objectData);
                         window.location.reload()
-                        this.goUrl('/sign')
+                        if(this.from == "index"){
+                            this.goUrl('/')
+                        }else{
+                            this.goUrl('/sign')
+                        }
+                        
                     }else{
                         alert(res.msg)
                     }
@@ -78,7 +84,12 @@
                         objectData.mobile=this.num;
                         window.localStorage.RunUserInfo = JSON.stringify(objectData);
                         window.location.reload()
-                        this.goUrl('/sign')
+                        if(this.from == "index"){
+                            this.goUrl('/')
+                        }else{
+                            this.goUrl('/sign')
+                        }
+                        //this.goUrl('/sign')
                     }else{
                         alert(res.msg)
                     }

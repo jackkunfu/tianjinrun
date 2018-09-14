@@ -147,8 +147,7 @@
                     // } else {
                     //     agecheck.push(true);
                     // }
-                }
-                
+                }                
                 
                 let goEnroll = await this.ajax('/app/mls/order/enrolls', {
                     mobile: JSON.parse(localStorage.RunUserInfo).mobile,
@@ -162,6 +161,7 @@
                 if(goEnroll && goEnroll.code == 906){
                     this.goUrl("/pay",{'outTradeNo':goEnroll.outTradeNo})
                 }else if(goEnroll && goEnroll.code == 900){
+                    alert("存在报名信息")
                     this.goUrl("/enrollCheck")
                 }else{
                     alert(goEnroll.msg)

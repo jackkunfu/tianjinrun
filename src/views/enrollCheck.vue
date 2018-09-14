@@ -64,8 +64,8 @@
         },
         methods: {
             async checkInfo(){
-                if(this.userName == '') return alert('请输入姓名')
                 if(this.cardId == '') return alert('请输入证件号')
+                if(this.userName == '') return alert('请输入姓名')
                 let get = await this.ajax('/search/enroll_status', {
                     userName: this.userName,
                     cardId: this.cardId

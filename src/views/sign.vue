@@ -1,7 +1,7 @@
 <template lang="pug">
     .signPage
         public-top
-        .matchInfo
+        .matchInfo(style="padding:10px 0px")
             process-tab
             .match(v-if='hasInvite==true')
                 .name 邀请码报名
@@ -85,7 +85,7 @@
                     // InvitationInfo.hasInvite = true;
                     this.goUrl('/editInfo', InvitationInfo)
                 }else if(get && get.code == 412){
-                    this.goUrl('/login')
+                    this.goUrl('/login',{from:'sign'})
                 }else{
                     alert(get.msg)
                 }
@@ -93,7 +93,7 @@
             goEnroll(item){
                 // if(!this.checked) return alert("请阅读并同意以上声明")
                 if(!this.ifLogin){
-                    this.goUrl("/login")
+                    this.goUrl('/login',{from:'sign'})
                 }else{
                     var addInfo = {}
                     addInfo.type = "add"
@@ -104,6 +104,7 @@
                 }
             },
             async getMatchs(){
+                let loading = this.$loading()
                 let res = await this.ajax('/app/mls/getEventEntryList', {
                     // eventId: localStorage.eventId,
                     eventId: '4663bafefb4143f588923ca288d51d45',
@@ -120,6 +121,7 @@
                 }else{
                     alert(res.msg)
                 }
+                loading.close()
             }
         }
     }

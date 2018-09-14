@@ -26,7 +26,7 @@
         .w1200.sign
             .fr(v-if="ifLogin == false")
                 span(@click="goUrl('/register')") 注册
-                span(@click="goUrl('/login')") 登陆
+                span(@click="goUrl('/login',{from:'index'})") 登陆
             .clear
             .fr(v-if="ifLogin == true")
                 span {{hasNum}}
@@ -121,7 +121,8 @@
 //     cursor: pointer
 .index
     min-height: 300px
-    // background-image: url('../assets/mainImg.jpeg')
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06)
+    // background-image: url('../assets/newImg.jpg')
     // background-repeat: no-repeat
     // background-size: 100% 100%
     // color: #fff

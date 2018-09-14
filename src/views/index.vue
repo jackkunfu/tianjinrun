@@ -3,7 +3,7 @@
         .w1200.sign
             .fr(v-if="ifLogin == false")
                 span(@click="goUrl('/register')") 注册
-                span(@click="goUrl('/sign')") 登陆
+                span(@click="goUrl('/login',{from:'index'})") 登陆
             .clear
             .fr(v-if="ifLogin == true")
                 span {{hasNum}}
@@ -164,12 +164,13 @@
                         let inter = setInterval(()=>{
                             let eT    // 结束时间
                             if(el.status == 1){   //
-                                eT = el.startDate
+                                eT = el.endDate
                             }else{
                                 eT = 0
                             }
 
                             let shijiancha = new Date(eT).getTime() - sysTime
+                            console.log(shijiancha);
 
                             if(shijiancha > 0){
                                 this.$set(el, 'clock', this.changeTime(shijiancha))
