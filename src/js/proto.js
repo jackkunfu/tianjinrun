@@ -43,11 +43,11 @@ export default function(Vue){
                 // }
             }).done( data => {
                 rs(data);
-                if (data && data.code == this.successCode) {
+                // if (data && data.code == this.successCode) {
 
-                } else {
-                    alert(data.msg)
-                }
+                // } else {
+                //     alert(data.msg)
+                // }
             }).fail( e => {
                 console.log('请求出错：' + url)
                 console.log(e)

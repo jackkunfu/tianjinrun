@@ -149,7 +149,6 @@
             objData(v){
                 this.count++;
                 this.obj = v
-                console.log(this.count)
                  // 图片数据处理
                 if(this.obj.runwayImage){
                     // this.obj.runwayImageArr = this.obj.runwayImage.split(',')
@@ -278,7 +277,6 @@
                         giveData[key] = value;
                     }                  
                 }
-                console.log(giveData);
                 return giveData
             },
             selectChange(data, i){
@@ -286,7 +284,7 @@
                 this.$set(this.selectObj[i], 'list', this.selectsArr[i].paramsArr.filter(el => el.p == data)[0].c)
             },
             testInput(){
-                if(!this.checked) return  alert("请阅读并同意以上声明")
+                if(!this.checked) return  alert("请阅读并同意《马拉松用户协议》")
                 var dynamicForm = []
                 for(let i=0; i < this.list.length; i++){
                     let el = this.list[i]

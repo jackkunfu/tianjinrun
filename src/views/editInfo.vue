@@ -38,6 +38,7 @@
                 Invitation: false,
                 InvitationCode: "",
                 enrollInfo: {},
+                cardId: "",
                 maxage:null,
                 minage:null
             }
@@ -53,6 +54,81 @@
             // }
         },
         methods: {
+            checkUser: function (user) {
+                var params=this.list;
+                //校验性别
+                var sex = user.sex;
+                if (sex != "" && sex != undefined && sex != null) {
+                    var sexflag = false;
+                    var iscontain = false;
+                    for (var i = 0; i < params.length; i++) {
+                        if (params[i].key == "sex") {
+                            iscontain = true;
+                            var obj = params[i];
+                            var secondList = obj.secondList;
+                            for (var j = 0; j < secondList.length; j++) {
+                                if (sex == secondList[j].name) {
+                                    sexflag = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                //证件类型
+                var cardType = user.cardType;
+                if (cardType != "" && cardType != undefined && cardType != null) {
+                    var cardTypeflag = false;
+                    var iscontain = false;
+                    for (var i = 0; i < params.length; i++) {
+                        if (params[i].key == "cardType") {
+                            iscontain = true;
+                            var obj = params[i];
+                            var secondList = obj.secondList;
+                            for (var j = 0; j < secondList.length; j++) {
+                                if (cardType == secondList[j].name) {
+                                cardTypeflag = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                //服装尺寸
+                var clothSize = user.clothSize;
+                if (clothSize != "" && clothSize != undefined && clothSize != null) {
+                    var clothSizeflag = false;
+                    var iscontain = false;
+                    for (var i = 0; i < params.length; i++) {
+                        if (params[i].key == "clothSize") {
+                            iscontain = true;
+                            var obj = params[i];
+                            var secondList = obj.secondList;
+                            for (var j = 0; j < secondList.length; j++) {
+                                if (clothSize == secondList[j].name) {
+                                    clothSizeflag = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                //血型校验
+                var blood = user.blood;
+                if (blood != "" && blood != undefined && blood != null) {
+                    var bloodflag = false;
+                    var iscontain = false;
+                    for (var i = 0; i < params.length; i++) {
+                        if (params[i].key == "blood") {
+                            iscontain = true;
+                            var obj = params[i];
+                            var secondList = obj.secondList;
+                            for (var j = 0; j < secondList.length; j++) {
+                                if (blood == secondList[j].name) {
+                                bloodflag = true;
+                                }
+                            }
+                        }
+                    }
+                }            
+            },
             getInviteCode(){
                 if(this.InvitationCode=='') return alert("请输入邀请码")
                 this.enroll(this.InvitationCode);
@@ -60,7 +136,6 @@
             async enroll(payCode){    
                 var map = {};
                 var opt = this.enrollInfo;
-                console.log(this.enrollInfo);
                 map[opt.cardId] = opt.personId;
                 var map2json=JSON.stringify(map);
                 if(this.enrollInfo.birthday){
@@ -74,7 +149,7 @@
                     // }
                 }
                 
-                console.log(map2json)
+                
                 let goEnroll = await this.ajax('/app/mls/order/enrolls', {
                     mobile: JSON.parse(localStorage.RunUserInfo).mobile,
                     sessionid: JSON.parse(localStorage.RunUserInfo).sessionId,
@@ -84,7 +159,6 @@
                     from: 'from_webs',
                     payCode: payCode
                 })
-                console.log({  param : map2json,})
                 if(goEnroll && goEnroll.code == 906){
                     this.goUrl("/pay",{'outTradeNo':goEnroll.outTradeNo})
                 }else if(goEnroll && goEnroll.code == 900){
@@ -120,7 +194,12 @@
                     // entryId: '5a503701ff0e4c74abcb05a15f4b9489'
                 }, 'post')
                 if(res && res.code == this.successCode){
+                    console.log(res);
                     this.propData = res.objectData || {}
+                    if(res.objectData.cardId){                        
+                        this.cardId = res.objectData.cardId 
+                    }
+
                     if(res.objectData != undefined && res.objectData != "") this.isEdit = true
                 }else{
                     alert(res.msg)
@@ -128,20 +207,29 @@
                 loading.close()
             },
             async editOk(obj){
-                if(this.isEdit){
-                    obj.personId = this.propData.id
-                }else{
-                    obj.personId = ""
-                }
+               
                 let opt = JSON.parse(JSON.stringify(obj))
                 opt.mobile = localStorage.RunUserInfo ? (JSON.parse(localStorage.RunUserInfo).mobile || '17647581576') : '17647581576'
                 opt.entryId = this.$route.query.entryId
+                
+                console.log("opt",opt.cardId)
+                console.log("cardId",this.cardId);
 
+                if(this.isEdit){   
+                    if(this.cardId!=opt.cardId){
+                        opt.personId = ""                        
+                    } else{                        
+                        opt.personId = this.propData.id
+                    }                
+                }else{
+                    opt.personId = ""
+                }
+                console.log(opt.personId);
                 delete opt.type
                 let res = await this.ajax('/app/user/saveEnrollUser', opt)
                 if(res && res.code == this.successCode){
                     this.enrollInfo = opt;
-                    if(this.hasInvite) return this.Invitation = true;                    
+                    if(this.hasInvite==true || this.hasInvite=="true") return this.Invitation = true;                    
                     this.enroll("")
                     //window.history.go(-1)
                 }else{

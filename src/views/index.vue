@@ -116,9 +116,6 @@
                 this.hasNum = '';
                 window.localStorage.clear();
                 window.location.reload()
-                console.log(this.ifLogin)
-                console.log(this.hasNum)
-                console.log(localStorage);
             },
             async getNews(){
                 //获取域名请求赛事公告

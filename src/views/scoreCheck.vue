@@ -65,7 +65,6 @@
                     domain: "tjwq-marathon"
                 })
                 if(get && get.code == this.successCode){
-                    console.log(this.baseUrl+get.objectData.receiveUrl);
                    location.href = this.baseUrl+get.objectData.receiveUrl      
                 }else{
                     alert(get.msg)
