@@ -2,7 +2,7 @@
  .sign
         public-top
         .signList
-            .matchInfo(style="min-height:800px")
+            .matchInfo(style="min-height:800px;padding:10px")
                 .enrollCheck 报名查询
                 .event 
                     .num
@@ -28,12 +28,7 @@
                     .eventName
                         .fl(style="width:50%")
                             .getName 参赛号码：{{item.matchNo}}                        
-                            .getCardId.eventName 支付状态：
-                                span(v-if="item.orderStatus==0") 未支付
-                                span(v-else-if="item.orderStatus==2") 已支付
-                                span(v-else-if="item.orderStatus==10") 已退款
-                                span(v-else-if="item.orderStatus==1") 已失效
-                                span(v-else) ---
+                            
                         .fr(style="width:50%")
                             .getNum 审核状态：
                                 span(v-if="item.check==1") 待审核
@@ -43,6 +38,13 @@
                                 span(v-else-if="item.check==5")  已中签
                                 span(v-else-if="item.check==6") 未中签
                                 span(v-else) 等待资料上传
+
+                    .eventName 支付状态：
+                        span(v-if="item.orderStatus==0") 未支付
+                        span(v-else-if="item.orderStatus==2") 已支付
+                        span(v-else-if="item.orderStatus==10") 已退款
+                        span(v-else-if="item.orderStatus==1") 已失效
+                        span(v-else) ---
 
                     .clear           
 
@@ -90,7 +92,7 @@
 .enrollInfo
     width: 600px
     padding: 20px
-    margin: 0px auto
+    margin: 10px auto
     text-align: left
     border: 1px solid #eee
     border-radius: 5px

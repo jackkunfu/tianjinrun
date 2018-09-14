@@ -122,6 +122,7 @@
 .index
     min-height: 300px
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.06)
+    z-index: 10
     // background-image: url('../assets/newImg.jpg')
     // background-repeat: no-repeat
     // background-size: 100% 100%
