@@ -118,6 +118,7 @@
                 window.location.reload()
             },
             async getNews(){
+                let loading = this.$loading()
                 //获取域名请求赛事公告
                 //var host = window.location.host;
                 var domain=document.domain;
@@ -133,6 +134,7 @@
                 }else{
                     alert(res.msg)
                 }
+                loading.close()
                 //获取域名请求赛事新闻
                 let re = await this.ajax('/news/news_notice/list', {
                     domain: 'tjwq-marathon',

@@ -1,5 +1,5 @@
 <template lang="pug">
-    .signPage
+    .signPage       
         public-top
         .matchInfo(style="padding:10px 0px")
             process-tab
@@ -104,7 +104,7 @@
                 }
             },
             async getMatchs(){
-                let loading = this.$loading()
+                // let loading = this.$loading()
                 let res = await this.ajax('/app/mls/getEventEntryList', {
                     // eventId: localStorage.eventId,
                     eventId: '4663bafefb4143f588923ca288d51d45',
@@ -121,7 +121,7 @@
                 }else{
                     alert(res.msg)
                 }
-                loading.close()
+                // loading.close()
             }
         }
     }
@@ -138,7 +138,7 @@
     transition: all 0.8s
     height: 170px
     color: #fff
-    background-image: url('../assets/listback.png')
+    background-image: url('../assets/listblack.png')
     background-repeat: no-repeat
     background-size: 100% 100%
     position: relative

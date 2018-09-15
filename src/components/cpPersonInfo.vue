@@ -216,17 +216,18 @@
             changeArea(c) {
                 this.selectProvince.area = c.value;
             },
-            upfile(key){
+            upfile(key){                
+                if(this.obj[key+'Arr'].length>=9) return alert("图片只能上传九张哦~")
                 let inputFile = document.createElement('input')
                 inputFile.type = 'file'
                 inputFile.click()
-
                 inputFile.onchange = async () => {
                     let loading = this.$loading()
                     let res = await this.upfileProto(inputFile.files[0])
                     loading.close()
                     if(res && res.code == this.successCode){
                         if(!this.obj[key+'Arr']) this.$set(this.obj, key+'Arr', [])
+                        console.log(this.obj[key+'Arr'].length);
                         this.obj[key+'Arr'].push(res.objectData)
                     }else{
                         alert(res.msg)
@@ -316,10 +317,12 @@
                                     return false
                                 }
                             }else if(key == 'cardId'){
+                                var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
                                 if( this.obj.cardType == '身份证' && !(/^[1-9][0-9]{5}([1][9][0-9]{2}|[2][0][0|1][0-9])([0][1-9]|[1][0|1|2])([0][1-9]|[1|2][0-9]|[3][0|1])[0-9]{3}([0-9]|[X])$/.test(keyVal)) ){
                                     alert(name + '格式不正确')
                                     return false
-                                }else if( this.obj.cardType == '护照' && !(/[\\u4E00-\\u9FFF]+/g.test(keyVal)) ){
+                                // }else if( this.obj.cardType == '护照' && !(/[\\u4E00-\\u9FFF]+/g.test(keyVal)) ){
+                                }else if( this.obj.cardType == '护照' && (reg.test(keyVal)) ){
                                     alert(name + '格式不正确')
                                     return false
                                 }

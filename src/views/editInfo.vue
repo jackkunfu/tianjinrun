@@ -136,12 +136,13 @@
             async enroll(payCode){    
                 var map = {};
                 var opt = this.enrollInfo;
+                console.log(opt);
                 map[opt.cardId] = opt.personId;
                 var map2json=JSON.stringify(map);
                 if(this.enrollInfo.birthday){
                     var age = this.enrollInfo.birthday;
                     var ddate = new Date(age).getTime();        
-                    if (ddate > this.minage || ddate < this.maxage) return alert("年龄不在范围内")
+                    if (ddate > this.minage || ddate < this.maxage) return alert("年龄不在范围内~")
                     // {
                     //     agecheck.push(false);
                     // } else {
@@ -161,7 +162,7 @@
                 if(goEnroll && goEnroll.code == 906){
                     this.goUrl("/pay",{'outTradeNo':goEnroll.outTradeNo})
                 }else if(goEnroll && goEnroll.code == 900){
-                    alert("存在报名信息")
+                    alert("已存在报名信息，请查询")
                     this.goUrl("/enrollCheck")
                 }else{
                     alert(goEnroll.msg)
@@ -209,7 +210,7 @@
             async editOk(obj){
                
                 let opt = JSON.parse(JSON.stringify(obj))
-                opt.mobile = localStorage.RunUserInfo ? (JSON.parse(localStorage.RunUserInfo).mobile || '17647581576') : '17647581576'
+                opt.mobile = localStorage.RunUserInfo ? (JSON.parse(localStorage.RunUserInfo).mobile || '') : ''
                 opt.entryId = this.$route.query.entryId
                 
                 console.log("opt",opt.cardId)
@@ -228,6 +229,7 @@
                 delete opt.type
                 let res = await this.ajax('/app/user/saveEnrollUser', opt)
                 if(res && res.code == this.successCode){
+                    opt.personId=res.objectData;
                     this.enrollInfo = opt;
                     if(this.hasInvite==true || this.hasInvite=="true") return this.Invitation = true;                    
                     this.enroll("")
