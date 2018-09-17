@@ -81,7 +81,7 @@
                     sessionId: JSON.parse(localStorage.RunUserInfo).sessionId || "",
                 })
                 if(get && get.code == this.successCode){
-                    var InvitationInfo={hasInvite:true,entryId:get.objectData.entryId};
+                    var InvitationInfo={hasInvite:true,entryId:get.objectData.entryId,payCode:this.InvitationCode,type:get.objectData.type};
                     // InvitationInfo.hasInvite = true;
                     this.goUrl('/editInfo', InvitationInfo)
                 }else if(get && get.code == 412){
@@ -99,15 +99,16 @@
                     addInfo.type = "add"
                     addInfo.entryId = item.entryId
                     addInfo.hasInvite = false;
-                    // addInfo.selectValus = []
+                    addInfo.payCode = "";
+                    addInfo.type = ""
                     this.goUrl("/editInfo",addInfo)
                 }
             },
             async getMatchs(){
                 // let loading = this.$loading()
                 let res = await this.ajax('/app/mls/getEventEntryList', {
-                    // eventId: localStorage.eventId,
-                    eventId: '4663bafefb4143f588923ca288d51d45',
+                    eventId: localStorage.eventId,
+                    // eventId: '4663bafefb4143f588923ca288d51d45',
                     // eventId: "080b9235021a435883c30559342b748a",
                     pageNo: 1,
                     pagesize: 100

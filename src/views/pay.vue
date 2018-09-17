@@ -18,21 +18,30 @@
                     .eventName.fr(style="width:50%") 手机号码：{{item.mobileNum}}
                     .clear
                 .payInfo
-                    .eventName 合计 {{totalData.totalFee}}
-                #alipay 
+                    .eventName 合计 ￥{{totalData.totalFee}}
+                .eventName(v-if = "hasInvite == 'true'")
+                    |邀请码报名
+                    input(v-model="inviteCode" )
+                #alipay
                     .payDetail 选择支付方式
-                    .eventName(@click="payWay=6")
-                        img.payimg(src="../assets/weixin.png")
-                        .payType 微信支付
-                        img.changePay(src="../assets/choose.png" v-if="payWay==6")
-                        img.changePay(src="../assets/nochoose.png" v-else)
-                    .eventName(@click="payWay=7")
-                        img.payimg(src="../assets/alipay.jpg")
-                        .payType 支付宝支付                        
-                        //- i 
-                        img.changePay(src="../assets/choose.png" v-if="payWay==7")
-                        //- i
-                        img.changePay(src="../assets/nochoose.png" v-else)
+                    .eventName(@click = "payWay = 5" v-if = "type == '1'")
+                        img.payimg(src = "../assets/weixin.png")
+                        .payType 邀请码报名
+                        img.changePay(src = "../assets/choose.png" v-if = "payWay==5")
+                        img.changePay(src = "../assets/nochoose.png" v-else)
+                    .type_pay(v-else)
+                        .eventName(@click = "payWay=6" )
+                            img.payimg(src = "../assets/weixin.png")
+                            .payType 微信支付
+                            img.changePay(src = "../assets/choose.png" v-if = "payWay==6")
+                            img.changePay(src="../assets/nochoose.png" v-else)
+                        .eventName(@click="payWay=7")
+                            img.payimg(src="../assets/alipay.jpg")
+                            .payType 支付宝支付                        
+                            //- i 
+                            img.changePay(src="../assets/choose.png" v-if="payWay==7")
+                            //- i
+                            img.changePay(src="../assets/nochoose.png" v-else)
                     el-button(@click="ensure" style='margin-top:30px') 确认支付
 
         .bodyClass(v-if = "scan == true")
@@ -53,6 +62,7 @@
     import publicTop from "./publicTop.vue";
     import processTab from "./processTab.vue";
     import QRCode from 'qrcode'
+import { thisTypeAnnotation } from 'babel-types';
     export default {
         name: 'pay',
         data(){
@@ -62,7 +72,11 @@
                 outTradeNo : this.$route.query.outTradeNo,
                 QueryDetail:'',
                 cancas:'',
-                scan: false                     
+                scan: false,
+                entry_id:"",
+                hasInvite: localStorage.hasInvite,
+                inviteCode: localStorage.payCode,
+                type: localStorage.type                    
             }
         },
         components: {
@@ -87,8 +101,23 @@
                 }
             },
             async gopay(){
+                console.log(localStorage);
+                if(localStorage.hasInvite == "true" || localStorage.hasInvite == true){
+                    if(this.inviteCode == '') return alert('请输入邀请码')
+                    let res = await this.ajax('/invite/code/verifyCode', {
+                        code: this.inviteCode,
+                        sessionId: JSON.parse(localStorage.RunUserInfo).sessionId || "",
+                    })
+                    if(res && res.code == this.successCode){
+                    
+                    }else{
+                        return alert(res.msg)
+                    }    
+                }
+                           
                 if(this.payWay == 0) return alert("请先选择付款方式")
                 var payType = null;
+                if(this.payWay == 5) payType = 5
                 if(this.payWay == 6) payType = 6
                 if(this.payWay == 7) payType = 7
                 var req={
@@ -100,7 +129,9 @@
                     payType : payType,//支付宝：7，微信：6
                     payFrom : 1,
                     total_fee : this.totalData.totalFee*100,
-                    password : ""
+                    password : "",
+                    payCode: localStorage.payCode,
+                    entry_id: this.entry_id
                 }
                 
                 let get = await this.ajax('/app/mls/order/unifiedPay', req)
@@ -121,19 +152,22 @@
                         // });
                         // qrcode.makeCode(get.data.codeUrl);
                     }
+                    if(payType == 5) alert("支付成功")
                      
                 }else{
                     alert(get.msg)
                 }
             },
-            async getpay(){
+            async getpay(){  
+                console.log(localStorage);          
                 let get = await this.ajax('/app/mls/order/getEnroll', {
                     mobile: JSON.parse(localStorage.RunUserInfo).mobile,
                     sessionid: JSON.parse(localStorage.RunUserInfo).sessionId,
                     outTradeNo:this.$route.query.outTradeNo
                 })
                 if(get && get.code == this.successCode){
-                    this.totalData=get.objectData   
+                    this.totalData = get.objectData;
+                    this.entry_id = get.objectData.entry.id; 
                 }else{
                     alert(get.msg)
                 }
@@ -159,6 +193,9 @@
     line-height: 40px
     display: flex
     border-bottom: 1px solid #eee
+    input
+        border: 0
+        padding-left: 20px
 .payType
     margin-left: 20px
     width: 82%

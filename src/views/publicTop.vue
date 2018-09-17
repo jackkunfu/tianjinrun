@@ -43,9 +43,9 @@
                      @click="goUrl(item.url)"
                     :class="{'cur':curPage==i}"
                 ) {{item.name}}
-                //- .fr.tp(@click="goUrl('/')") 
-                //-     span.back(src="../assets/tab-back.png")
-                //-     span.toFirst 返回首页
+                .fr.tp(@click="goUrl('/')") 
+                    //- span.back(src="../assets/tab-back.png")
+                    span.toFirst 返回首页
 
             .clear  
                     

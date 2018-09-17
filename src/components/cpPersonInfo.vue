@@ -85,8 +85,7 @@
                             filterable = false
                             v-for="(it, j) in item.paramsArr" :key="j"
                             :label="it.p"
-                            :value="it.p"
-                            
+                            :value="it.p"                            
                         )
 
                 el-form-item(:label="item.selectName")
@@ -227,7 +226,6 @@
                     loading.close()
                     if(res && res.code == this.successCode){
                         if(!this.obj[key+'Arr']) this.$set(this.obj, key+'Arr', [])
-                        console.log(this.obj[key+'Arr'].length);
                         this.obj[key+'Arr'].push(res.objectData)
                     }else{
                         alert(res.msg)
@@ -290,6 +288,7 @@
                 for(let i=0; i < this.list.length; i++){
                     let el = this.list[i]
                     let key = el.key, name = el.name
+                    if(key == "location") this.obj[key] = this.selectProvince.province + "," + this.selectProvince.city+"," + this.selectProvince.area;
                     // dynamic
                     if(el.dynamic){
                         var dynamicTemp = {};                     

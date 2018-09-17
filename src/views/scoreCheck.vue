@@ -21,6 +21,7 @@
                         .fl(style="width:50%")
                             .getName 姓名：{{item.name}}                        
                             .getCardId.eventName 证件号：{{item.cardId}}
+                            .getCardId.eventName 参赛号码：{{item.matchNo}}
                         .fr(style="width:50%")
                             .getNum 手机号码：{{item.mobile}}
                             .getSex.eventName 性别：{{item.sex}}

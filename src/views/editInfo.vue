@@ -5,14 +5,14 @@
             process-tab
             .w1200(style="width:1000px;")
             cp-person-info(:objData="propData" @submit="editOk" :list="list" :isSelect="isSelect" :selects="selects")
-            .bodyClass(v-if="Invitation==true")
-                .code
-                    .codeText(style='font-size:25px;margin-bottom:10px') 邀请码验证            
-                    .codeText 请填写正确的邀请码
-                    input(v-model="InvitationCode")
-                    el-button.fl(@click="Invitation=false" style='margin-top:30px') 点击取消
-                    el-button.fr(@click="getInviteCode" style='margin-top:30px') 点击验证
-                    .clear
+            //- .bodyClass(v-if="Invitation==true")
+            //-     .code
+            //-         .codeText(style='font-size:25px;margin-bottom:10px') 邀请码验证            
+            //-         .codeText 请填写正确的邀请码
+            //-         input(v-model="InvitationCode")
+            //-         el-button.fl(@click="Invitation=false" style='margin-top:30px') 点击取消
+            //-         el-button.fr(@click="getInviteCode" style='margin-top:30px') 点击验证
+            //-         .clear
                     
 </template>
 <script>
@@ -34,13 +34,13 @@
                 selects: [],
                 // id: this.$route.query.id,
                 isEdit: false,
-                hasInvite: this.$route.query.hasInvite,
-                Invitation: false,
-                InvitationCode: "",
+                // hasInvite: this.$route.query.hasInvite,
+                // Invitation: false,
+                // InvitationCode: "",
                 enrollInfo: {},
                 cardId: "",
                 maxage:null,
-                minage:null
+                minage:null,
             }
         },
         created(){
@@ -129,20 +129,19 @@
                     }
                 }            
             },
-            getInviteCode(){
-                if(this.InvitationCode=='') return alert("请输入邀请码")
-                this.enroll(this.InvitationCode);
-            },
-            async enroll(payCode){    
+            // getInviteCode(){
+            //     if(this.InvitationCode=='') return alert("请输入邀请码")
+            //     this.enroll(this.InvitationCode);
+            // },
+            async enroll(){    
                 var map = {};
                 var opt = this.enrollInfo;
-                console.log(opt);
                 map[opt.cardId] = opt.personId;
                 var map2json=JSON.stringify(map);
                 if(this.enrollInfo.birthday){
                     var age = this.enrollInfo.birthday;
                     var ddate = new Date(age).getTime();        
-                    if (ddate > this.minage || ddate < this.maxage) return alert("年龄不在范围内~")
+                    if (ddate > this.minage || ddate < this.maxage) return alert("年龄不在范围内，不可报名~")
                     // {
                     //     agecheck.push(false);
                     // } else {
@@ -157,10 +156,11 @@
                     additionals: [],
                     param : map2json,
                     from: 'from_webs',
-                    payCode: payCode
+                    payCode: localStorage.payCode
                 })
+                
                 if(goEnroll && goEnroll.code == 906){
-                    this.goUrl("/pay",{'outTradeNo':goEnroll.outTradeNo})
+                    this.goUrl("/pay",{outTradeNo:goEnroll.outTradeNo})
                 }else if(goEnroll && goEnroll.code == 900){
                     alert("已存在报名信息，请查询")
                     this.goUrl("/enrollCheck")
@@ -169,7 +169,12 @@
                 }
                 
             },
-            async getAsyncList(){
+            async getAsyncList(){ 
+                window.localStorage.payCode = this.$route.query.payCode;
+                window.localStorage.hasInvite = this.$route.query.hasInvite;
+                window.localStorage.type = this.$route.query.type;
+                // this.hasInvite = this.$route.query.hasInvite;
+                // this.payCode = this.$route.query.payCode;                          
                 let loading = this.$loading()
                 let res = await this.ajax('/app/mls/getEventDyncList', {
                     entryId: this.$route.query.entryId
@@ -195,7 +200,6 @@
                     // entryId: '5a503701ff0e4c74abcb05a15f4b9489'
                 }, 'post')
                 if(res && res.code == this.successCode){
-                    console.log(res);
                     this.propData = res.objectData || {}
                     if(res.objectData.cardId){                        
                         this.cardId = res.objectData.cardId 
@@ -203,7 +207,7 @@
 
                     if(res.objectData != undefined && res.objectData != "") this.isEdit = true
                 }else{
-                    alert(res.msg)
+                    // alert(res.msg)
                 }
                 loading.close()
             },
@@ -213,8 +217,6 @@
                 opt.mobile = localStorage.RunUserInfo ? (JSON.parse(localStorage.RunUserInfo).mobile || '') : ''
                 opt.entryId = this.$route.query.entryId
                 
-                console.log("opt",opt.cardId)
-                console.log("cardId",this.cardId);
 
                 if(this.isEdit){   
                     if(this.cardId!=opt.cardId){
@@ -225,13 +227,12 @@
                 }else{
                     opt.personId = ""
                 }
-                console.log(opt.personId);
                 delete opt.type
                 let res = await this.ajax('/app/user/saveEnrollUser', opt)
                 if(res && res.code == this.successCode){
-                    opt.personId=res.objectData;
+                    opt.personId = res.objectData;
                     this.enrollInfo = opt;
-                    if(this.hasInvite==true || this.hasInvite=="true") return this.Invitation = true;                    
+                    // if(this.hasInvite==true || this.hasInvite=="true") return this.Invitation = true;                    
                     this.enroll("")
                     //window.history.go(-1)
                 }else{
