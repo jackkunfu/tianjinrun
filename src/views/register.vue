@@ -51,9 +51,10 @@
                 let res = await this.ajax('/basic/user/reg', params)
                 if(res && res.code == this.successCode){
                     alert("注册成功,去登陆~")
-                    window.location.reload()
+                    // window.location.reload()
                     // window.localStorage.RunUserInfo = JSON.stringify(objectData);
-                    this.goUrl("goUrl('/login',{from:'index'})")
+                    this.goUrl('/login',{from:'index'})
+                    // this.goUrl("goUrl('/login',{from:'index'})")
                 }else {
                     alert(res.msg)
                 }

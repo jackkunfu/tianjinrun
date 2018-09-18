@@ -58,7 +58,7 @@
                 .enrollEntry
                     .enroll-list(v-for="(item, i) in enrolls")
                         .enroll(v-if="item.status==1" @click="goEnroll(item)") 立即报名
-                        .enroll.grey(v-else) 报名已结束
+                        .enroll.grey(v-else @click="goEnroll(item)") 报名已结束
                         .center.know {{item.name}}
                         .time 
                             .clock {{item.clock}}
@@ -242,7 +242,7 @@
             color: #fff
         &.grey
             border: 1px solid #eee
-            cursor: not-allowed
+            // cursor: not-allowed
             background: #eee
             color: #fff
             &:hover

@@ -8,7 +8,7 @@
         template(v-for="(item, i) in list")
             //- 输入的
             el-form-item(v-if="item.formType == 'text'" :label="item.name")
-                el-input(v-model="obj[item.key]" type="text")
+                el-input(v-model="obj[item.key]" type="text" maxlength="30")
 
             //- 下拉选择
             el-form-item(v-else-if="item.formType == 'select'" :label="item.name")
@@ -215,8 +215,10 @@
             changeArea(c) {
                 this.selectProvince.area = c.value;
             },
-            upfile(key){                
-                if(this.obj[key+'Arr'].length>=9) return alert("图片只能上传九张哦~")
+            upfile(key){
+                if(this.obj[key+'Arr']) {                    
+                    if(this.obj[key+'Arr'].length>=9) return alert("图片只能上传九张哦~")
+                }               
                 let inputFile = document.createElement('input')
                 inputFile.type = 'file'
                 inputFile.click()

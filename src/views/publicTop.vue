@@ -43,9 +43,11 @@
                      @click="goUrl(item.url)"
                     :class="{'cur':curPage==i}"
                 ) {{item.name}}
-                .fr.tp(@click="goUrl('/')") 
+                .fr.tp
                     //- span.back(src="../assets/tab-back.png")
-                    span.toFirst 返回首页
+                    span.toFirst 个人中心
+                    span.toFirst(@click="goUrl('/')") 返回首页
+                   
 
             .clear  
                     
