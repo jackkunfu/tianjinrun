@@ -1,6 +1,6 @@
 <template lang="pug">
  .sign
-        public-top
+        //- public-top
         .signList
             .matchInfo(style="min-height:800px;padding:10px")
                 .enrollCheck 报名查询
@@ -66,6 +66,7 @@
         },
         methods: {
             async checkInfo(){
+                if(!localStorage.RunUserInfo) return this.goUrl('/login',{from:'sign'});
                 if(this.cardId == '') return alert('请输入证件号')
                 if(this.userName == '') return alert('请输入姓名')
                 let get = await this.ajax('/search/enroll_status', {

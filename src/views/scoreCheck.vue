@@ -1,6 +1,6 @@
 <template lang="pug">
     .sign
-        public-top
+        //- public-top
         .signList
             .matchInfo(style="min-height:800px")
                 .enrollCheck 成绩查询
@@ -73,6 +73,8 @@
                 // location.href = item.receiveUrl
             },
              async checkInfo(){
+                // var mobile = JSON.parse(localStorage.RunUserInfo).mobile;
+                if(!localStorage.RunUserInfo) return this.goUrl('/login',{from:'sign'});
                 if(this.cardId == '') return alert('请输入证件号')
                 if(this.name == '') return alert('请输入姓名')
                 let get = await this.ajax('/search/matchScoreList', {

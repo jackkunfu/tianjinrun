@@ -13,9 +13,6 @@ export default function(Vue){
        Vue.prototype.ifLogin = false
        Vue.prototype.hasNum = ''
     }
-    // //储存邀请码信息
-    // Vue.prototype.hasInvite = false
-    // Vue.prototype.payCode = ''
     // 跳转
     Vue.prototype.goUrl = function (url, data) {
         if(!url) location.reload()

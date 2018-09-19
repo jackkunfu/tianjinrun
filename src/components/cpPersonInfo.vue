@@ -136,14 +136,17 @@
                     return el
                 })
                 // 处理级联数据
-                if(this.isSelect && this.objData.selectValus.length != 0){
-                    this.selectObj = this.objData.selectValus.map(el => {
-                        return {
-                            firstValue: el.firstGrade.split('_')[1] || "",
-                            secondValue: el.secondGrade.split('_')[1] || ""
-                        }
-                    })
+                if(this.objData.selectValus){
+                    if(this.isSelect && this.objData.selectValus.length != 0){
+                        this.selectObj = this.objData.selectValus.map(el => {
+                            return {
+                                firstValue: el.firstGrade.split('_')[1] || "",
+                                secondValue: el.secondGrade.split('_')[1] || ""
+                            }
+                        })
+                    }
                 }
+                
             },
             objData(v){
                 this.count++;

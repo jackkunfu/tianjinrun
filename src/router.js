@@ -95,6 +95,11 @@ export default new Router({
             path: '/accountAbout',
             name: 'accountAbout',
             component: r => require(['./views/accountAbout'], r)
+        },
+        {
+          path: '/tab',
+          name: 'tab',
+          component: r => require(['./views/tab'], r)
         }
     ] 
 })

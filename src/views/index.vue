@@ -109,7 +109,7 @@
         methods: {
             goEnroll(item){
                 window.localStorage.eventId=item.id;                
-                this.goUrl("/sign")
+                this.goUrl("/tab")
             },
             clearNum(){
                 this.ifLogin = false;

@@ -1,6 +1,6 @@
 <template lang="pug">
     .signPage       
-        public-top
+        //- public-top
         .matchInfo(style="padding:10px 0px")
             process-tab
             .match(v-if='hasInvite==true')
@@ -139,7 +139,7 @@
     transition: all 0.8s
     height: 170px
     color: #fff
-    background-image: url('../assets/listblack.png')
+    background-image: url('../assets/listback.png')
     background-repeat: no-repeat
     background-size: 100% 100%
     position: relative
