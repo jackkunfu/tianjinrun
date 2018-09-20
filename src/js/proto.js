@@ -1,4 +1,4 @@
-import {hexMD5} from './MD5.js';
+import {hexMD5} from './Md5.js';
 import config from './config.js';
 export default function(Vue){
     if (localStorage.RunUserInfo!=undefined){

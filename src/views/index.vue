@@ -1,77 +1,111 @@
 <template lang="pug">
-    .index
-        .w1200.sign
-            .fr(v-if="ifLogin == false")
-                span(@click="goUrl('/register')") 注册
-                span(@click="goUrl('/login',{from:'index'})") 登陆
-            .clear
-            .fr(v-if="ifLogin == true")
-                span {{hasNum}}
-                span 已登陆
-                span(@click="clearNum") 退出登录
-            .clear
+    .indexMainpage
+        .indexTop
+            img(src = "../assets/p_6_2.gif")
+            .indexInfo
+                .indexLogo
+                    img.logoImage(src = "../assets/p_1_n.png")
+                    .listImg
+                        img(src = "../assets/p_4_2.png")
+                        img(src = "../assets/p_4_2.png")
+                        img(src = "../assets/p_4_2.png")
+                    .loginEntry
+                        .gologin                        
+                            span 登录
+                        .gologin
+                            span 注册  
+                        .index_icon                      
+                            img(src = "../assets/p_2.jpg")
+                            img(src = "../assets/p_2.jpg")
+                            img(src = "../assets/p_2.jpg")
+                            img(src = "../assets/p_2.jpg")
+                    .indexClock
+                        img(src="../assets/p_36.jpg")
+
+        .indexMiddle
+            .indexTab            
+                .listItem(v-for="(item,i) in tab" :key = "i" @mouseover = "control = i" @mouseout = "control = 100")
+                    .tabTitle
+                        span {{item.name}}
+                    ul.menuItem(v-if = "control == i")
+                        li.menuList(v-for="(items,index) in item.list" :key = "index")
+                            span {{items.name}}
+
+
+        .indexFooter
+    //- .index
+    //-     .w1200.sign
+    //-         .fr(v-if="ifLogin == false")
+    //-             span(@click="goUrl('/register')") 注册
+    //-             span(@click="goUrl('/login',{from:'index'})") 登陆
+    //-         .clear
+    //-         .fr(v-if="ifLogin == true")
+    //-             span {{hasNum}}
+    //-             span 已登陆
+    //-             span(@click="clearNum") 退出登录
+    //-         .clear
         
-        .w1200
-            .fl
-                img.logo(src="../assets/logo.png")
+    //-     .w1200
+    //-         .fl
+    //-             img.logo(src="../assets/logo.png")
 
-            .nav.fl
-                span(
-                    v-for="(item, i) in navs" :key="i"
-                    @click="goUrl(item.url)"
-                    :class="{'cur':curPage==i}"
-                ) {{item.name}}
+    //-         .nav.fl
+    //-             span(
+    //-                 v-for="(item, i) in navs" :key="i"
+    //-                 @click="goUrl(item.url)"
+    //-                 :class="{'cur':curPage==i}"
+    //-             ) {{item.name}}
 
-            .clear
+    //-         .clear
             
-        div
-            //- img.poster(src="../assets/mainImg.jpeg")
-            el-carousel.poster
-                el-carousel-item(v-for="(item,ke) in banner" :key="ke")
-                    img.poster(:src="item.image") 
+    //-     div
+    //-         //- img.poster(src="../assets/mainImg.jpeg")
+    //-         el-carousel.poster
+    //-             el-carousel-item(v-for="(item,ke) in banner" :key="ke")
+    //-                 img.poster(:src="item.image") 
 
-        .main
-            .content
-                //- .fl
-                .report
-                    .fl.public(@click="control = 0" :class="control == 0 ? 'control':''") 赛事公告
-                    .fl.public(@click="control = 1" :class="control == 1 ? 'control':''") 赛事新闻
-                    .clear
-                    .newsList(
-                        v-for="(item, i) in list" :key="i"
-                        v-if='control==0'
-                        @click="goUrl('/report',{newsId:item.id,eventId:item.marathonEvent.id})"
-                    ) 
-                        .matchTime 2018
-                        .matchClass {{item.title|intercept}}
-                        .matchTime {{item.updateDate|intercept}}
-                    .newsList(
-                        v-for="(item, i) in report" :key="i"
-                        v-if='control==1'
-                       @click="goUrl('/newsDetail',{newsId:item.id,eventId:item.marathonEvent.id})"
-                    ) 
-                        .matchTime 2018
-                        .matchClass {{item.title|intercept}}
-                        .matchTime {{item.updateDate|intercept}}
+    //-     .main
+    //-         .content
+    //-             //- .fl
+    //-             .report
+    //-                 .fl.public(@click="control = 0" :class="control == 0 ? 'control':''") 赛事公告
+    //-                 .fl.public(@click="control = 1" :class="control == 1 ? 'control':''") 赛事新闻
+    //-                 .clear
+    //-                 .newsList(
+    //-                     v-for="(item, i) in list" :key="i"
+    //-                     v-if='control==0'
+    //-                     @click="goUrl('/report',{newsId:item.id,eventId:item.marathonEvent.id})"
+    //-                 ) 
+    //-                     .matchTime 2018
+    //-                     .matchClass {{item.title|intercept}}
+    //-                     .matchTime {{item.updateDate|intercept}}
+    //-                 .newsList(
+    //-                     v-for="(item, i) in report" :key="i"
+    //-                     v-if='control==1'
+    //-                    @click="goUrl('/newsDetail',{newsId:item.id,eventId:item.marathonEvent.id})"
+    //-                 ) 
+    //-                     .matchTime 2018
+    //-                     .matchClass {{item.title|intercept}}
+    //-                     .matchTime {{item.updateDate|intercept}}
 
-                //- .fr 
-                .enrollEntry
-                    .enroll-list(v-for="(item, i) in enrolls")
-                        .enroll(v-if="item.status==1" @click="goEnroll(item)") 立即报名
-                        .enroll.grey(v-else @click="goEnroll(item)") 报名已结束
-                        .center.know {{item.name}}
-                        .time 
-                            .clock {{item.clock}}
-                            .clockText
-                                | 天 时 分 秒
-                        .enrollTime
-                            img.icon(src='../assets/clock.png')
-                            .text 报名时间：{{item.startDate.split(' ')[0]}} - {{item.endDate.split(' ')[0]}}
-                        .enrollTime
-                            img.icon(src='../assets/clock.png')
-                            .text 比赛时间：{{item.eventDate | stampToStr}}
-        div
-            img.footer(src="../assets/footer.png")
+    //-             //- .fr 
+    //-             .enrollEntry
+    //-                 .enroll-list(v-for="(item, i) in enrolls")
+    //-                     .enroll(v-if="item.status==1" @click="goEnroll(item)") 立即报名
+    //-                     .enroll.grey(v-else @click="goEnroll(item)") 报名已结束
+    //-                     .center.know {{item.name}}
+    //-                     .time 
+    //-                         .clock {{item.clock}}
+    //-                         .clockText
+    //-                             | 天 时 分 秒
+    //-                     .enrollTime
+    //-                         img.icon(src='../assets/clock.png')
+    //-                         .text 报名时间：{{item.startDate.split(' ')[0]}} - {{item.endDate.split(' ')[0]}}
+    //-                     .enrollTime
+    //-                         img.icon(src='../assets/clock.png')
+    //-                         .text 比赛时间：{{item.eventDate | stampToStr}}
+    //-     div
+    //-         img.footer(src="../assets/footer.png")
 </template>
 
 <script>
@@ -94,11 +128,83 @@
                 }],
                 list: [],
                 report: [],
-                control: 0,
+                control: 100,
                 matchName: '',
-                curPage: 0,
+                curPage: 10,
                 enrolls: [],
-                banner: []
+                banner: [],
+                tab:[{
+                    name:"赛事新闻",
+                    list:[{
+                        name:"赛事规程"
+                    },
+                    {
+                        name:"比赛路线"
+                    },
+                    {
+                        name:"报名须知"
+                    },
+                    {
+                        name:"领物须知"
+                    },
+                    {
+                        name:"保险信息"
+                    }]                    
+                },
+                {
+                    name:"新闻公告",
+                    list:[{
+                        name:"赛事规程"
+                    },
+                    {
+                        name:"比赛路线"
+                    },
+                    {
+                        name:"报名须知"
+                    },
+                    {
+                        name:"领物须知"
+                    },
+                    {
+                        name:"保险信息"
+                    }] 
+                },
+                {
+                    name:"相关活动",
+                    list:[{
+                        name:"赛事规程"
+                    },
+                    {
+                        name:"比赛路线"
+                    },
+                    {
+                        name:"报名须知"
+                    },
+                    {
+                        name:"领物须知"
+                    },
+                    {
+                        name:"保险信息"
+                    }] 
+                },
+                {
+                    name:"赛事新闻",
+                    list:[{
+                        name:"赛事规程"
+                    },
+                    {
+                        name:"比赛路线"
+                    },
+                    {
+                        name:"报名须知"
+                    },
+                    {
+                        name:"领物须知"
+                    },
+                    {
+                        name:"保险信息"
+                    }] 
+                }]
             }
         },
         mounted(){
@@ -107,6 +213,9 @@
             // this.getTime()
         },
         methods: {
+            showTab(item,i){
+                alert("1");
+            },
             goEnroll(item){
                 window.localStorage.eventId=item.id;                
                 this.goUrl("/tab")
@@ -206,128 +315,185 @@
 </script>
 
 <style lang="sass" scoped>
-
-    .main
-        background: #e5e7ef
-
-    .logo
-        height: 100px
-
-    .poster
-        width: 100%
-        height: 490px
-
-    .sign
-        margin-bottom: 10px
-        span
-            height: 30px
-            line-height: 30px
-            display: inline-block
-            margin: 0 10px
-            cursor: pointer
-    .enroll-list
-        border: 1px solid #eee
-    .enroll
-        width: 120px
-        margin: 20px auto
-        text-align: center
-        height: 40px
-        line-height: 38px
-        border: 1px solid #000
-        border-radius: 5px
-        cursor: pointer
-        &:hover
-            background: #278bc5
-            border: 1px solid #278bc5
-            color: #fff
-        &.grey
-            border: 1px solid #eee
-            // cursor: not-allowed
-            background: #eee
-            color: #fff
-            &:hover
-                background: #eee
-                border: 1px solid #eee
-                color: #fff
-    .nav
-        margin-top: 64px
-        span
-            // height: 40px
-            // line-height: 40px
-            padding: 10px 20px
-            font-size: 20px
-            display: inline-block
-            margin: 0 10px
-            cursor: pointer
-            &:hover, &.cur
-                color: #fff
-                background: #278bc5
-
-    .content
+.indexInfo
+    position: relative
+    .indexLogo
         display: flex
-    .report
-        width: 65%
-        min-height: 500px
-        background: #fff
-        border-radius: 10px
-        margin: 20px
-        .public
-            width: 50%
+        .listImg
+            margin-left: 100px
+            img
+                margin: 0px 10px
+        .logoImage
+            margin-left: 30px
+        .loginEntry
+            position: absolute
+            right: 0
+            display: flex
+            height: 50px
+            border: 1px solid #eee
+            line-height: 50px
+            .index_icon
+                margin-top: 8px
+                margin-left: 60px
+            .gologin
+                width: 100px
+                text-align: center
+                border-right: 1px solid #eee
+            img
+                margin: 0px 5px
+        .indexClock
+            position: absolute
+            width: 320px
+            right: 0%
+            bottom: 0
+            height: 50px
+            img
+                width: 100%
+.indexMiddle
+    width: 100%
+    height: 600px
+    background: #eee
+    display: flex
+    .indexTab 
+        width: 15%
+        background: #55585d
+        color: #eee           
+        .listItem
+            line-height: 40px
             text-align: center
-            height: 45px
-            line-height: 45px
-            border-bottom: 2px solid #e5e7ef
-            font-size: 18px
-            color: #999
-            margin-top: 10px
-            cursor: pointer
-            // background: #e5e7ef
-            &.control
-                // background: #999999
-                color: #278bc5
-                border-bottom: 2px solid #278bc5
+            font-size: 13px
+            cursor: pointer            
+            .tabTitle
+                &:hover   
+                    background: #7a7d82
+            .menuItem
+                margin-left: -20px
+                .menuList
+                    &:hover   
+                        color: #bfa7a7
+                        // background: #7a7d82
+                // display: none
+    // .main
+    //     background: #e5e7ef
 
-    .enrollEntry
-        width: 35%
-        min-height: 500px
-        background: #fff
-        border-radius: 10px
-        margin: 20px
-    .time
-        text-align: center
-        // height: 120px
-        margin: 20px
-        line-height: 60px
-        font-size: 36px
-    .clockText
-        word-spacing: 27px
-        font-size: 18px
-        line-height: 30px
-        color: #666
-    .know
-        margin: 0 7px
-    .enrollTime
-        margin-left: 20px
-        height: 40px
-        line-height: 40px
-        font-size: 20px
-        position: relative
-    .icon
-        width: 20px
-        position: absolute
-        top: 10px
-    .text
-        position: absolute
-        left: 30px
-        color: #999
-        font-size: 16px
-    .footer
-        width: 100%
-        height: 270px
+    // .logo
+    //     height: 100px
 
-    .newsList
-        color: #666
-        font-size: 15px
+    // .poster
+    //     width: 100%
+    //     height: 490px
+
+    // .sign
+    //     margin-bottom: 10px
+    //     span
+    //         height: 30px
+    //         line-height: 30px
+    //         display: inline-block
+    //         margin: 0 10px
+    //         cursor: pointer
+    // .enroll-list
+    //     border: 1px solid #eee
+    // .enroll
+    //     width: 120px
+    //     margin: 20px auto
+    //     text-align: center
+    //     height: 40px
+    //     line-height: 38px
+    //     border: 1px solid #000
+    //     border-radius: 5px
+    //     cursor: pointer
+    //     &:hover
+    //         background: #278bc5
+    //         border: 1px solid #278bc5
+    //         color: #fff
+    //     &.grey
+    //         border: 1px solid #eee
+    //         // cursor: not-allowed
+    //         background: #eee
+    //         color: #fff
+    //         &:hover
+    //             background: #eee
+    //             border: 1px solid #eee
+    //             color: #fff
+    // .nav
+    //     margin-top: 64px
+    //     span
+    //         // height: 40px
+    //         // line-height: 40px
+    //         padding: 10px 20px
+    //         font-size: 20px
+    //         display: inline-block
+    //         margin: 0 10px
+    //         cursor: pointer
+    //         &:hover, &.cur
+    //             color: #fff
+    //             background: #278bc5
+
+    // .content
+    //     display: flex
+    // .report
+    //     width: 65%
+    //     min-height: 500px
+    //     background: #fff
+    //     border-radius: 10px
+    //     margin: 20px
+    //     .public
+    //         width: 50%
+    //         text-align: center
+    //         height: 45px
+    //         line-height: 45px
+    //         border-bottom: 2px solid #e5e7ef
+    //         font-size: 18px
+    //         color: #999
+    //         margin-top: 10px
+    //         cursor: pointer
+    //         // background: #e5e7ef
+    //         &.control
+    //             // background: #999999
+    //             color: #278bc5
+    //             border-bottom: 2px solid #278bc5
+
+    // .enrollEntry
+    //     width: 35%
+    //     min-height: 500px
+    //     background: #fff
+    //     border-radius: 10px
+    //     margin: 20px
+    // .time
+    //     text-align: center
+    //     // height: 120px
+    //     margin: 20px
+    //     line-height: 60px
+    //     font-size: 36px
+    // .clockText
+    //     word-spacing: 27px
+    //     font-size: 18px
+    //     line-height: 30px
+    //     color: #666
+    // .know
+    //     margin: 0 7px
+    // .enrollTime
+    //     margin-left: 20px
+    //     height: 40px
+    //     line-height: 40px
+    //     font-size: 20px
+    //     position: relative
+    // .icon
+    //     width: 20px
+    //     position: absolute
+    //     top: 10px
+    // .text
+    //     position: absolute
+    //     left: 30px
+    //     color: #999
+    //     font-size: 16px
+    // .footer
+    //     width: 100%
+    //     height: 270px
+
+    // .newsList
+    //     color: #666
+    //     font-size: 15px
     // .el-carousel__container 
     //     position: relative
     //     height: 490px!important

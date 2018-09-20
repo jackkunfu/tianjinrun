@@ -1,22 +1,23 @@
 <template lang="pug">
     .publicBack
-        .login        
+        .login_top
+            .login       
 
-            .center.fz22 注册
-            
-            .num 
-                input(v-model='num' placeholder="请输入手机号码")
-                //- .fr.getcode(@click='getcode(num)')
-                //-     |{{msg}}
-                input(v-model='code' placeholder="请输入验证码")               
-                el-button.fr(@click="getcode(num)" size="mini" style='margin-top:20px') {{msg}}
-                input(v-model='pass' placeholder="请输入6-26位密码" type="password")  
+                .center.fz22(style="color:#fff") 注册
+                
+                .num 
+                    input(v-model='num' placeholder="请输入手机号码")
+                    //- .fr.getcode(@click='getcode(num)')
+                    //-     |{{msg}}
+                    input(v-model='code' placeholder="请输入验证码")               
+                    input(v-model='pass' placeholder="请输入6-26位密码" type="password")  
 
-            .clear
-            
-                input.marginPublic(type='checkbox' v-model='checked')
-                span(style="cursor:pointer")(@click="goUrl('/accountAbout')") 阅读并接受《马拉松用户协议》          
+                
+                input.agreement(type='checkbox' v-model='checked')
+                span(style="cursor:pointer;color:#fff")(@click="goUrl('/accountAbout')") 阅读并接受《马拉松用户协议》          
                 .loginButton(@click="register") 注册
+            
+            el-button.getcode(@click="getcode(num)" size="mini" style='margin-top:55px') {{msg}}
 
 </template>
 
@@ -69,4 +70,6 @@
     margin: 0
     width: 0
     height: 0 
+.agreement
+    margin: 0px 10px 0px 30px
 </style>
