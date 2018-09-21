@@ -10,9 +10,9 @@
                         img(src = "../assets/p_4_2.png")
                         img(src = "../assets/p_4_2.png")
                     .loginEntry
-                        .gologin                        
+                        .gologin(@click="goUrl('/login',{from:'index'})")                        
                             span 登录
-                        .gologin
+                        .gologin(@click="goUrl('/register')")
                             span 注册  
                         .index_icon                      
                             img(src = "../assets/p_2.jpg")
@@ -21,18 +21,51 @@
                             img(src = "../assets/p_2.jpg")
                     .indexClock
                         img(src="../assets/p_36.jpg")
-
-        .indexMiddle
-            .indexTab            
-                .listItem(v-for="(item,i) in tab" :key = "i" @mouseover = "control = i" @mouseout = "control = 100")
-                    .tabTitle
+        .indexMiddleBanner
+            .indexMiddle
+                .indexTab            
+                    .listItem(v-for="(item,i) in tab" :key = "i" @mouseover = "control = i" @mouseout = "control = 100")
+                        .tabTitle
+                            span {{item.name}}
+                        ul.menuItem(v-if = "control == i")
+                            li.menuList(v-for="(items,index) in item.list" :key = "index")
+                                span {{items.name}}
+                el-carousel.poster(height="100%")
+                    el-carousel-item(v-for="(item,ke) in banner" :key="ke")
+                        img(src="../assets/banner1.jpg")
+                .checkInfo
+                    .scoreCheck(v-for="(item, i) in enrolls")
+                        span.enroll(v-if="item.status==1" @click="goEnroll(item)") 立即报名
+                        span.grey(v-else @click="goEnroll(item)") 报名已结束
                         span {{item.name}}
-                    ul.menuItem(v-if = "control == i")
-                        li.menuList(v-for="(items,index) in item.list" :key = "index")
-                            span {{items.name}}
+                        span {{item.clock}}
+                .sponsor
+                    .sponsorBox
+                        .title 冠名赞助商
+                        .sponsorImg
+                            img(src="../assets/20170624192853804.png")
+            .indexMiddle
+                .reportLeft
+                //- .matchReport
+                .newsInfoList
+                    .newsList(
+                            v-for="(item, i) in list" :key="i"
+                            @click="goUrl('/report',{newsId:item.id,eventId:item.marathonEvent.id})"
+                        ) 
+                            .matchTime 2018
+                            .matchClass {{item.title|intercept}}
+                            .matchTime {{item.updateDate|intercept}}
+                    .newsList(
+                            v-for="(item, i) in report" :key="i"
+                                @click="goUrl('/newsDetail',{newsId:item.id,eventId:item.marathonEvent.id})"
+                            ) 
+                        .matchTime 2018
+                        .matchClass {{item.title|intercept}}
+                        .matchTime {{item.updateDate|intercept}}
 
 
         .indexFooter
+
     //- .index
     //-     .w1200.sign
     //-         .fr(v-if="ifLogin == false")
@@ -132,7 +165,7 @@
                 matchName: '',
                 curPage: 10,
                 enrolls: [],
-                banner: [],
+                banner: [{image:'../assets/p_35.jpg'},{image:'../assets/p_35.jpg'},{image:'../assets/p_35.jpg'}],
                 tab:[{
                     name:"赛事新闻",
                     list:[{
@@ -268,7 +301,7 @@
                 if(time && time.code == this.successCode){
                     // this.matchName = time.list[0].name
                     this.enrolls = time.list || []
-                    this.banner = time.banners || []
+                    // this.banner = time.banners || []
                     this.enrolls.forEach(el => {
                         let sysTime = time.systemCurrentTime
 
@@ -305,10 +338,10 @@
                 var m = Math.floor(minutes);
                 var second = shijiancha / 1000 - (24 * 60 * 60 * d) - (60 * 60 * h) - (60 * m);
                 var s = Math.floor(second);
-                return `${(d+'').length == 1 ? '0'+ d : d} 
-                        ${(h+'').length == 1 ? '0'+ h : h}
-                        ${(m+'').length == 1 ? '0'+ m : m}
-                        ${(s+'').length == 1 ? '0'+ s : s}`
+                return `${(d+'').length == 1 ? '0'+ d + ' 天' : d+' 天'} 
+                        ${(h+'').length == 1 ? '0'+ h + ' 时' : h+' 时'}
+                        ${(m+'').length == 1 ? '0'+ m + ' 分' : m+' 分'}
+                        ${(s+'').length == 1 ? '0'+ s + ' 秒' : s+' 秒'}`
             },
         }
     }
@@ -339,6 +372,10 @@
                 width: 100px
                 text-align: center
                 border-right: 1px solid #eee
+                cursor: pointer
+                span
+                    &:hover
+                        border-bottom: 1px solid #999
             img
                 margin: 0px 5px
         .indexClock
@@ -351,15 +388,17 @@
                 width: 100%
 .indexMiddle
     width: 100%
-    height: 600px
+    min-height: 600px
     background: #eee
     display: flex
+    ul
+        margin: 0
     .indexTab 
-        width: 15%
+        width: 12%
         background: #55585d
         color: #eee           
         .listItem
-            line-height: 40px
+            line-height: 50px
             text-align: center
             font-size: 13px
             cursor: pointer            
@@ -369,10 +408,59 @@
             .menuItem
                 margin-left: -20px
                 .menuList
+                    line-height: 30px
                     &:hover   
                         color: #bfa7a7
-                        // background: #7a7d82
-                // display: none
+.indexMiddle
+    margin-top: 20px
+    .reportLeft
+        width: 12%
+    .poster
+        width: 65%
+        img
+            width: 100%
+            height: 100%
+    .checkInfo
+        width: 16%
+        background: #e02929
+        .scoreCheck
+            height: 200px
+            text-align: center
+            font-size: 16px
+            color: #fff
+            background: #c52121
+            border-bottom: 1px dashed #fff
+            padding: 20px
+            .enroll
+                cursor: pointer
+            span
+                display: block
+                height: 50px
+                line-height: 50px
+    .sponsor
+        width: 8%
+        margin-left: 20px
+        .sponsorBox
+            background: #fff
+            margin-top: 10px
+            border-radius: 3px
+            padding-bottom: 3px
+        .title
+            text-align: center
+            height: 30px
+            line-height: 30px
+            font-size: 14px
+            border-bottom: 1px dashed
+        .sponsorImg
+            width: 110px
+            margin: 10px auto
+            border: 1px solid #999
+            img
+                width: 100%
+                height: 100%
+
+// .el-carousel-item 
+//     height: 100%
     // .main
     //     background: #e5e7ef
 
@@ -496,6 +584,6 @@
     //     font-size: 15px
     // .el-carousel__container 
     //     position: relative
-    //     height: 490px!important
+    //     height: 100%!important
 
 </style>
