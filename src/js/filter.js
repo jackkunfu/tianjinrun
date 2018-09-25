@@ -9,6 +9,16 @@ export default function(Vue){
         return value.length > 10 ? (value.substr(0, 10)) : value;
     })
 
+    Vue.filter('interceptYear', function (value) {
+      if (!value) return ''
+      return value.length > 10 ? (value.substr(0, 7)) : value;
+    })
+
+    Vue.filter('interceptDay', function (value) {
+      if (!value) return ''
+      return value.length > 10 ? (value.substr(8, 2)) : value;
+    })
+
     Vue.filter('stampToStr', function (value) {
         if (!value) return ''
         let date = new Date(value)

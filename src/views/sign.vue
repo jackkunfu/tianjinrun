@@ -62,8 +62,7 @@
                 matchStartDate:'',
                 matchEndDate:'',
                 address:'',
-                // checked:'',
-                // tip:false            
+                           
             }
         },
         components: {

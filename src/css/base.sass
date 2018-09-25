@@ -195,11 +195,23 @@
 .event
     font-size: 20px
     padding: 20px 300px
+.checkNum
+    height: 40px
+    line-height: 40px
+    margin-top: 20px
+    input
+        display: block
+        width: 300px
+        height: 40px
+        background: none
+        padding: 20px
+        border-radius: 5px  
+        float: right
 .check
     width: 140px
     text-align: center
     font-size: 20px
-    background: #278bc5
+    background: #c33131
     color: #fff
     height: 35px
     line-height: 35px
@@ -219,19 +231,241 @@
     line-height: 40px
     border-bottom: 2px dashed #eee
 //赛事新闻样式
-.newsList
+// .newsList
+//     display: flex
+//     width: 80%
+//     margin: 0 auto
+//     text-align: left
+//     font-size: 16px
+//     height: 50px
+//     line-height: 50px
+//     border-bottom: 1px dashed
+//     cursor: pointer
+//     .matchTime
+//         width: 25%
+//         text-align: center
+//     .matchClass
+//         margin: 0px 25px
+//         width: 40%
+//公共组件样式
+.indexMainpage
+    background: #eee
+.indexInfo
+    position: relative
+    background: #fff
+    .indexLogo
+        display: flex
+        .listImg
+            margin-left: 100px
+            img
+                margin: 0px 10px
+        .logoImage
+            margin-left: 30px
+        .loginEntry
+            position: absolute
+            right: 0
+            display: flex
+            height: 50px
+            border: 1px solid #eee
+            line-height: 50px
+            .index_icon
+                margin-top: 8px
+                margin-left: 60px
+            .gologin
+                width: 100px
+                text-align: center
+                border-right: 1px solid #eee
+                cursor: pointer
+                span
+                    &:hover
+                        border-bottom: 1px solid #999
+            img
+                margin: 0px 5px
+        .indexClock
+            position: absolute
+            width: 320px
+            right: 0%
+            bottom: 0
+            height: 50px
+            img
+                width: 100%
+.indexMiddle
+    width: 100%
+    min-height: 600px
+    background: #eee
     display: flex
-    width: 80%
-    margin: 0 auto
-    text-align: left
-    font-size: 16px
-    height: 50px
-    line-height: 50px
-    border-bottom: 1px dashed
-    cursor: pointer
-    .matchTime
-        width: 25%
+ul
+    margin: 0
+.indexTab 
+    width: 12%
+    background: #55585d
+    color: #eee           
+    .listItem
+        line-height: 50px
         text-align: center
-    .matchClass
-        margin: 0px 25px
+        font-size: 13px
+        cursor: pointer            
+        .tabTitle
+            &:hover   
+                background: #7a7d82
+        .menuItem
+            margin-left: -20px
+            .menuList
+                line-height: 30px
+                span
+                    &:hover   
+                        color: #bfa7a7
+                        border-bottom: 1px solid #bfa7a7
+    
+
+.poster
+    width: 68%
+    img
+        width: 100%
+        height: 100%
+.checkInfo
+    background: #e02929
+    .scoreCheck
+        height: 200px
+        text-align: center
+        font-size: 16px
+        color: #fff
+        background: #c52121
+        border-bottom: 1px dashed #fff
+        padding: 20px
+        .enroll
+            cursor: pointer
+        span
+            display: block
+            height: 50px
+            line-height: 50px
+.sponsor
+    width: 30%
+    margin: 0 auto
+    .sponsorBox
+        background: #fff
+        margin-top: 10px
+        border-radius: 3px
+        padding-bottom: 3px
+    .title
+        text-align: center
+        height: 30px
+        line-height: 30px
+        font-size: 14px
+        border-bottom: 1px dashed
+    .sponsorImg
+        width: 110px
+        margin: 10px auto
+        border: 1px solid #999
+        img
+            width: 100%
+            height: 100%
+.indexRep
+    width: 100%
+    min-height: 600px
+    background: #eee
+    display: flex
+    .reportLeft
+        width: 12%
+    .reportMiddle
+        padding-top: 20px
+    .adver
+        width: 89.7%
+        display: flex
+        height: 145px
+        img
+            margin: 20px 10px
+            width: 49%
+    .adverBannerImg
+        width: 89.7%
+        display: flex
+        height: 145px
+        img
+            margin-top: 20px
+            margin-left: 20px
+            margin-bottom: 0px
+    .adverBanner
+        height: 345px
         width: 40%
+        // width: 
+    .newsInfoList
+        width: 25%
+        margin-top: 20px
+        margin-left: 10px
+        .matchReport
+            width: 100%
+            text-align: center
+            color: #fff
+            background: #ff0000
+            height: 60px
+            line-height: 60px
+            cursor: pointer
+        .newsList
+            height: 65px
+            margin-top: 5px
+            background: #fff
+            display: flex
+            position: relative
+            cursor: pointer
+            .matchTime
+                margin-left: 10px
+                color: #d71418
+                font-size: 14px
+            .matchClass
+                padding: 10px
+                height: 65px
+                line-height: 45px
+                font-size: 14px
+                margin-left: 30px
+            .indexIcon
+                line-height: 65px
+                color: #ff0000
+                position: absolute
+                right: 10px
+            .updateDay
+                text-align: center
+                margin-top: 13px   
+    .indexActivity
+        width: 550px
+        .activityImg
+            float: left
+            position: relative
+            span
+                position: absolute
+                bottom: 0px
+                left: 20px
+                width: 92%
+                text-align: center
+                height: 40px
+                background: #232222
+                opacity: 0.7
+                color: #fff
+                line-height: 35px
+
+        // img
+            
+.indexFooter
+    position: relative
+    bottom: 0
+    background: #999
+    top: 60px
+    .indexPoster
+        background: #fff
+        position: relative
+        height: 120px
+        .posterImg
+            position: absolute
+            right: 10px
+            top: 30px
+            img
+                margin-left: 10px
+    .indexQrcode
+        background: #999
+        position: relative
+        height: 120px
+        .posterImg
+            position: absolute
+            right: 10px
+            top: 20px
+            img
+                margin-left: 10px

@@ -5,10 +5,10 @@
             .matchInfo(style="min-height:800px;padding:10px")
                 .enrollCheck 报名查询
                 .event 
-                    .num
+                    .checkNum
                         .fl 证件号
                         input(style='margin-left:20px' v-model='cardId')
-                    .num
+                    .checkNum
                         .fl 姓名
                         input(style='margin-left:20px' v-model='userName')
                     .check(@click='checkInfo') 查询

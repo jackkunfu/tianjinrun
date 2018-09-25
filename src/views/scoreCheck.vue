@@ -5,11 +5,11 @@
             .matchInfo(style="min-height:800px")
                 .enrollCheck 成绩查询
                 .event
-                    .num
-                        |证件号
+                    .checkNum
+                        .fl 证件号
                         input(style='margin-left:20px' v-model="cardId")
-                    .num
-                        |姓名
+                    .checkNum
+                        .fl 姓名
                         input(style='margin-left:20px' v-model="name")
                     .check(@click="checkInfo") 查询
                 .goods(v-for="(item,ke) in list" :key="ke")

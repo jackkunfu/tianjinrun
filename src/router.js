@@ -100,6 +100,31 @@ export default new Router({
           path: '/tab',
           name: 'tab',
           component: r => require(['./views/tab'], r)
+        },
+        {
+          path: '/moduleTop',
+          name: 'moduleTop',
+          component: r => require(['./views/moduleTop'], r)
+        },
+        {
+           path: '/moduleLeft',
+           name: 'moduleLeft',
+           component: r => require(['./views/moduleLeft'], r)
+        },
+        {
+           path: '/moduleRight',
+           name: 'moduleRight',
+           component: r => require(['./views/moduleRight'], r)
+        },
+        {
+           path: '/moduleFooter',
+           name: 'moduleFooter',
+           component: r => require(['./views/moduleFooter'], r)
+        },
+        {
+           path: '/matchNews',
+           name: 'matchNews',
+           component: r => require(['./views/matchNews'], r)
         }
     ] 
 })
